@@ -1,7 +1,15 @@
 """Shared test builders. pytest puts tests/ on sys.path, so tests can `from helpers import ...`."""
+from pathlib import Path
 from types import SimpleNamespace
 
-from promo_finder.models import Candidate, Promo, Segment
+from promo_finder.models import Candidate, Episode, Promo, Segment
+from promo_finder.parser import parse_show
+
+FIXTURE_SHOW = Path(__file__).parent / "fixtures" / "show"
+
+
+def fixture_episodes() -> dict[int, Episode]:
+    return {e.number: e for e in parse_show(FIXTURE_SHOW)}
 
 
 def make_candidate(**overrides) -> Candidate:
