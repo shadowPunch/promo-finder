@@ -11,3 +11,4 @@ Tools used:
 | Date | Tool | What it got wrong | How I caught it | Fix |
 |------|------|-------------------|-----------------|-----|
 | 2026-11-06 | Claude Code | The build plan set `readme = "README.md"` in pyproject.toml but only wrote README.md in the last task, so `uv sync` failed on the first step | `uv sync` build error | Added a stub README in Task 1 |
+| 2026-11-06 | Claude Code | The plan's smoke-test snippet called `load_dotenv()` from `python -` (stdin), where python-dotenv cannot locate the caller and crashes | AssertionError in `find_dotenv` | Use `load_dotenv(".env")` there; CLI/app use `find_dotenv(usecwd=True)` |

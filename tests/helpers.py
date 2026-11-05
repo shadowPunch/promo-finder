@@ -56,3 +56,11 @@ class FakeClient:
             choices=[SimpleNamespace(message=SimpleNamespace(content=text))],
             usage=SimpleNamespace(prompt_tokens=tokens, completion_tokens=5),
         )
+
+
+def fake_llm(replies, cache_dir: Path):
+    """An LLM wired to FakeClient; inspect requests via `llm.client.requests`."""
+    from promo_finder.llm import LLM, LLMConfig
+
+    cfg = LLMConfig(model="fake-model", base_url="http://fake", api_key="test")
+    return LLM(cfg, client=FakeClient(replies), cache_dir=cache_dir)
