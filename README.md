@@ -92,8 +92,9 @@ cliffhanger; a longer tail is trimmed. No line of dialogue is cut mid-sentence; 
 Every run is logged to Weights & Biases (project `kuku-promo-finder`): config, prompt version, data version, per-batch
 counts, tokens, cost, rejection reasons, and a timestamps-only promo table. Screenplay text is never sent to W&B.
 `PROMO_WANDB=0` turns tracking off.
-Quality is checked with unit tests on synthetic fixtures (`uv run pytest`), automatic run stats, and human labels of the
-top 20 (`promo-finder eval`: precision@k, reasons for rejects, and judge–human agreement).
+Quality is checked with unit tests on synthetic fixtures (`uv run pytest`), the rule checks in the validator, automatic
+run stats, and the cold-viewer judge. No human labels are used. When an editor does label a run (app or `labels.csv`),
+`promo-finder eval` scores the ranking against them: precision@k, reasons for rejects, and judge–human agreement.
 
 ## Limits
 

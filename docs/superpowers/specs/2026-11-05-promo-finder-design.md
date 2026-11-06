@@ -101,6 +101,10 @@ taps through. The spoiler penalty protects the series' main twist, and the early
 4. **Judge–human agreement:** the mean judge score for "post" vs "reject" shows whether the automatic judge can be trusted
    at scale.
 
+> **Update 2026-11-06:** steps 3–4 are dropped for the submission. The labeller isn't a promo editor, and the first
+> labels judged the model's working titles rather than the clips (W&B run `7wjnqkdk`, tagged `invalid`). Quality rests
+> on steps 1–2 and the cold-viewer judge. `promo-finder eval` stays for when an editor labels a run.
+
 Failure modes to look for (to be confirmed by the runs):
 - Standalone scores come out too high because the judge reads character names that viewers never see.
 - Visual hooks (a slap that exists only in an ACTION line) are over- or under-rated.

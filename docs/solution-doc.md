@@ -4,9 +4,8 @@
 
 ## Why this problem
 
-Picking promos is the most repetitive editor task in microdrama. Every episode of every weekly show gets watched just to
-find 20–60 s clips. The output can be checked (exact timestamps, a 3-second hook, an unresolved ending), and it feeds
-user acquisition directly. A good tool turns hours of watching per show into a short review of a ranked list.
+Picking promos is the most repetitive editor task in microdrama: every episode of every show gets watched just to find
+20–60 s clips. The output is checkable (timestamps, a 3 s hook, an open ending) and feeds user acquisition directly.
 
 ## Assumptions
 
@@ -14,18 +13,17 @@ user acquisition directly. A good tool turns hours of watching per show into a s
 2. "Hook in the first 3 s": the hook line or action starts ≤ 3.0 s after the clip starts.
 3. "Ends on a cliffhanger": the clip ends on the cliffhanger block, with at most 2 s of tail.
 4. 1–3 segments, 20–60 s in total. Joins across episodes only within one batch of 5 consecutive episodes.
-5. Earlier episodes get a small bonus (+0.25 for episodes 1–10), because an ad should land a new viewer at the start of
-   the show. This is a bonus, not a filter.
+5. Episodes 1–10 get a +0.25 bonus (not a filter): an ad should land a new viewer near the start of the show.
 6. Viewers never see character names, so "makes sense on its own" can't rely on them.
-7. Model: `gpt-5.6-sol` via AgentRouter with a $10 quota, the access I had. AgentRouter only serves approved agent
-   clients, so the tool sends prompts through the real Codex CLI. An `openai` backend covers any normal API.
+7. Model: `gpt-5.6-sol` via AgentRouter ($10 quota), the access I had. AgentRouter only serves approved agent clients,
+   so prompts go through the real Codex CLI. An `openai` backend covers any normal API.
 8. The pack is confidential: it is never committed or logged to W&B, and goes only to the model provider.
 
 ## How it works
 
 ```
 parser (code) → finder (LLM, 5 episodes/call) → validator (code) → scorer + dedupe (code)
-             → cold-viewer judge (LLM) → ranker (code) → JSON/CSV/report + W&B run → editor review (human)
+  → cold-viewer judge (LLM) → ranker (code) → JSON/CSV/report + W&B run → editor review
 ```
 
 - **AI does the taste:** it proposes promos and scores hook, cliffhanger and standalone. A second "cold-viewer" pass
@@ -35,8 +33,8 @@ parser (code) → finder (LLM, 5 episodes/call) → validator (code) → scorer 
   repairs automatically and rejects anything else with a reason. It also scores, dedupes and ranks.
 - **Ranking:** `0.4·hook + 0.3·cliffhanger + 0.3·standalone − spoiler penalty + early bonus`, plus the judge's 1–5. The
   hook weighs most because an ad that doesn't stop the scroll is never watched.
-- **Human in the loop:** the editor reviews the ranked list (report or local app), marks post / maybe / reject, and
-  checks timing against the video. Those labels are the eval set.
+- **Editor review (in production):** an editor works down the ranked list (report or local app) and checks timing
+  against the video. This submission uses no human labels.
 - **Swappable model:** two backends behind one interface. Switching model or provider is a `.env` edit.
 
 ## Results on the 50-episode pack
@@ -60,30 +58,27 @@ One run over all 50 episodes (W&B run `k3ehwr16`, raw outputs in the Drive folde
 ## How I know it's good, and where it fails
 
 - **Rules hold by construction:** every cut lands on a real block edge, and the hook, length and ending rules are checked
-  in code (50 unit tests). I hand-checked two promos' start and end times against the screenplay, and both were exact.
+  in code (50 unit tests). A spot check of two promos' start and end times against the screenplay found both exact.
 - **The cold-viewer judge separates promos; self-scores don't.** The finder rated its own hook 4–5 on 92 of 93 promos,
   and standalone 4–5 on all of them, so its scores barely rank anything. The judge, which sees only the clip, spread its 15
   verdicts from 2 to 5 (mean 3.3). It's the judge that orders the top of the list.
-- **Human check (I labelled the top 20):** 10 post, 6 maybe, 4 reject. "Post" was 2 of the top 5, 5 of the top 10 and
-  10 of 20; "post or maybe" was 80% at every cut-off. So the list is usable, but the order past #2 adds little: #11–13
-  were all "post" while #3–5 were maybe, maybe, reject. The judge agrees only weakly (mean 3.4 for "post" vs 3.0 for
-  "reject", 15 judged). All 4 rejects were for being too generic.
+- **No human labels:** I'm not a promo editor, so quality rests on the code checks and the judge. The judge is
+  uncalibrated; editor post / reject decisions (the app and `promo-finder eval` collect them) are the next step.
 - **Where it picks badly (seen in this run):**
-  1. *Near-duplicate beats:* #2 and #7 are both the altar rejection (episodes 1 and 2). #5 and #8 overlap for 6 s in
-     episode 7. Dedupe only catches promos that share over half their footage.
-  2. *Optimistic "standalone":* the judge's summaries use character names, which a scrolling viewer never sees, so
-     clarity is overrated. Its own "unclear" notes often flag a relationship that isn't set up in the clip.
-  3. *Same model as finder and judge:* the key allows one model, so the judge may favour its own picks.
-  4. *Script, not video:* it can't tell whether a visual hook lands, or whether script times match the final cut.
+    1. *Near-duplicate beats:* #2 and #7 are both the altar rejection (episodes 1 and 2). #5 and #8 overlap for 6 s in
+       episode 7. Dedupe only catches promos that share over half their footage.
+    2. *Optimistic "standalone":* the judge's summaries use character names a viewer never sees, so clarity is overrated.
+       Its "unclear" notes often flag a relationship the clip doesn't set up.
+    3. *Silent gaps:* episode 8 got no promo at all, though every episode was asked for two. Nothing flags this yet.
+    4. *Same model as finder and judge:* the key allows one model, so the judge may favour its own picks.
+    5. *Script, not video:* it can't tell whether a visual hook lands, or whether script times match the final cut.
 
 ## Scale to every show
 
-- **Per show:** ~11 calls, ~19 min and ~$2 on this setup. Running the 10 finder calls in parallel would bring it to about
-  2 min. Codex's fixed instructions are ~45% of the input tokens, so with the `openai` backend on a direct API (e.g.
-  Kuku's own), the same run sends roughly half the input.
-- **Weekly pipeline:** one job per new show folder; ranked promos go to the editor's review queue (CSV or the local app).
-  Editor decisions accumulate as labels. They become a regression test whenever the prompt or model changes, and later
-  few-shot examples.
+- **Per show:** ~11 calls, ~19 min, ~$2. Parallel finder calls would cut it to ~2 min. Codex's fixed instructions are
+  ~45% of the input, so the `openai` backend on a direct API (e.g. Kuku's own) sends about half as much.
+- **Weekly pipeline:** one job per new show folder; ranked promos go to the editor's review queue. Editor decisions
+  become labels: a regression test when the prompt or model changes, and later few-shot examples.
 - **Not yet handled:** merging similar beats across episodes, other languages (the parser is format-based, the prompts
   are English), and checking against the actual video.
 
@@ -92,5 +87,5 @@ One run over all 50 episodes (W&B run `k3ehwr16`, raw outputs in the Drive folde
 - **Claude Code** wrote the design, plan, code and tests. I reviewed the decisions and steered the model choice.
 - **gpt-5.6-sol** (via Codex CLI) is the product's finder and judge.
 - **Where AI got it wrong:** Claude's build plan pointed `pyproject.toml` at a README it only created in the last task,
-  so the first install failed. Its smoke-test snippet also called `load_dotenv()` in a way that crashes when Python reads
-  code from stdin. Both were caught by running the steps, not by reading them. Full log: `docs/ai-log.md`.
+  so the first install failed; its smoke test called `load_dotenv()` in a way that crashes on code read from stdin. Both
+  were caught by running the steps, not reading them (`docs/ai-log.md`).
