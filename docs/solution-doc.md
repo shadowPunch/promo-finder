@@ -64,8 +64,10 @@ One run over all 50 episodes (W&B run `k3ehwr16`, raw outputs in the Drive folde
 - **The cold-viewer judge separates promos; self-scores don't.** The finder rated its own hook 4–5 on 92 of 93 promos,
   and standalone 4–5 on all of them, so its scores barely rank anything. The judge, which sees only the clip, spread its 15
   verdicts from 2 to 5 (mean 3.3). It's the judge that orders the top of the list.
-- **Human check:** _(after labelling the top 20: precision@5 / @10 for "post" and "post or maybe", the reject-reason
-  counts, and the mean judge score for "post" vs "reject" from `eval.json`)_
+- **Human check (I labelled the top 20):** 10 post, 6 maybe, 4 reject. "Post" was 2 of the top 5, 5 of the top 10 and
+  10 of 20; "post or maybe" was 80% at every cut-off. So the list is usable, but the order past #2 adds little: #11–13
+  were all "post" while #3–5 were maybe, maybe, reject. The judge agrees only weakly (mean 3.4 for "post" vs 3.0 for
+  "reject", 15 judged). All 4 rejects were for being too generic.
 - **Where it picks badly (seen in this run):**
   1. *Near-duplicate beats:* #2 and #7 are both the altar rejection (episodes 1 and 2). #5 and #8 overlap for 6 s in
      episode 7. Dedupe only catches promos that share over half their footage.
