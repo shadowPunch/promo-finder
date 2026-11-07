@@ -1,6 +1,6 @@
 # Promo Finder: Kuku AI Generalist, Problem 1
 
-**Name** · **Roll no** · **Branch** · Repo (with run steps): `<link>` · Raw outputs (Drive): `<link>` · Video: `<link>`
+**Nithish Ravikkumar** · Roll no. 23123028
 
 ## Why this problem
 
@@ -12,12 +12,12 @@ Picking promos is the most repetitive editor task in microdrama: every episode o
 1. Screenplay timestamps match the final cut closely enough for an editor to trim from.
 2. "Hook in the first 3 s": the hook line or action starts ≤ 3.0 s after the clip starts.
 3. "Ends on a cliffhanger": the clip ends on the cliffhanger block, with at most 2 s of tail.
-4. 1–3 segments, 20–60 s in total. Joins across episodes only within one batch of 5 consecutive episodes.
-5. Episodes 1–10 get a +0.25 bonus (not a filter): an ad should land a new viewer near the start of the show.
+4. 1–3 segments, 20–60 s in total; cross-episode joins only within a batch of 5 consecutive episodes.
+5. Episodes 1–10 get a +0.25 bonus (not a filter): an ad should land new viewers near the start.
 6. Viewers never see character names, so "makes sense on its own" can't rely on them.
 7. Model: `gpt-5.6-sol` via AgentRouter ($10 quota), the access I had. AgentRouter only serves approved agent clients,
    so prompts go through the real Codex CLI. An `openai` backend covers any normal API.
-8. The pack is confidential: it is never committed or logged to W&B, and goes only to the model provider.
+8. The pack is confidential: it goes only to the model provider, never to git or W&B.
 
 ## How it works
 
@@ -43,7 +43,7 @@ One run over all 50 episodes (W&B run `k3ehwr16`, raw outputs in the Drive folde
 
 - **97 proposed → 95 passed the rules → 93 unique.** Rejected: one at 19.4 s (too short), and one whose hook landed past
   3 s once the cut was widened to keep a line whole. Durations run from 20.2 to 59.7 s (median 37 s). 80 are single
-  stretches, 13 join 2–3 moments, and 2 of those cross episodes.
+  stretches, 13 join 2–3 moments (2 across episodes).
 - **Cost and time:** 11 model calls (10 finder, 1 judge), 18 min 46 s, **$2.18 billed**. That's 417K input tokens, of
   which ~186K are Codex's fixed instructions, plus 80K output tokens.
 
@@ -61,7 +61,7 @@ One run over all 50 episodes (W&B run `k3ehwr16`, raw outputs in the Drive folde
   in code (50 unit tests). A spot check of two promos' start and end times against the screenplay found both exact.
 - **The cold-viewer judge separates promos; self-scores don't.** The finder rated its own hook 4–5 on 92 of 93 promos,
   and standalone 4–5 on all of them, so its scores barely rank anything. The judge, which sees only the clip, spread its 15
-  verdicts from 2 to 5 (mean 3.3). It's the judge that orders the top of the list.
+  verdicts from 2 to 5 (mean 3.3), so it orders the top of the list.
 - **No human labels:** I'm not a promo editor, so quality rests on the code checks and the judge. The judge is
   uncalibrated; editor post / reject decisions (the app and `promo-finder eval` collect them) are the next step.
 - **Where it picks badly (seen in this run):**
@@ -77,15 +77,15 @@ One run over all 50 episodes (W&B run `k3ehwr16`, raw outputs in the Drive folde
 
 - **Per show:** ~11 calls, ~19 min, ~$2. Parallel finder calls would cut it to ~2 min. Codex's fixed instructions are
   ~45% of the input, so the `openai` backend on a direct API (e.g. Kuku's own) sends about half as much.
-- **Weekly pipeline:** one job per new show folder; ranked promos go to the editor's review queue. Editor decisions
-  become labels: a regression test when the prompt or model changes, and later few-shot examples.
+- **Weekly pipeline:** one job per new show; ranked promos go to an editor's queue, whose decisions become a regression
+  test for prompt or model changes and, later, few-shot examples.
 - **Not yet handled:** merging similar beats across episodes, other languages (the parser is format-based, the prompts
   are English), and checking against the actual video.
 
 ## AI tools used, and where they got it wrong
 
-- **Claude Code** wrote the design, plan, code and tests. I reviewed the decisions and steered the model choice.
-- **gpt-5.6-sol** (via Codex CLI) is the product's finder and judge.
+- **Claude Code** wrote the design, plan, code and tests; I reviewed the decisions and chose the model. **gpt-5.6-sol**
+  (via Codex CLI) is the product's finder and judge.
 - **Where AI got it wrong:** Claude's build plan pointed `pyproject.toml` at a README it only created in the last task,
   so the first install failed; its smoke test called `load_dotenv()` in a way that crashes on code read from stdin. Both
   were caught by running the steps, not reading them (`docs/ai-log.md`).
