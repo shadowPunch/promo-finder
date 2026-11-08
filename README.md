@@ -1,7 +1,7 @@
 # Promo Finder
 
 <h2 align="center">
-  <a href="https://promo-finder-nrk.streamlit.app/"> Deployed webapp and demo </a>
+  <a href="https://promo-finder-nrk.streamlit.app/"> -> Deployed webapp and demo </a>
 </h1>
 
 
