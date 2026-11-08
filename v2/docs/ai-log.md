@@ -1,0 +1,17 @@
+# AI usage log (v2)
+
+Kept during the v2 build; continues v1's log (`../../docs/ai-log.md`).
+
+Tools used:
+- Claude Code: research, design spec, implementation plan, code and tests
+- gpt-5.6-sol via AgentRouter, run through the Codex CLI: the product's finder, quick screen, promo editor and
+  simulated audience
+
+## Where AI got it wrong
+
+| Date | Tool | What it got wrong | How it was caught | Fix |
+|------|------|-------------------|-------------------|-----|
+| 2026-11-08 | gpt-5.6-sol (simulated audience) | Rated almost every clip at the top of every scale: punch 1.0 on all 14 versions, viewer-A sinker 0.94-0.99, so two of the four score parts ranked nothing (the same leniency v1's self-scores showed) | Reading the score components of the 5-episode dev run | Calibrated the prompt with anchors ("strength 3 is rare, at most one line per clip"; "need-to-know 5 is about 1 clip in 10"; honest 80/20 likelihoods). Punch then ranged 0.67-1.0 and sinker A 0.68-0.87 |
+| 2026-11-08 | Claude Code | The design budgeted the full run at ~$4.10 from v1's numbers, but v2's audience and editor calls produce ~8-10K hidden reasoning tokens each; the measured projection was ~$5.70, more than the credit left | Billing delta of the dev run ($1.30 for 5 episodes) | Fewer, larger calls (10 episodes per finder call, 50 promos per screen call), 6 moments instead of 12, cap at $4.90 |
+| 2026-11-08 | Claude Code | Two plan tests had wrong expectations: a report string missed the Markdown bold (`**Still watching:**`) and the expected test count was off by one | Running the tests | Fixed the test string; counts noted |
+| 2026-11-08 | Claude Code | The spending cap reserved $0.30 per call, so a $1.00/$1.50 dev cap blocked the last (reliability) call even though real spend was well under | Dev runs ended `partial` | Dev caps set with that headroom in mind; documented |
