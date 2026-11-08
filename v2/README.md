@@ -105,6 +105,8 @@ cap, and tables of winners and curves. Screenplay text is never sent to W&B. `PR
 - Script only: it can't judge visuals or acting, or whether script times match the final cut.
 - One model makes and scores versions; blind, shuffled scoring and the reliability check limit the bias.
 - AI viewers agree only weakly with real viewers: the score ranks versions, it doesn't forecast exact metrics.
+- One audience pass is noisy: the same 23 versions scored twice agreed at r = 0.18. Treat small score gaps as ties;
+  average several passes (or compare versions pairwise) before trusting a single winner.
 - Weights are uncalibrated until real post-launch metrics exist.
 
 ## Troubleshooting
