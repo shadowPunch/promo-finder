@@ -15,10 +15,20 @@ def test_run_end_to_end_with_fake_llm(tmp_path, monkeypatch):
     assert counts["versions_valid"] == 4 and counts["versions_scored"] == 6 and counts["refined"] == 2
     assert [p.rank for p in result.winners] == [1, 2] and result.slate[0].slate_role == "proven"
     assert meta["partial"] is False and meta["failed_calls"] == []
-    assert meta["usage"]["llm"]["calls"] == 3 and meta["usage"]["judge"]["calls"] == 4
+    # judge: screen, audience, duels + swap, refine audience, refine duels + swap, reliability
+    assert meta["usage"]["llm"]["calls"] == 3 and meta["usage"]["judge"]["calls"] == 8
+    assert meta["duels"]["n"] == 8 and meta["duels"]["missing"] == 0
     assert set(meta["change_win_rates"]) >= {"original", "sinker", "refine"}
     for name in FILES:
         assert (result.out_dir / name).exists(), name
+
+
+def test_duels_can_be_switched_off(tmp_path, monkeypatch):
+    monkeypatch.setenv("PROMO_WANDB", "0")
+    judge = fake_llm(pipeline_reply, tmp_path / "c2")
+    result = run(FIXTURE_SHOW, tmp_path / "out", fake_llm(pipeline_reply, tmp_path / "c1"), judge,
+                 Settings(duels=False))
+    assert result.meta["duels"] == {} and len(judge.client.requests) == 4
 
 
 def test_spending_cap_stops_cleanly_and_marks_the_run_partial(tmp_path, monkeypatch):

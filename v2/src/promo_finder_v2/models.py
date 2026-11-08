@@ -16,6 +16,7 @@ NeedNext = Annotated[int, Field(ge=1, le=5)]
 Likelihood = Annotated[float, Field(ge=0)]
 Engine = Literal["explosive", "funny", "puzzling", "shocking"]
 Change = Literal["original", "hook", "sinker", "length", "structure", "refine"]
+Pick = Literal["X", "Y"]
 
 
 # --- LLM response schemas -------------------------------------------------
@@ -67,6 +68,17 @@ class ClipReaction(BaseModel):
 
 class RawAudience(BaseModel):
     clips: list[dict]  # each clip is validated separately against its own line ids
+
+
+class DuelVerdict(BaseModel):
+    """The simulated viewers' choice between two cuts (X and Y) of one moment."""
+    duel: str
+    why: str
+    pick: tuple[Pick, Pick]  # viewer A, viewer B
+
+
+class RawDuels(BaseModel):
+    duels: list[dict]  # each duel is validated separately
 
 
 class MomentVersions(BaseModel):
@@ -153,10 +165,22 @@ class Promo:
     engagement: Engagement | None = None
     slate_role: str | None = None         # "proven", "challenger" or "wild card"
     rank: int | None = None
+    win_share: float | None = None        # weighted share of head-to-head duels won within its moment
 
     @property
     def duration(self) -> float:
         return sum(s.duration for s in self.segments)
+
+
+@dataclass(frozen=True)
+class Duel:
+    """One head-to-head judgment of two cuts of a moment, by promo id."""
+    moment_id: str
+    shown_first: str   # cut X
+    shown_second: str  # cut Y
+    pick_a: str        # the cut viewer A preferred
+    pick_b: str        # the cut viewer B preferred
+    why: str
 
 
 @dataclass
@@ -167,6 +191,7 @@ class Moment:
     versions: list[Promo] = field(default_factory=list)
     winner: Promo | None = None
     refined: Promo | None = None  # the refine round's version, kept even if it lost
+    duels: list[Duel] = field(default_factory=list)
 
 
 @dataclass

@@ -138,6 +138,37 @@ For EVERY clip above, reply with JSON only, in exactly this shape:
 {AUDIENCE_SCHEMA}"""
 
 
+DUEL_VERSION = "duel-v1"
+
+DUEL_SYSTEM = f"""You simulate two real viewers scrolling Instagram Reels with the sound on. Neither has seen this show
+before.
+{VIEWER_A}
+{VIEWER_B}
+
+Each duel shows two cuts, X and Y, of the same story moment, edited differently: another opening, ending, length or
+order. Clips are written as numbered screenplay lines (L01, L02, ...) with times in seconds from the start of the clip.
+"--- CUT ---" marks a jump to another moment. React only to what is on the page.
+
+For each duel and each viewer, pick the cut that viewer would engage with more: more likely to stop scrolling in the
+first 3 seconds, to watch to the end, and to be left needing the next episode. A cut has to earn its length; longer is
+not better. Judge every duel on its own: the order the cuts are shown in means nothing. If the cuts are close, still
+pick the one with the edge."""
+
+DUEL_SCHEMA = """{"duels": [{"duel": "D01", "why": "one sentence: the difference that decides it", "pick": ["X", "Y"]}]}
+"pick" is [viewer A's choice, viewer B's choice]; each is "X" or "Y"."""
+
+
+def duel_user(duels: list[tuple[str, str, str]], retry: bool = False) -> str:
+    """duels: (duel id, cut X as numbered lines, cut Y as numbered lines)."""
+    body = "\n\n".join(f"### DUEL {duel_id}\nCUT X\n{x}\n\nCUT Y\n{y}" for duel_id, x, y in duels)
+    reminder = ("\nLast time some duels came back missing or invalid. Answer every duel above, each exactly once, "
+                "with two picks that are each \"X\" or \"Y\".\n") if retry else ""
+    return f"""{body}
+{reminder}
+For EVERY duel above, reply with JSON only, in exactly this shape:
+{DUEL_SCHEMA}"""
+
+
 EDITOR_VERSION = "editor-v1"
 
 EDITOR_SYSTEM = """You are a senior promo editor for vertical microdrama apps. You re-cut promo clips so that more people
@@ -201,4 +232,4 @@ Set "change" to "refine". Reply with JSON only, in exactly this shape:
 {EDITOR_SCHEMA}"""
 
 
-PROMPT_VERSION = "+".join([FINDER_VERSION, SCREEN_VERSION, EDITOR_VERSION, AUDIENCE_VERSION])
+PROMPT_VERSION = "+".join([FINDER_VERSION, SCREEN_VERSION, EDITOR_VERSION, AUDIENCE_VERSION, DUEL_VERSION])

@@ -32,6 +32,9 @@ def main(argv: list[str] | None = None) -> int:
     r.add_argument("--versions", type=int, default=3, help="new versions per moment")
     r.add_argument("--refine-top", type=int, default=5, help="winners that get one improvement round; 0 = off")
     r.add_argument("--reliability", type=int, default=8, help="winners re-scored to measure stability; 0 = off")
+    r.add_argument("--no-duels", dest="duels", action="store_false",
+                   help="pick winners by absolute score instead of head-to-head duels")
+    r.add_argument("--duel-batch", type=int, default=12, help="duels per audience call")
     r.add_argument("--audience-weight", type=float, default=0.65, help="weight of viewer A; viewer B gets the rest")
     r.add_argument("--max-cost", type=float, default=5.0, help="spending cap in USD for this run; 0 = no cap")
     r.add_argument("--max-episodes", type=int, help="only the first N episodes (quick dev runs)")
@@ -52,7 +55,8 @@ def _run(args: argparse.Namespace) -> int:
     cache = None if args.no_cache else Path(".cache/llm")
     settings = Settings(per_call=args.per_call, per_episode=args.per_episode, screen_batch=args.screen_batch,
                         shortlist=args.shortlist, versions=args.versions, refine_top=args.refine_top,
-                        reliability=args.reliability, audience_weight=args.audience_weight,
+                        reliability=args.reliability, duels=args.duels, duel_batch=args.duel_batch,
+                        audience_weight=args.audience_weight,
                         max_cost=args.max_cost or None, max_episodes=args.max_episodes)
     result = run(args.input, args.out, LLM(cfg, cache_dir=cache), LLM(judge_cfg, cache_dir=cache), settings,
                  tags=args.tag)

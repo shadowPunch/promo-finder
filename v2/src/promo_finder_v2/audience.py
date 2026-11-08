@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import logging
 import random
+from typing import Callable
 
 from . import engagement, prompts
 from .budget import BudgetExceeded
@@ -43,13 +44,20 @@ def score_clips(promos: list[Promo], episodes: dict[int, Episode], llm: LLM, wei
     random.Random(seed).shuffle(order)
     scores: Scores = {}
     failed: list[str] = []
-    for i, group in enumerate(batches(order, per_call), 1):
-        name = f"{tag}-{i:02d}"
-        missed = _score_group(group, episodes, llm, weight_a, name, scores, failed, retry=False)
-        if missed:
-            log.warning("%s: %d clips incomplete, retrying them once", name, len(missed))
-            _score_group(missed, episodes, llm, weight_a, f"{name}-retry", scores, failed, retry=True)
+    judge_in_batches(order, per_call, tag, lambda group, name, retry:
+                     _score_group(group, episodes, llm, weight_a, name, scores, failed, retry))
     return scores, failed
+
+
+def judge_in_batches(items: list, per_call: int, tag: str, judge_group: Callable[[list, str, bool], list]) -> None:
+    """Calls judge_group(group, call tag, retry) per batch. Whatever a batch leaves unjudged is retried once, together
+    in one smaller call; if it fails again it stays unjudged rather than guessed."""
+    for i, group in enumerate(batches(items, per_call), 1):
+        name = f"{tag}-{i:02d}"
+        missed = judge_group(group, name, False)
+        if missed:
+            log.warning("%s: %d items incomplete, retrying them once", name, len(missed))
+            judge_group(missed, f"{name}-retry", True)
 
 
 def apply(promos: list[Promo], scores: Scores) -> None:

@@ -50,7 +50,8 @@ def review(result: RunResult) -> None:
     right.download_button("Download versions.json", (result.out_dir / "versions.json").read_bytes(), "versions.json")
     st.subheader("Recommended posting slate")
     st.table([{"role": p.slate_role, "rank": p.rank, "promo": p.candidate.title, "engagement": p.engagement.score,
-               "engine": p.engagement.engine, "segments": segments_text(p)} for p in result.slate])
+               "duels won": "-" if p.win_share is None else f"{p.win_share:.0%}", "engine": p.engagement.engine,
+               "segments": segments_text(p)} for p in result.slate])
     reviewed = []
     for p in result.winners:
         c, e = p.candidate, p.engagement
@@ -75,7 +76,8 @@ def main() -> None:
     load_settings_into_env()
     st.title("Promo Finder v2")
     st.caption("Upload a microdrama's timestamped screenplays: it finds promo moments, tries versions of each, scores "
-               "them with a simulated audience and recommends a posting slate.")
+               "them with a simulated audience, picks each moment's best cut in head-to-head duels and recommends a "
+               "posting slate.")
     with st.sidebar:
         st.markdown(f"**Model:** `{os.environ.get('LLM_MODEL', 'not set')}`")
         settings = Settings(
@@ -83,6 +85,7 @@ def main() -> None:
             shortlist=st.slider("Moments for the tournament", 2, 20, 12),
             versions=st.slider("New versions per moment", 1, 4, 3),
             refine_top=st.slider("Winners refined once", 0, 8, 5),
+            duels=st.toggle("Pick winners in head-to-head duels", value=True),
             max_cost=st.number_input("Spending cap (USD)", 0.5, 20.0, 5.0, step=0.5),
         )
     files = st.file_uploader("Screenplay .txt files (one per episode)", type="txt", accept_multiple_files=True)

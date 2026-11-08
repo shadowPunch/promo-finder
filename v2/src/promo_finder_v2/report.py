@@ -15,8 +15,8 @@ from .transcript import ClipLine, clip_lines, render_clip
 SPARK = "▁▂▃▄▅▆▇█"
 SPARK_POINTS = 20
 CSV_COLUMNS = ["rank", "slate_role", "promo_id", "moment_id", "title", "change", "duration_s", "segments", "engine",
-               "measured_engine", "hook", "sinker_question", "engagement", "viewer_a", "viewer_b", "hook_a",
-               "completion_a", "punch", "sinker_a"]
+               "measured_engine", "hook", "sinker_question", "engagement", "win_share", "viewer_a", "viewer_b",
+               "hook_a", "completion_a", "punch", "sinker_a"]
 
 
 def segments_text(p: Promo) -> str:
@@ -84,6 +84,7 @@ def promo_record(p: Promo) -> dict:
         "spoiler_risk": c.spoiler_risk,
         "screen": p.verdict.model_dump() if p.verdict else None,
         "engagement": engagement_record(p.engagement),
+        "win_share": p.win_share,
         "audience": ({"understood": p.reaction.understood, "question": p.reaction.question,
                       "next": [list(n) for n in p.reaction.next]} if p.reaction else None),
         "auto_fixes": p.fixes,
@@ -97,6 +98,8 @@ def version_records(moments: list[Moment]) -> list[dict]:
         "versions": [{**promo_record(v),
                       "curve_a": v.engagement.a.curve if v.engagement else None,
                       "curve_b": v.engagement.b.curve if v.engagement else None} for v in m.versions],
+        "duels": [{"shown_first": d.shown_first, "shown_second": d.shown_second, "pick_a": d.pick_a,
+                   "pick_b": d.pick_b, "why": d.why} for d in m.duels],
     } for m in moments]
 
 
@@ -114,8 +117,8 @@ def write_outputs(out_dir: Path, winners: list[Promo], slate: list[Promo], momen
             a, b = e.get("viewer_a") or {}, e.get("viewer_b") or {}
             writer.writerow([r["rank"], r["slate_role"], r["promo_id"], r["moment_id"], r["title"], r["change"],
                              r["duration_s"], segments_text(p), r["engine"], e.get("measured_engine"), r["hook"],
-                             r["sinker_question"], e.get("score"), a.get("score"), b.get("score"), a.get("hook"),
-                             a.get("completion"), e.get("punch"), a.get("sinker")])
+                             r["sinker_question"], e.get("score"), r["win_share"], a.get("score"), b.get("score"),
+                             a.get("hook"), a.get("completion"), e.get("punch"), a.get("sinker")])
     _write_json(out_dir / "versions.json", version_records(moments))
     _write_json(out_dir / "screened.json", [promo_record(p) for p in screened])
     _write_json(out_dir / "rejected.json",
@@ -140,6 +143,12 @@ def _markdown(winners: list[Promo], slate: list[Promo], moments: list[Moment], e
     if reliability.get("n"):
         lines.append(f"Reliability: {reliability['n']} winners re-scored in a new order; rank correlation "
                      f"{reliability['spearman']}, mean score change {reliability['mean_abs_change']} points.")
+    if meta.get("duels", {}).get("n"):
+        d = meta["duels"]
+        lines.append(f"Duels: {d['n']} judged ({d['missing']} missing); both orders agreed on "
+                     f"{_pct(d['order_agreement'])} of picks (chance: 50%); first-shown cut won "
+                     f"{_pct(d['first_shown_win_rate'])} (no position bias: 50%); the duel winner was also the top "
+                     f"absolute score in {_pct(d['same_winner_as_score'])} of moments.")
     if meta.get("episodes_without_promo"):
         lines.append(f"Episodes without a valid promo: {', '.join(map(str, meta['episodes_without_promo']))}.")
     lines += ["", "## Recommended posting slate", "",
@@ -152,17 +161,25 @@ def _markdown(winners: list[Promo], slate: list[Promo], moments: list[Moment], e
     return "\n".join(lines) + "\n"
 
 
+def _pct(value: float | None) -> str:
+    return "-" if value is None else f"{value:.0%}"
+
+
+def _duels_won(p: Promo) -> str:
+    return "" if p.win_share is None else f", duels won {p.win_share:.0%}"
+
+
 def _version_label(v: Promo, winner: Promo) -> str:
     if not v.engagement:
         return f"{v.candidate.change} unscored"
-    return f"{v.candidate.change} {v.engagement.score:.1f}" + (" ← winner" if v is winner else "")
+    return f"{v.candidate.change} {v.engagement.score:.1f}{_duels_won(v)}" + (" ← winner" if v is winner else "")
 
 
 def _promo_section(p: Promo, moment: Moment | None, episodes: dict[int, Episode]) -> list[str]:
     c, e = p.candidate, p.engagement
     clip = clip_lines(p, episodes)
     role = f" · slate: {p.slate_role}" if p.slate_role else ""
-    out = [f"## #{p.rank} {c.title} ({p.duration:.1f}s, engagement {e.score:.1f})", "",
+    out = [f"## #{p.rank} {c.title} ({p.duration:.1f}s, engagement {e.score:.1f}{_duels_won(p)})", "",
            f"- **Segments:** {segments_text(p)}",
            f"- **Version:** {c.change} (moment {p.moment_id}){role}",
            f"- **Engine:** {c.engine} (measured: {e.engine or 'none'})",

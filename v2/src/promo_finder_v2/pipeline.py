@@ -1,6 +1,7 @@
 """One end-to-end v2 run, shared by the CLI and the Streamlit app:
 parse -> find (LLM) -> validate -> coverage -> quick screen (LLM) -> shortlist -> versions (LLM editor)
--> simulated audience (LLM) -> pick + refine + reliability -> posting slate -> write + track.
+-> simulated audience (LLM) -> head-to-head duels (LLM) -> pick + refine + reliability -> posting slate
+-> write + track.
 Every model call sits behind one spending cap; if it is reached the run stops cleanly and is marked partial."""
 from __future__ import annotations
 
@@ -35,6 +36,8 @@ class Settings:
     versions: int = 3             # new versions per moment
     refine_top: int = 5           # winners that get one improvement round
     reliability: int = 8          # winners re-scored to measure score stability
+    duels: bool = True            # pick each moment's winner in head-to-head duels (False: highest absolute score)
+    duel_batch: int = 12          # duels per call
     audience_weight: float = 0.65  # viewer A (core audience); viewer B (newcomers) gets the rest
     max_cost: float | None = 5.0  # spending cap in USD for this run; None = no cap
     seed: int = 0                 # shuffles clip order for the screen and the audience
@@ -91,7 +94,8 @@ def run(input_dir: Path, out_root: Path, llm: LLM, judge_llm: LLM | None = None,
         failed += screening.screen(promos, episodes, judge_llm, settings.screen_batch, settings.seed)
         short = screening.shortlist(promos, settings.shortlist)
         outcome = run_tournament(short, episodes, llm, judge_llm, settings.versions, settings.refine_top,
-                                 settings.reliability, settings.audience_weight, settings.seed)
+                                 settings.reliability, settings.audience_weight, settings.seed, settings.duels,
+                                 settings.duel_batch)
         rejections += outcome.rejections
         failed += outcome.failed
         slate = build_slate(outcome.winners)
@@ -106,6 +110,7 @@ def run(input_dir: Path, out_root: Path, llm: LLM, judge_llm: LLM | None = None,
             "change_win_rates": change_win_rates(outcome.moments),
             "refine": refine_uplift(outcome.moments),
             "reliability": outcome.reliability,
+            "duels": outcome.duels,
             "slate": [{"promo_id": p.promo_id, "rank": p.rank, "role": p.slate_role} for p in slate],
             "usage": _usage(llm, judge_llm, budget),
             "partial": budget.exhausted,
@@ -199,6 +204,7 @@ def _track(tracker: Tracker, winners: list[Promo], meta: dict) -> None:
         "engagement/sinker_a_mean": _mean([w.engagement.a.sinker for w in scored]),
         **{f"refine/{k}": v for k, v in meta["refine"].items()},
         **{f"reliability/{k}": v for k, v in meta["reliability"].items()},
+        **{f"duels/{k}": v for k, v in meta["duels"].items()},
         "episodes_without_promo": len(meta["episodes_without_promo"]),
         "llm_calls": sum(u["calls"] for u in clients),
         "cache_hits": sum(u["cache_hits"] for u in clients),
@@ -211,10 +217,11 @@ def _track(tracker: Tracker, winners: list[Promo], meta: dict) -> None:
         "failed_calls": len(meta["failed_calls"]),
     })
     columns = ["rank", "promo_id", "moment_id", "slate_role", "segments", "duration_s", "change", "engine",
-               "measured_engine", "engagement", "viewer_a", "viewer_b", "hook_a", "completion_a", "hook_b",
+               "measured_engine", "engagement", "win_share", "viewer_a", "viewer_b", "hook_a", "completion_a", "hook_b",
                "completion_b", "punch", "sinker_a", "sinker_b", "spread", "penalty"]
     rows = [[w.rank, w.promo_id, w.moment_id, w.slate_role, segments_text(w), round(w.duration, 1),
-             w.candidate.change, w.candidate.engine, w.engagement.engine, w.engagement.score, w.engagement.a.score,
+             w.candidate.change, w.candidate.engine, w.engagement.engine, w.engagement.score, w.win_share,
+             w.engagement.a.score,
              w.engagement.b.score, w.engagement.a.hook, w.engagement.a.completion, w.engagement.b.hook,
              w.engagement.b.completion, w.engagement.punch, w.engagement.a.sinker, w.engagement.b.sinker,
              w.engagement.spread, w.engagement.penalty] for w in scored]

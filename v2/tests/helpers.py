@@ -92,6 +92,29 @@ def audience_reply(user: str, leave=(10, 20), need=(4, 3), emotion="shock", stre
     return json.dumps({"clips": clips})
 
 
+def duels_in(user: str) -> dict[str, tuple[str, str]]:
+    """Duel id -> (cut X text, cut Y text), read from a duel prompt."""
+    duels = {}
+    for chunk in user.split("### DUEL ")[1:]:
+        duel_id, body = chunk.split("\n", 1)
+        x, y = body.split("\n\nCUT Y\n", 1)
+        duels[duel_id.strip()] = (x.removeprefix("CUT X\n"), y)
+    return duels
+
+
+def prefer_frozen_face(x: str, y: str) -> str:
+    """Fake judge taste: the cut ending on episode 1's last block wins; otherwise the first-shown cut
+    (a position bias)."""
+    return "Y" if "frozen face" in y and "frozen face" not in x else "X"
+
+
+def duel_reply(user: str, prefer=prefer_frozen_face, skip=()) -> str:
+    """A valid duel reply: both viewers pick the cut `prefer(x_text, y_text)` returns. Duels in `skip` are left out."""
+    duels = [{"duel": duel_id, "why": "w", "pick": [prefer(x, y)] * 2}
+             for duel_id, (x, y) in duels_in(user).items() if duel_id not in skip]
+    return json.dumps({"duels": duels})
+
+
 def make_engagement(score: float, engine: str | None = "explosive", b_score: float | None = None) -> Engagement:
     def viewer(value: float) -> ViewerScore:
         return ViewerScore(hook=0.5, completion=0.5, sinker=0.5, score=value, curve=[1.0, 0.5])
@@ -147,6 +170,8 @@ def pipeline_reply(request) -> str:
         return editor_reply(user)
     if system == prompts.AUDIENCE_SYSTEM:
         return audience_reply(user)
+    if system == prompts.DUEL_SYSTEM:
+        return duel_reply(user)
     return json.dumps({"candidates": [
         make_candidate().model_dump(),
         make_candidate(segments=[{"start": "E01L003", "end": "E01L004"}],
