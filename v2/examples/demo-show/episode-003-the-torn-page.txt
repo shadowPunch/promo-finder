@@ -1,0 +1,247 @@
+EPISODE NUMBER: Episode 3
+EPISODE LOGLINE: Arjun secretly tests whether Kabir is his son, while Meera finds a torn page in her father's diary that leads her into a trap.
+CONTINUITY NOTES: Picks up the morning after Episode 2.
+
+--- SCRIPT START ---
+
+SCENE 01
+Scene heading: INT. CITY HOSPITAL, CORRIDOR – DAY
+Scene start: 00:00.00
+Scene end: 00:30.00
+
+Actions and dialogue:
+
+**ACTION:**
+Start: (00:00.00) | End: (00:03.00)
+Arjun hands a sealed envelope to a doctor: a strand of hair and a used juice straw.
+
+**ARJUN (Low):**
+Start: (00:03.50) | End: (00:06.50)
+"I need the result by tonight. Nobody, not even my mother, can know."
+
+**DOCTOR (Cautious):**
+Start: (00:07.00) | End: (00:10.00)
+"A paternity test usually takes three days, Mr. Raichand."
+
+**ARJUN (Hard):**
+Start: (00:10.50) | End: (00:13.50)
+"Then buy the lab three more machines. Tonight."
+
+**CAMERA:**
+Start: (00:13.50) | End: (00:17.00)
+At the end of the corridor, Tanya lowers her phone. She has heard everything.
+
+**TANYA (On the phone, whispering):**
+Start: (00:17.50) | End: (00:22.00)
+"Aunty, it's worse than we thought. Arjun thinks the boy is his."
+
+**SAVITRI (V.O., on the phone):**
+Start: (00:22.50) | End: (00:27.00)
+"Then the mother has to disappear before the result arrives. Do exactly as I say."
+
+**CAMERA:**
+Start: (00:27.00) | End: (00:28.50)
+Tanya ends the call and smiles at her reflection in the glass.
+
+**TANYA (To her reflection):**
+Start: (00:28.50) | End: (00:30.00)
+"Bye-bye, Meera."
+
+SCENE 02
+Scene heading: INT. HOTEL BANQUET HALL – NIGHT
+Scene start: 00:30.00
+Scene end: 01:05.00
+
+Actions and dialogue:
+
+**ACTION:**
+Start: (00:30.00) | End: (00:33.00)
+A charity dinner. Bunty, in a waiter's jacket and a fake moustache, balances a tray of canapés.
+
+**BUNTY (To himself):**
+Start: (00:33.50) | End: (00:36.50)
+"Agent Bunty. Mission: follow Tanya. Rule one: never eat on duty."
+
+**ACTION:**
+Start: (00:37.00) | End: (00:38.50)
+He eats a canapé. Then another.
+
+**BUNTY (Chewing):**
+Start: (00:38.50) | End: (00:41.00)
+"Rule two: rule one is cancelled."
+
+**TANYA (On the phone):**
+Start: (00:41.50) | End: (00:45.00)
+"The records room, eleven o'clock. Make sure the door locks from outside."
+
+**ACTION:**
+Start: (00:45.50) | End: (00:48.00)
+Bunty leans closer to listen and his fake moustache drops into the soup tureen.
+
+**GUEST (Disgusted):**
+Start: (00:48.50) | End: (00:50.50)
+"Waiter, there's a moustache in my soup."
+
+**BUNTY (Deep fake voice):**
+Start: (00:51.00) | End: (00:54.00)
+"It's French cuisine, madam. Very rare. Moustache bisque."
+
+**TANYA (Narrowing her eyes):**
+Start: (00:54.50) | End: (00:57.00)
+"Wait. I know you. You're her cousin!"
+
+**ACTION:**
+Start: (00:57.00) | End: (01:00.00)
+Bunty flings the tray in the air and sprints out through the kitchen doors.
+
+**SOUND FX:**
+Start: (00:59.00) | End: (01:01.00)
+A crash of plates and a chef's scream.
+
+**CAMERA:**
+Start: (01:01.00) | End: (01:05.00)
+Tanya picks up Bunty's dropped earpiece and slips it into her purse.
+
+SCENE 03
+Scene heading: INT. MEERA'S APARTMENT – NIGHT
+Scene start: 01:05.00
+Scene end: 02:00.00
+
+Actions and dialogue:
+
+**ACTION:**
+Start: (01:05.00) | End: (01:08.00)
+Meera opens an old tin trunk and lifts out her father's leather diary.
+
+**MEERA (Softly):**
+Start: (01:08.50) | End: (01:11.00)
+"Papa wrote everything down. Everything."
+
+**ACTION:**
+Start: (01:11.50) | End: (01:14.00)
+She flips to the week of the wedding. One page has been torn out.
+
+**CAMERA:**
+Start: (01:14.00) | End: (01:17.00)
+On the next page, pressed into the paper, the faint dents of the missing words.
+
+**ACTION:**
+Start: (01:17.50) | End: (01:20.50)
+Meera rubs a pencil over the dents. Letters rise out of the grey.
+
+**MEERA (Reading, shaken):**
+Start: (01:21.00) | End: (01:25.50)
+"The forger lives inside the Raichand house. He has a key to the records room."
+
+**SOUND FX:**
+Start: (01:26.00) | End: (01:27.00)
+The doorbell rings.
+
+**ACTION:**
+Start: (01:27.00) | End: (01:30.00)
+Arjun stands at the door, holding a hospital envelope.
+
+**ARJUN (Unsteady):**
+Start: (01:30.50) | End: (01:33.00)
+"The result came. He's my son, Meera."
+
+**MEERA (Cold):**
+Start: (01:33.50) | End: (01:37.50)
+"He was your son the night your mother threw me out. You chose not to ask."
+
+**ARJUN (Pleading):**
+Start: (01:38.00) | End: (01:41.50)
+"I didn't know you were pregnant. If I had known..."
+
+**MEERA (Firm):**
+Start: (01:42.00) | End: (01:45.50)
+"You'd have stood up for me? For the baby, but never for me?"
+
+**CAMERA:**
+Start: (01:45.50) | End: (01:49.00)
+Arjun has no answer. Kabir peeks out from behind the bedroom door.
+
+**KABIR (Sleepy):**
+Start: (01:49.50) | End: (01:52.00)
+"Mumma, is the sad man staying for dinner?"
+
+**MEERA (Gently):**
+Start: (01:52.50) | End: (01:55.00)
+"No, baby. He was just leaving."
+
+**CAMERA:**
+Start: (01:55.00) | End: (02:00.00)
+Meera closes the door. On the table, the diary page glows under the lamp: RECORDS ROOM.
+
+SCENE 04
+Scene heading: INT. RAICHAND MANSION, RECORDS ROOM – NIGHT
+Scene start: 02:00.00
+Scene end: 02:54.00
+
+Actions and dialogue:
+
+**ACTION:**
+Start: (02:00.00) | End: (02:03.00)
+Meera slips into a dusty room stacked with old files, a torch in her hand.
+
+**MEERA (Whispering):**
+Start: (02:03.50) | End: (02:06.00)
+"Five years of lies. They have to be here somewhere."
+
+**ACTION:**
+Start: (02:06.50) | End: (02:10.00)
+She pulls a file marked SHARMA TEXTILES. Inside: sheets of practice signatures.
+
+**MEERA (Stunned):**
+Start: (02:10.50) | End: (02:13.50)
+"Papa's signature. Copied fifty times."
+
+**SOUND FX:**
+Start: (02:14.00) | End: (02:15.50)
+The heavy door slams. A key turns in the lock.
+
+**ACTION:**
+Start: (02:15.50) | End: (02:18.00)
+Meera runs to the door and pulls the handle. It doesn't move.
+
+**MEERA (Shouting):**
+Start: (02:18.50) | End: (02:20.50)
+"Who's there? Open the door!"
+
+**TANYA (Through the door, sweetly):**
+Start: (02:21.00) | End: (02:24.50)
+"Looking for the truth, Meera? It burns so easily."
+
+**SOUND FX:**
+Start: (02:25.00) | End: (02:27.00)
+A match strikes. Liquid splashes against the door.
+
+**CAMERA:**
+Start: (02:27.00) | End: (02:30.00)
+Smoke curls in under the door. An orange glow grows in the gap.
+
+**MEERA (Banging on the door):**
+Start: (02:30.50) | End: (02:33.00)
+"Tanya! Open this door! Tanya!"
+
+**ACTION:**
+Start: (02:33.50) | End: (02:37.00)
+Flames climb the old shelves. Papers curl and blacken.
+
+**MEERA (Coughing):**
+Start: (02:37.50) | End: (02:40.50)
+"Kabir... I promised I'd be home."
+
+**ACTION:**
+Start: (02:41.00) | End: (02:45.00)
+She clutches the forged file to her chest and sinks to the floor, coughing.
+
+**SOUND FX:**
+Start: (02:45.00) | End: (02:48.00)
+The roar of fire. A window bursts in the heat.
+
+**CAMERA:**
+Start: (02:48.00) | End: (02:54.00)
+Through the smoke, Meera's torch flickers and goes out.
+
+--- SCRIPT END ---
