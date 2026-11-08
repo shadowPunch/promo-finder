@@ -29,10 +29,11 @@ hr { border-color: var(--rule) !important; }
 .pf-script { font-family: var(--mono); font-size: .88rem; line-height: 1.55; background: var(--card);
              border: 1px solid var(--rule); border-left: 3px solid var(--red); padding: 1rem 1.2rem;
              max-height: 30rem; overflow-y: auto; }
-.pf-line { display: grid; grid-template-columns: 2.6rem 10rem 1fr; gap: .7rem; padding: .12rem 0; }
+.pf-line { display: grid; grid-template-columns: 2.8rem 1fr; column-gap: .6rem; padding: .3rem 0; }
+.pf-line p { margin: 0; grid-column: 2; }
 .pf-tc { color: var(--muted); }
-.pf-speaker { font-weight: 700; text-transform: uppercase; overflow-wrap: anywhere; }
-.pf-cue { color: var(--muted); text-transform: uppercase; }
+.pf-speaker { display: block; font-weight: 700; text-transform: uppercase; }
+.pf-cue { display: block; color: var(--muted); text-transform: uppercase; font-size: .8rem; }
 .pf-cut { color: var(--red); text-align: center; letter-spacing: .4em; text-transform: uppercase; font-size: .7rem;
           border-top: 1px dashed var(--rule); margin: .5rem 0; padding-top: .3rem; }
 
@@ -48,6 +49,9 @@ hr { border-color: var(--rule) !important; }
           border-radius: 3px; padding: .05rem .4rem; margin-left: .55rem; vertical-align: 3px; }
 .pf-tag.model { border-color: var(--red); color: var(--red); }
 
+/* Streamlit metrics in the headline serif */
+[data-testid="stMetricValue"] { font-family: var(--serif); font-weight: 600; }
+
 /* plain card */
 .pf-card { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: 1.1rem 1.25rem;
            min-height: 14rem; }
@@ -59,5 +63,4 @@ hr { border-color: var(--rule) !important; }
   .block-container { padding-top: 4.5rem; }
   .pf-card { min-height: 0; }
   .pf-line { grid-template-columns: 2.4rem 1fr; }
-  .pf-line span:last-child { grid-column: 2; }
 }

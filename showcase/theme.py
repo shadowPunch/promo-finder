@@ -39,5 +39,5 @@ def script(lines: list[dict]) -> None:
             rows.append('<div class="pf-cut">cut</div>')
         cue = "pf-speaker" if line["kind"] == "dialogue" else "pf-cue"
         rows.append(f'<div class="pf-line"><span class="pf-tc">{line["t0"]:04.1f}</span>'
-                    f'<span class="{cue}">{esc(line["label"])}</span><span>{esc(line["text"])}</span></div>')
+                    f'<span class="{cue}">{esc(line["label"])}</span><p>{esc(line["text"])}</p></div>')
     st.html(f'<div class="pf-script">{"".join(rows)}</div>')
