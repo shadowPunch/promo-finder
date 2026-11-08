@@ -235,6 +235,34 @@ weights can later be fitted to real hook rate / completion once promos are poste
 - **Reliability (S = 8):** the top 8 winners are re-scored in one call with a different shuffle (seed + 1). Report
   Spearman rank correlation and mean absolute score change between the two passes.
 
+### 5.7a Head-to-head duels (`duels.py`, added after the first full runs)
+
+**Why:** one absolute audience pass proved too noisy to pick between versions of a moment. The same 23 versions scored
+in two runs agreed at r = 0.18, ordered a pair of versions the same way only 61% of the time (chance is 50%), and
+picked the same winner in 1 of 6 moments. Judges are usually far more consistent at "A or B?" than at absolute scores.
+
+**How:**
+- For each moment, every pair of scored versions is a duel: the same two blind viewers see cut X and cut Y and each
+  picks the cut they would engage with more (stop in the first 3 s, watch to the end, need the next episode). Each
+  duel gives a one-line reason first, then the two picks.
+- Each pair is judged twice, once in each order, in different calls, so a bias towards the first (or second) cut
+  cancels out. Which cut goes first in the first pass is random (seeded). 12 duels per call.
+- **Win share** of a version = its share of picks across its duels, weighted 0.65 viewer A + 0.35 viewer B.
+  The winner is the highest win share; ties go to the higher absolute score, then the shorter cut.
+- **Refine:** the improved version duels the current winner in both orders and replaces it only with a win share
+  above 0.5.
+- Absolute scores stay: they drive the refine diagnostics, the curves and AIDA view in the report, the posting slate
+  and the ranking across moments (duels only compare cuts of the same moment).
+- A missing or invalid duel is retried once in a smaller call; if it fails again it is left out. If a moment has no
+  judged duels, its winner falls back to the highest absolute score. `--no-duels` gives the old behaviour.
+
+**Self-checks (run_meta, report, W&B):** order agreement (share of pair × viewer judgments that picked the same cut
+in both orders; 50% is chance, absolute scores managed 61%), first-shown win rate (0.5 = no position bias), and how
+often the duel winner equals the top absolute score.
+
+**Cost:** about 66 pairs × 2 orders ≈ 132 duels in ~11 calls, plus one refine call pair, at about $0.20 per call:
+≈ $2.50. Earlier stages hit the cache when the settings are unchanged.
+
 ### 5.8 Posting slate (`slate.py`, 70/20/10)
 
 From the ranked winners, a slate of up to 10:
