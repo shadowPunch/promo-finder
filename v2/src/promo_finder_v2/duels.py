@@ -89,6 +89,21 @@ def consistency(duels: list[Duel]) -> dict:
     }
 
 
+def split_half_agreement(moments: list[Moment], weight_a: float = 0.65) -> float | None:
+    """Share of moments whose round-robin winner is the same when picked from each half alone (one order of every
+    pair per half). The answer to "would a second pass pick the same cut?" with half the evidence each time."""
+    same = []
+    for m in moments:
+        refined = m.refined.promo_id if m.refined else None
+        played = [d for d in m.duels if refined not in (d.shown_first, d.shown_second)]
+        halves = ([d for d in played if d.shown_first < d.shown_second],
+                  [d for d in played if d.shown_first > d.shown_second])
+        first, second = (duel_winner(m.versions, half, weight_a) for half in halves)
+        if first and second:
+            same.append(first is second)
+    return share(same)
+
+
 def share(flags: list[bool]) -> float | None:
     return round(sum(flags) / len(flags), 3) if flags else None
 

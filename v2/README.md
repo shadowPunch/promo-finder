@@ -1,7 +1,8 @@
 # Promo Finder v2: engagement tournament
 
 Finds 20–60 s promo clips in a microdrama's timestamped screenplays, re-cuts the best moments into several versions,
-scores every version with a simulated audience, keeps the best, and recommends a posting slate.
+scores every version with a simulated audience, picks each moment's best cut in head-to-head duels, and recommends a
+posting slate.
 
 v1 (the parent folder) finds promos that follow the rules. v2 adds a measurable engagement score and uses it to try
 versions and keep the winner. Design and research: `docs/superpowers/specs/2026-11-08-engagement-tournament-design.md`.
@@ -24,7 +25,8 @@ parse (code) → find v2 (LLM) → rule checks (code) → coverage check (code)
   → quick screen (LLM) → shortlist 12 (code)
   → versions (LLM editor) → rule checks (code)
   → simulated audience (LLM, two viewers, line by line) → engagement score (code)
-  → best version per moment (code) → refine top 5 (LLM) → reliability check (LLM)
+  → head-to-head duels per moment (LLM, both orders) → winner by win share (code)
+  → refine top 5 (LLM, must win its duel) → reliability check (LLM)
   → posting slate + report + W&B (code)
 ```
 
@@ -35,8 +37,13 @@ parse (code) → find v2 (LLM) → rule checks (code) → coverage check (code)
   structure such as a cold open).
 - **Simulated audience:** two blind viewers react to each version line by line: emotion, strength and the % chance
   each scrolls away. They also imagine 2–4 next scenes and say how badly they need to know what happens next.
-- **Refine and reliability:** the top 5 get one improvement round driven by their weak spots; 8 winners are re-scored
-  in a new order to measure how stable the scores are.
+- **Duels:** every pair of versions of a moment is shown to the same two viewers, who each pick the cut they would
+  engage with more. Each pair is judged twice, once in each order and in separate calls, so a bias towards the first
+  cut cancels out. The winner has the highest win share (0.65 viewer A + 0.35 viewer B); ties go to the higher
+  absolute score. Why: one absolute scoring pass was too noisy to pick versions (two passes ordered a pair the same way
+  only 61% of the time; chance is 50%). The run reports how often the two orders agree and how often the first cut won.
+- **Refine and reliability:** the top 5 get one improvement round driven by their weak spots; the improved cut must
+  beat the winner head to head. 8 winners are re-scored in a new order to measure how stable absolute scores are.
 
 The model only points at block ids and gives reactions. Code owns every timestamp, rule and number.
 
@@ -56,6 +63,8 @@ Weights are a stated assumption; every component is saved so they can be fitted 
 | `--versions` | 3 | new versions per moment |
 | `--refine-top` | 5 | winners that get one improvement round (0 = off) |
 | `--reliability` | 8 | winners re-scored to measure stability (0 = off) |
+| `--no-duels` | | pick winners by absolute score instead of head-to-head duels |
+| `--duel-batch` | 12 | duels per audience call |
 | `--audience-weight` | 0.65 | weight of viewer A |
 | `--max-cost` | 5 | spending cap in USD (0 = none); the run stops cleanly and is tagged `partial` |
 | `--max-episodes` | all | quick dev runs on the first N episodes |
@@ -75,8 +84,9 @@ Model and provider come from `.env` (`LLM_*`; `JUDGE_*` overrides the screen and
 | `screen.py` | quick screen, shortlist, footage dedupe |
 | `editor.py` | versions and the refine round |
 | `audience.py` | simulated viewers; per-clip validation and one retry |
+| `duels.py` | head-to-head duels in both orders, win shares, order agreement and position bias |
 | `engagement.py` | the score maths (pure functions) |
-| `tournament.py` | pick winners, refine, reliability, win rates |
+| `tournament.py` | pick winners (duels or score), refine, reliability, win rates |
 | `slate.py` | 70/20/10 posting slate |
 | `budget.py`, `llm.py`, `codex_client.py` | spending cap, model client, Codex backend |
 | `report.py`, `tracking.py`, `pipeline.py`, `cli.py` | outputs, W&B, the run, the command |
@@ -84,8 +94,8 @@ Model and provider come from `.env` (`LLM_*`; `JUDGE_*` overrides the screen and
 ## Outputs
 
 `outputs/<show>/<run_id>/`: `report.md` (slate first, then each winner with its score parts, drop-off sparklines,
-AIDA timeline, version history and transcript), `promos.json/csv` (winners), `versions.json` (every version with
-per-second curves), `screened.json`, `rejected.json`, `raw_llm.jsonl`, `run_meta.json`.
+AIDA timeline, version history with duel win shares, and transcript), `promos.json/csv` (winners), `versions.json`
+(every version with per-second curves, and every duel with both picks and the reason), `screened.json`, `rejected.json`, `raw_llm.jsonl`, `run_meta.json`.
 
 ## Business frameworks behind the design
 
@@ -97,16 +107,17 @@ only the top), jobs to be done (no fake-out sinkers), unit economics (cost per s
 ## Tracking
 
 Every run is logged to Weights & Biases (project `kuku-promo-finder`, tag `v2`): config incl. prompt versions and
-weights, counts per stage, engagement spreads, win rate per change type, refine uplift, reliability, spend against the
-cap, and tables of winners and curves. Screenplay text is never sent to W&B. `PROMO_WANDB=0` runs untracked.
+weights, counts per stage, engagement spreads, win rate per change type, refine uplift, reliability, duel order
+agreement and position bias, spend against the cap, and tables of winners (with win shares) and curves. Screenplay text is never sent to W&B. `PROMO_WANDB=0` runs untracked.
 
 ## Limits
 
 - Script only: it can't judge visuals or acting, or whether script times match the final cut.
 - One model makes and scores versions; blind, shuffled scoring and the reliability check limit the bias.
 - AI viewers agree only weakly with real viewers: the score ranks versions, it doesn't forecast exact metrics.
-- One audience pass is noisy: the same 23 versions scored twice agreed at r = 0.18. Treat small score gaps as ties;
-  average several passes (or compare versions pairwise) before trusting a single winner.
+- One absolute audience pass is noisy: the same 23 versions scored twice agreed at r = 0.18. That is why winners are
+  picked in duels; absolute scores still rank winners across moments and fill the slate, so treat small gaps there as
+  ties.
 - Weights are uncalibrated until real post-launch metrics exist.
 
 ## Troubleshooting

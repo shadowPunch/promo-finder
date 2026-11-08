@@ -2,7 +2,7 @@ import json
 
 from helpers import duel_reply, duels_in, fake_llm, fixture_episodes, make_candidate, make_engagement, make_promo
 from promo_finder_v2 import prompts
-from promo_finder_v2.duels import consistency, duel_winner, judge, round_robin, win_shares
+from promo_finder_v2.duels import consistency, duel_winner, judge, round_robin, split_half_agreement, win_shares
 from promo_finder_v2.models import Duel, Moment
 from promo_finder_v2.validate import validate
 
@@ -42,6 +42,20 @@ def test_duel_winner_uses_win_share_then_absolute_score_then_length():
     p2.engagement = make_engagement(40)
     assert duel_winner([p1, p2], tied) is p2                     # still tied: shorter cut
     assert duel_winner([p1, p2], []) is None
+
+
+def test_split_half_agreement_compares_winners_picked_from_each_order_alone():
+    p1, p2, p3 = (make_promo([(1, 0.0, 30.0)], promo_id=pid) for pid in ("p1", "p2", "p3"))
+    for p in (p1, p2, p3):
+        p.engagement = make_engagement(50)
+    steady = Moment("M01", p1, [p1, p2], duels=[Duel("M01", "p1", "p2", "p2", "p2", ""),
+                                               Duel("M01", "p2", "p1", "p2", "p2", "")])
+    # p3 is this moment's refined version: its duel against the winner is left out of the split
+    flaky = Moment("M02", p1, [p1, p2, p3], refined=p3,
+                   duels=[Duel("M02", "p1", "p2", "p1", "p1", ""), Duel("M02", "p2", "p1", "p2", "p2", ""),
+                          Duel("M02", "p3", "p2", "p3", "p3", "")])
+    assert split_half_agreement([steady, flaky]) == 0.5
+    assert split_half_agreement([Moment("M03", p1, [p1])]) is None
 
 
 def test_round_robin_pairs_only_scored_versions_of_each_moment():

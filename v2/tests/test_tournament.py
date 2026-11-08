@@ -66,6 +66,7 @@ def test_tournament_by_duels_picks_winners_head_to_head_and_settles_refine_by_du
     assert (stats["n"], stats["missing"], stats["pairs_both_orders"]) == (6, 0, 3)
     assert stats["order_agreement"] == 0.667 and stats["first_shown_win_rate"] == 0.667
     assert stats["same_winner_as_score"] == 1.0
+    assert stats["split_half_same_winner"] == 0.5    # M01 steady; M02's position-biased picks flip with the order
     assert refine_uplift(result.moments)["won"] == 0
 
 

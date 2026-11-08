@@ -147,7 +147,8 @@ def _markdown(winners: list[Promo], slate: list[Promo], moments: list[Moment], e
         d = meta["duels"]
         lines.append(f"Duels: {d['n']} judged ({d['missing']} missing); both orders agreed on "
                      f"{_pct(d['order_agreement'])} of picks (chance: 50%); first-shown cut won "
-                     f"{_pct(d['first_shown_win_rate'])} (no position bias: 50%); the duel winner was also the top "
+                     f"{_pct(d['first_shown_win_rate'])} (no position bias: 50%); each order alone picked the same "
+                     f"winner in {_pct(d.get('split_half_same_winner'))} of moments; the duel winner was also the top "
                      f"absolute score in {_pct(d['same_winner_as_score'])} of moments.")
     if meta.get("episodes_without_promo"):
         lines.append(f"Episodes without a valid promo: {', '.join(map(str, meta['episodes_without_promo']))}.")

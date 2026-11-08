@@ -154,6 +154,7 @@ def _duel_summary(moments: list[Moment], weight_a: float, expected: int, same_as
         for v in m.versions:
             v.win_share = shares.get(v.promo_id)
     return {**duels.consistency(all_duels), "missing": expected - len(all_duels),
+            "split_half_same_winner": duels.split_half_agreement(moments, weight_a),
             "same_winner_as_score": same_as_score}
 
 
