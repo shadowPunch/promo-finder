@@ -1,5 +1,7 @@
 # Showcase site
 
+**Live: [promo-finder-nrk.streamlit.app](https://promo-finder-nrk.streamlit.app/)**
+
 A four-page Streamlit site that explains Promo Finder and replaces a recorded demo video:
 
 | Page | What it shows |
@@ -63,4 +65,6 @@ full run files are in `v2/results/155bsnqx/`.
 ## Deploy (Streamlit Community Cloud)
 
 share.streamlit.io → Create app → repo `shadowPunch/promo-finder`, branch `main`, main file
-`showcase/streamlit_app.py` → Deploy. The repo is public, so the app is public.
+`showcase/streamlit_app.py` → Deploy. The repo is public, so the app is public. Deployed at
+https://promo-finder-nrk.streamlit.app/; every push to `main` redeploys it. Apps sleep after 12 hours without
+visitors; anyone can wake one with "Yes, get this app back up!".

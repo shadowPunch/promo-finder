@@ -1,13 +1,37 @@
 # Promo Finder
 
+<h1 align="center">
+  <a href="https://promo-finder-nrk.streamlit.app/">▶ Open the live site: promo-finder-nrk.streamlit.app</a>
+</h1>
+
+<p align="center">
+  <b>Start here.</b> What it is, how it works, the results on the 50-episode pack, and an
+  <a href="https://promo-finder-nrk.streamlit.app/demo">animated demo</a> of the tool turning four episodes into a promo.
+</p>
+
+<p align="center">
+  <a href="https://promo-finder-nrk.streamlit.app/">
+    <img src="docs/showcase.png" width="860" alt="The Promo Finder showcase site (click to open)">
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://promo-finder-nrk.streamlit.app/">
+    <img src="https://static.streamlit.io/badges/streamlit_badge_black_white.svg" height="44" alt="Open in Streamlit">
+  </a>
+</p>
+
+---
+
 Reads a folder of timestamped microdrama screenplays and returns ranked 20–60 s promo clips for TikTok, Reels and
 Shorts. For each clip you get the episode and exact start/end of every segment, the hook, the cliffhanger, and why it works.
-Built for Kuku's AI Generalist assignment (Problem 1).
+Built for Kuku's AI Generalist assignment (Problem 1). By Nithish Ravikkumar (23123028).
 
-**Showcase site:** a four-page Streamlit site (Home, Methodology, Outputs, and an animated Demo of the tool turning four
-episodes into a promo) lives in [`showcase/`](showcase/README.md). Run it from this folder with
-`env -u PYTHONPATH uv run --project v2 streamlit run showcase/streamlit_app.py`. **v2** (engagement tournament with
-head-to-head duels) is in [`v2/`](v2/README.md); its submitted run's files are in `v2/results/155bsnqx/`.
+**Showcase site:** [promo-finder-nrk.streamlit.app](https://promo-finder-nrk.streamlit.app/) (code in
+[`showcase/`](showcase/README.md); run it locally from this folder with
+`env -u PYTHONPATH uv run --project v2 streamlit run showcase/streamlit_app.py`). **v2** (engagement tournament with
+head-to-head duels) is in [`v2/`](v2/README.md); its submitted run's files are in
+[`v2/results/155bsnqx/`](v2/results/155bsnqx/).
 
 ## Quick start
 

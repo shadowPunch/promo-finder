@@ -1,5 +1,7 @@
 # Promo Finder v2: engagement tournament
 
+**▶ Live site with an animated demo: [promo-finder-nrk.streamlit.app](https://promo-finder-nrk.streamlit.app/)**
+
 Finds 20–60 s promo clips in a microdrama's timestamped screenplays, re-cuts the best moments into several versions,
 scores every version with a simulated audience, picks each moment's best cut in head-to-head duels, and recommends a
 posting slate.
