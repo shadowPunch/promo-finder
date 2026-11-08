@@ -23,13 +23,15 @@ credentials. The site reads two small JSON files and needs only `streamlit` to r
 
 ```
 .streamlit/config.toml            theme; Community Cloud reads config only from the repo root
-site/
+showcase/                         (not `site/`: that name shadows Python's built-in `site` module)
   streamlit_app.py                entry: page config, shared CSS, st.navigation(position="top")
   requirements.txt                streamlit
   theme.py                        load CSS, small shared HTML helpers (stat row, section label, script block)
-  style.css                       paper / ink / red styles, font imports
-  pages/home.py, methodology.py, outputs.py, demo.py
-  player/player.html              the demo animation: one self-contained HTML/CSS/JS file
+  loaders.py                      read data/*.json; friendly error if a file is missing
+  demo_player.py                  inject demo.json into the player HTML
+  assets/style.css                paper / ink / red styles
+  assets/player.html              the demo animation: one self-contained HTML/CSS/JS file
+  views/home.py, methodology.py, outputs.py, demo.py
   data/results.json               real run 155bsnqx: summary, slate, two excerpts, links
   data/demo.json                  artificial show: episodes plus the full tool output on it
   tests/test_site.py              every page renders; player gets valid data
@@ -39,10 +41,10 @@ v2/results/155bsnqx/              committed run files for the download link
 ```
 
 **Data flow:** the tool runs as usual and writes a run folder → `promo-finder-v2 export-site` (new CLI subcommand,
-backed by `site_data.py`) turns a run folder into `site/data/*.json` → the site renders the JSON. The site has no
+backed by `site_data.py`) turns a run folder into `showcase/data/*.json` → the site renders the JSON. The site has no
 dependency on the `promo_finder_v2` package, so it builds fast on Community Cloud and can't call a model by accident.
 
-**Demo player:** `demo.py` reads `player.html`, injects `demo.json` (with `</` escaped so the JSON can't close the
+**Demo player:** `demo_player.py` reads `assets/player.html`, injects `demo.json` (with `</` escaped so the JSON can't close the
 script tag) and shows it with `st.components.v1.html` at a fixed height. Pure HTML/CSS/JS, no libraries, no network
 except Google Fonts. It plays on its own once started, so each viewer costs the server nothing.
 
@@ -109,14 +111,14 @@ and tell the user before rerunning.
 
 - `v2/tests/test_site_data.py`: export from a small fake run folder built on the fixture show; checks both JSON
   shapes, that the two excerpts are the requested ranks, and that the demo episodes' block ids match the candidates.
-- `site/tests/test_site.py`: Streamlit `AppTest` runs each page with the committed data and asserts no exceptions;
+- `showcase/tests/test_site.py`: Streamlit `AppTest` runs each page with the committed data and asserts no exceptions;
   the player HTML contains the injected JSON and survives a `</script>` string in the data.
-- Manual check: run locally from the repo root (`streamlit run site/streamlit_app.py`), screenshot every page at
+- Manual check: run locally from the repo root (`streamlit run showcase/streamlit_app.py`), screenshot every page at
   desktop and phone widths with headless Chrome, and watch the demo end to end.
 
 ## Release
 
 1. Merge `v2-duels` and the site branch into `main` and push (only after the user says so).
 2. The user signs in at share.streamlit.io and deploys: repo `shadowPunch/promo-finder`, branch `main`, main file
-   `site/streamlit_app.py`. Public repo → public app.
-3. Root README and `site/README.md` describe the site, how to run it and how to refresh its data.
+   `showcase/streamlit_app.py`. Public repo → public app.
+3. Root README and `showcase/README.md` describe the site, how to run it and how to refresh its data.
