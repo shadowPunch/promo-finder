@@ -8,4 +8,5 @@ def test_tracker_is_a_no_op_when_disabled(monkeypatch):
     tracker.log({"x": 1})
     tracker.summary({"y": 2})
     tracker.table("t", ["c"], [[1]])
+    tracker.add_tags(["partial"])
     tracker.finish()

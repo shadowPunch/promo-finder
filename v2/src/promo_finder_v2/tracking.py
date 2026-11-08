@@ -38,6 +38,10 @@ class Tracker:
 
             self.run.log({name: wandb.Table(columns=columns, data=rows)})
 
+    def add_tags(self, tags: list[str]) -> None:
+        if self.run:
+            self.run.tags = tuple(self.run.tags) + tuple(tags)
+
     def finish(self, failed: bool = False) -> None:
         if self.run:
             self.run.finish(exit_code=1 if failed else 0)

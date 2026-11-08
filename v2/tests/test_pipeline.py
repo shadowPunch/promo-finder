@@ -1,32 +1,29 @@
-import json
+from helpers import FIXTURE_SHOW, fake_llm, pipeline_reply
+from promo_finder_v2.pipeline import Settings, run
 
-from helpers import FIXTURE_SHOW, clip_blocks, fake_llm, make_candidate
-from promo_finder_v2 import prompts
-from promo_finder_v2.pipeline import run
-
-
-def _reply(request):
-    system, user = request["messages"][0]["content"], request["messages"][1]["content"]
-    if system == prompts.SCREEN_SYSTEM:
-        return json.dumps({"verdicts": [{"clip": c, "understood": "x", "stops_scroll": 3, "needs_next": 3,
-                                         "overall": 3} for c in clip_blocks(user)]})
-    return json.dumps({"candidates": [
-        make_candidate().model_dump(),
-        make_candidate(segments=[{"start": "E01L003", "end": "E01L004"}],
-                       hook_ref="E01L003", cliffhanger_ref="E01L004").model_dump(),  # 7 s: too short
-        make_candidate(title="The portrait", segments=[{"start": "E02L001", "end": "E02L004"}],
-                       hook_ref="E02L001", cliffhanger_ref="E02L004").model_dump(),
-    ]})
+FILES = ("promos.json", "promos.csv", "versions.json", "screened.json", "report.md", "rejected.json",
+         "raw_llm.jsonl", "run_meta.json")
 
 
 def test_run_end_to_end_with_fake_llm(tmp_path, monkeypatch):
     monkeypatch.setenv("PROMO_WANDB", "0")
-    result = run(FIXTURE_SHOW, tmp_path / "out", fake_llm(_reply, tmp_path / "c1"), fake_llm(_reply, tmp_path / "c2"))
-    counts = result.meta["counts"]
-    assert (counts["proposed"], counts["valid"], counts["screened"], counts["shortlisted"]) == (3, 2, 2, 2)
+    llm, judge = fake_llm(pipeline_reply, tmp_path / "c1"), fake_llm(pipeline_reply, tmp_path / "c2")
+    result = run(FIXTURE_SHOW, tmp_path / "out", llm, judge, Settings())
+    meta, counts = result.meta, result.meta["counts"]
+    assert (counts["proposed"], counts["valid"], counts["shortlisted"], counts["winners"]) == (3, 2, 2, 2)
     assert counts["rejected_by_reason"] == {"too_short": 1}
-    assert result.meta["episodes_without_promo"] == []
-    assert [p.rank for p in result.ranked] == [1, 2]
-    assert result.meta["usage"]["llm"]["calls"] == 1 and result.meta["usage"]["judge"]["calls"] == 1
-    for name in ("promos.json", "promos.csv", "report.md", "rejected.json", "raw_llm.jsonl", "run_meta.json"):
+    assert counts["versions_valid"] == 4 and counts["versions_scored"] == 6 and counts["refined"] == 2
+    assert [p.rank for p in result.winners] == [1, 2] and result.slate[0].slate_role == "proven"
+    assert meta["partial"] is False and meta["failed_calls"] == []
+    assert meta["usage"]["llm"]["calls"] == 3 and meta["usage"]["judge"]["calls"] == 4
+    assert set(meta["change_win_rates"]) >= {"original", "sinker", "refine"}
+    for name in FILES:
         assert (result.out_dir / name).exists(), name
+
+
+def test_spending_cap_stops_cleanly_and_marks_the_run_partial(tmp_path, monkeypatch):
+    monkeypatch.setenv("PROMO_WANDB", "0")
+    result = run(FIXTURE_SHOW, tmp_path / "out", fake_llm(pipeline_reply, tmp_path / "c"), settings=Settings(max_cost=0.1))
+    assert result.meta["partial"] is True and result.winners == []
+    assert result.meta["failed_calls"] == ["find-01-E01-E02"]
+    assert (result.out_dir / "report.md").exists()

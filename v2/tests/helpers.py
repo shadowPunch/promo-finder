@@ -133,3 +133,24 @@ def editor_reply(user: str) -> str:
         version = make_candidate(**cut, change="refine" if refine else "sinker").model_dump()
         moments.append({"moment": moment_id, "versions": [version]})
     return json.dumps({"moments": moments})
+
+
+def pipeline_reply(request) -> str:
+    """Fake model for a whole v2 run on the fixture show, routed by system prompt."""
+    from promo_finder_v2 import prompts
+
+    system, user = request["messages"][0]["content"], request["messages"][1]["content"]
+    if system == prompts.SCREEN_SYSTEM:
+        return json.dumps({"verdicts": [{"clip": c, "understood": "x", "stops_scroll": 3, "needs_next": 3,
+                                         "overall": 3} for c in clip_blocks(user)]})
+    if system == prompts.EDITOR_SYSTEM:
+        return editor_reply(user)
+    if system == prompts.AUDIENCE_SYSTEM:
+        return audience_reply(user)
+    return json.dumps({"candidates": [
+        make_candidate().model_dump(),
+        make_candidate(segments=[{"start": "E01L003", "end": "E01L004"}],
+                       hook_ref="E01L003", cliffhanger_ref="E01L004").model_dump(),  # 7 s: too short
+        make_candidate(title="The portrait", segments=[{"start": "E02L001", "end": "E02L004"}],
+                       hook_ref="E02L001", cliffhanger_ref="E02L004").model_dump(),
+    ]})
