@@ -69,6 +69,15 @@ class RawAudience(BaseModel):
     clips: list[dict]  # each clip is validated separately against its own line ids
 
 
+class MomentVersions(BaseModel):
+    moment: str
+    versions: list[dict]  # each version is validated separately as a Candidate
+
+
+class EditorResult(BaseModel):
+    moments: list[MomentVersions]
+
+
 # --- Parsed screenplay ------------------------------------------------------
 
 @dataclass(frozen=True)
@@ -151,6 +160,17 @@ class Promo:
 
 
 @dataclass
+class Moment:
+    """A shortlisted promo and the versions tried for it (the original is version 0)."""
+    moment_id: str
+    original: Promo
+    versions: list[Promo] = field(default_factory=list)
+    winner: Promo | None = None
+    refined: Promo | None = None  # the refine round's version, kept even if it lost
+
+
+@dataclass
 class Rejection:
     raw: dict
     reason: str  # "<code> (detail)", e.g. "too_short (12.0s)"
+    moment_id: str | None = None  # set for rejected editor versions

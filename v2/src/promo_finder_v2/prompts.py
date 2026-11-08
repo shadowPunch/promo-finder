@@ -134,4 +134,67 @@ For EVERY clip above, reply with JSON only, in exactly this shape:
 {AUDIENCE_SCHEMA}"""
 
 
-PROMPT_VERSION = "+".join([FINDER_VERSION, SCREEN_VERSION, AUDIENCE_VERSION])
+EDITOR_VERSION = "editor-v1"
+
+EDITOR_SYSTEM = """You are a senior promo editor for vertical microdrama apps. You re-cut promo clips so that more people
+stop, watch to the end and need the next episode. Clips are taken from the show as-is: no narration, music or text.
+
+A promo works like an ad (AIDA): ATTENTION in the first 3 seconds (its engine - explosive, funny, puzzling or shocking -
+is there at once); INTEREST (who is against whom and what is at stake, within about 10 seconds); DESIRE (the emotion
+builds to a peak); ACTION (it ends on the SINKER: one clear unanswered question with several believable answers; cut
+before the answer). The sinker question must be one the show really answers later: no fake-outs. Viewers never see
+character names.
+
+Rules for every version:
+- Refer to blocks only by the ids shown in the scene text; never invent ids.
+- A segment plays from the START of its "start" block to the END of its "end" block; 1-3 segments, 20-60 seconds in
+  total. Segments may be in any order: a cold open shows a later moment first, then the build-up.
+- "hook_ref" must begin within 3 seconds of the first segment's start. "cliffhanger_ref" (the sinker block) must be
+  inside the last segment, at or near its end.
+- Give the full promo fields, plus "change": the one thing this version changes compared with the original."""
+
+EDITOR_SCHEMA = """{"moments": [{"moment": "M01", "versions": [{
+  "change": "sinker",
+  "title": "short internal name",
+  "segments": [{"start": "E03L012", "end": "E03L036"}],
+  "engine": "explosive",
+  "hook_ref": "E03L012",
+  "hook": "what the viewer sees and hears in the first 3 seconds",
+  "cliffhanger_ref": "E03L036",
+  "cliffhanger": "the unresolved moment the promo cuts on",
+  "sinker_question": "the one question the viewer is left needing answered",
+  "sinker_answers": ["a believable answer", "another believable answer"],
+  "why": "one line on why this version should work better",
+  "spoiler_risk": "low"
+}]}]}
+change is one of "hook", "sinker", "length", "structure" (or "refine" when asked to improve a version)."""
+
+
+def editor_user(moments: list[tuple[str, str, str, str]], n_versions: int) -> str:
+    """moments: (moment id, scene text with block ids, original promo as JSON, cold-viewer notes)."""
+    body = "\n\n".join(f"## MOMENT {moment_id}\nSCENE:\n{scene}\n\nORIGINAL PROMO:\n{original}\n\n"
+                       f"COLD VIEWER NOTES: {notes}" for moment_id, scene, original, notes in moments)
+    return f"""{body}
+
+For EACH moment, write {n_versions} new versions. Each version changes ONE thing compared with the original, and the
+versions should change different things:
+- "hook": open on a different, stronger block;
+- "sinker": end on a different block, usually cutting earlier at a stronger open question;
+- "length": a tighter (about 25 s) or fuller (about 50 s) cut;
+- "structure": a cold open (a later moment first, then the build-up), or join 2-3 moments.
+Reply with JSON only, in exactly this shape:
+{EDITOR_SCHEMA}"""
+
+
+def refine_user(moments: list[tuple[str, str, str, str]]) -> str:
+    """moments: (moment id, scene text, current best version as JSON, weak spots found by the audience test)."""
+    body = "\n\n".join(f"## MOMENT {moment_id}\nSCENE:\n{scene}\n\nCURRENT BEST VERSION:\n{best}\n\n"
+                       f"AUDIENCE TEST: {notes}" for moment_id, scene, best, notes in moments)
+    return f"""{body}
+
+For EACH moment, write 1 improved version that fixes the weak spots the audience test found, keeping what works.
+Set "change" to "refine". Reply with JSON only, in exactly this shape:
+{EDITOR_SCHEMA}"""
+
+
+PROMPT_VERSION = "+".join([FINDER_VERSION, SCREEN_VERSION, EDITOR_VERSION, AUDIENCE_VERSION])
