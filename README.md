@@ -1,13 +1,9 @@
 # Promo Finder
 
-<h1 align="center">
-  <a href="https://promo-finder-nrk.streamlit.app/">▶ Open the live site: promo-finder-nrk.streamlit.app</a>
+<h2 align="center">
+  <a href="https://promo-finder-nrk.streamlit.app/"> Deployed webapp and demo </a>
 </h1>
 
-<p align="center">
-  <b>Start here.</b> What it is, how it works, the results on the 50-episode pack, and an
-  <a href="https://promo-finder-nrk.streamlit.app/demo">animated demo</a> of the tool turning four episodes into a promo.
-</p>
 
 <p align="center">
   <a href="https://promo-finder-nrk.streamlit.app/">
@@ -25,7 +21,6 @@
 
 Reads a folder of timestamped microdrama screenplays and returns ranked 20–60 s promo clips for TikTok, Reels and
 Shorts. For each clip you get the episode and exact start/end of every segment, the hook, the cliffhanger, and why it works.
-Built for Kuku's AI Generalist assignment (Problem 1). By Nithish Ravikkumar (23123028).
 
 **Showcase site:** [promo-finder-nrk.streamlit.app](https://promo-finder-nrk.streamlit.app/) (code in
 [`showcase/`](showcase/README.md); run it locally from this folder with
