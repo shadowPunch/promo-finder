@@ -57,7 +57,7 @@ hr { border-color: var(--rule) !important; }
 
 /* plain card */
 .pf-card { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: 1.1rem 1.25rem;
-           min-height: 14rem; }
+           min-height: 17rem; }
 .pf-card h4 { margin: 0 0 .4rem; font-size: 1.15rem; }
 .pf-card p { margin: 0; color: var(--ink); line-height: 1.55; }
 .pf-card .pf-num { font-family: var(--serif); color: var(--red); font-size: .95rem; font-weight: 600; }

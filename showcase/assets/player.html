@@ -273,7 +273,7 @@ const STAGES = [
   ["Check", () => "Code checks every rule. The best promo from each episode goes on to testing.", check],
   ["Versions", () => "An AI editor re-cuts each moment, one change per version. Code throws out cuts that break the rules.", versions],
   ["Audience", () => "Two simulated viewers react line by line; code turns who keeps watching into a score out of 100.", audience],
-  ["Duels", () => "The viewers compare every pair of cuts, in both orders, and pick the one they'd keep watching.", duels],
+  ["Compare", () => "The viewers compare every pair of cuts, in both orders, and pick the one they'd keep watching.", duels],
   ["Promo", () => "The winning cut, as a viewer meets it on their phone.", promo],
 ];
 
@@ -473,7 +473,7 @@ async function audience(root) {
 
 async function duels(root) {
   const layout = el("div", "duels"), list = el("div", "dlist"), tally = el("div", "tally");
-  add(tally, el("p", "label", "Share of duels won"));
+  add(tally, el("p", "label", "Share of comparisons won"));
   const bars = {}, won = {}, played = {};
   for (const v of TOP.versions) {
     const row = el("div", "trow"), track = el("div", "track"), fill = el("div", "fill"), val = el("span", "v", "–");
@@ -483,7 +483,7 @@ async function duels(root) {
   }
   const crown = el("div", "crown");
   tally.appendChild(crown);
-  add(root, el("p", "label", `${TOP.id} · ${momentTitle(TOP)} · ${TOP.duels.length} duels`), add(layout, list, tally));
+  add(root, el("p", "label", `${TOP.id} · ${momentTitle(TOP)} · ${TOP.duels.length} comparisons`), add(layout, list, tally));
   for (const [i, d] of TOP.duels.entries()) {
     const row = el("div", "drow fade-in"), pills = {};
     for (const [side, id] of [["X", d.x], ["Y", d.y]]) {
@@ -518,9 +518,9 @@ async function duels(root) {
   if (bars[TOP.winner]) bars[TOP.winner].row.classList.add("win");
   const quote = TOP.duels.find(d => d.pick_a === TOP.winner);
   add(crown, el("h4", null, `${winner.label} wins`),
-      el("p", null, `It won ${pct(winner.win_share)} of its duels (viewer A counts 65%, B 35%).`),
+      el("p", null, `It won ${pct(winner.win_share)} of its comparisons (viewer A counts 65%, B 35%).`),
       topScore !== winner ? el("p", "note", `${topScore.label} had the highest absolute score (${topScore.score.toFixed(1)}) `
-        + `but lost head to head. One absolute score is too noisy to pick a cut; duels decide.`) : null,
+        + `but lost the side-by-side comparisons. A single score is too noisy to pick a cut; comparisons decide.`) : null,
       quote ? el("blockquote", null, `"${quote.why}"`) : null);
   await wait(300);
   crown.classList.add("show");
@@ -542,7 +542,7 @@ async function promo(root) {
   [`${Math.round(P.duration_s)} s`, `Episode ${episodeOfMoment(TOP)}`, `${winner.label || ""} cut`, `run ${D.run.id}`]
     .forEach(t => add(chips, el("span", "chip", t)));
   add(stats, add(el("div"), el("b", null, P.score.toFixed(1)), el("span", null, "engagement score")),
-             add(el("div"), el("b", null, pct(P.win_share)), el("span", null, "of duels won")));
+             add(el("div"), el("b", null, pct(P.win_share)), el("span", null, "of comparisons won")));
   const guesses = el("ul");
   P.sinker_answers.forEach(a => add(guesses, el("li", null, a)));
   add(info, el("p", "label", "The winning cut"), el("h2", null, P.title), chips, stats,

@@ -6,10 +6,10 @@ A four-page Streamlit site that explains Promo Finder and replaces a recorded de
 
 | Page | What it shows |
 |---|---|
-| **Home** | What the tool does, the funnel on the 50-episode pack, the three steps |
-| **Methodology** | The pipeline (model steps vs code steps), the engagement score, why duels pick the winner, frameworks, limits |
-| **Outputs** | The submitted run (`155bsnqx`): funnel, which re-cuts win, trust checks, the posting slate, two promos in full, a link to download everything |
-| **Demo** | An animated replay of the real tool running on an artificial 4-episode show: scripts → promos found → rule checks → re-cuts → simulated audience → duels → the winning promo playing as captions on a phone |
+| **Home** | What the tool does, in three steps |
+| **Methodology** | The stages (model steps vs code steps), the engagement score, why cuts are compared side by side, model and cost, frameworks, weaknesses |
+| **Outputs** | The submitted run (`155bsnqx`): headline numbers, which re-cuts win, trust checks, the ranked promos, two promos in full, a link to download everything |
+| **Demo** | An animated replay of the real tool running on an artificial 4-episode show: scripts → promos found → rule checks → re-cuts → simulated audience → side-by-side comparisons → the winning promo playing as captions on a phone |
 
 Design brief: `docs/superpowers/specs/2026-11-09-showcase-site-design.md` (repo root).
 

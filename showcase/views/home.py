@@ -3,29 +3,24 @@ import streamlit as st
 import theme
 from loaders import data
 
-results = data("results.json")
-funnel = {f["label"]: f["value"] for f in results["funnel"]}
-links = results["links"]
+links = data("results.json")["links"]
 
 theme.label("Kuku AI Generalist assignment · Problem 1 · Nithish Ravikkumar (23123028)")
-st.html('<h1 class="pf-hero">From 50 scripts to the <em>10&nbsp;promos</em> worth posting.</h1>')
+st.html('<h1 class="pf-hero">From scripts to <em>promos</em></h1>')
 st.html('<p class="pf-lede">Promo Finder reads a microdrama\'s timestamped screenplays and finds the 20–60 second '
         'stretches that make a good promo: a hook in the first three seconds, a punch in the middle and an ending '
         'that leaves one question open. It re-cuts each strong moment, tests every cut on a simulated audience, '
-        'picks the best cut in head-to-head duels and hands an editor a ranked posting slate. No human labels.</p>')
-theme.stats([(str(funnel["promos proposed"]), "promos found in 50 episodes"),
-             (str(funnel["moments tested"]), "moments tested"),
-             (str(funnel["versions scored"]), "cuts scored by the audience"),
-             (str(funnel["head-to-head duels"]), "head-to-head duels"),
-             (str(funnel["promos to post"]), "promos to post")])
+        'picks the best cut through clip-by-clip comparisons and outputs a ranked list of recommended promos.</p>')
+st.write("")
 
 STEPS = [
-    ("01", "Find", ("An AI model reads ten episodes at a time and proposes promos by citing script block ids. Code "
-                   "checks every rule: length, hook within 3 seconds, clean cuts.")),
-    ("02", "Test", ("Each strong moment gets three re-cuts. Two simulated viewers react line by line, and code turns "
-                   "their reactions into an engagement score.")),
-    ("03", "Pick", ("The viewers compare cuts two at a time, in both orders. The cut that wins most duels goes into a "
-                   "70 / 20 / 10 posting slate.")),
+    ("01", "Find", ("An AI model reads the episodes, ten at a time, and suggests moments that could work as a promo. "
+                   "Then a few simple checks make sure each one is the right length, grabs you in the first three "
+                   "seconds and cuts cleanly.")),
+    ("02", "Test", ("Every strong moment gets three alternative cuts. Two simulated viewers watch each cut line by "
+                   "line, and how long they stay hooked becomes its engagement score.")),
+    ("03", "Pick", ("The viewers then look at the cuts two at a time and choose the one they would keep watching. "
+                   "The winners become a ranked list of promos worth posting.")),
 ]
 for col, (num, head, body) in zip(st.columns(3), STEPS):
     with col:
