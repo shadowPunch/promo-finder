@@ -4,7 +4,7 @@ import re
 from pathlib import Path
 from types import SimpleNamespace
 
-from promo_finder_v2.models import Candidate, Episode, Promo, Segment
+from promo_finder_v2.models import Candidate, ClipReaction, Engagement, Episode, Promo, Segment, ViewerScore
 from promo_finder_v2.parser import parse_show
 
 FIXTURE_SHOW = Path(__file__).parent / "fixtures" / "show"
@@ -90,3 +90,46 @@ def audience_reply(user: str, leave=(10, 20), need=(4, 3), emotion="shock", stre
                       "need_next": list(need_for(texts[clip_id]) if need_for else need),
                       "beats": [[line, emotion, strength, leave[0], leave[1]] for line in lines]})
     return json.dumps({"clips": clips})
+
+
+def make_engagement(score: float, engine: str | None = "explosive", b_score: float | None = None) -> Engagement:
+    def viewer(value: float) -> ViewerScore:
+        return ViewerScore(hook=0.5, completion=0.5, sinker=0.5, score=value, curve=[1.0, 0.5])
+
+    return Engagement(a=viewer(score), b=viewer(score if b_score is None else b_score), punch=0.5, engine=engine,
+                      spread=0.5, penalty=0.0, score=score)
+
+
+def score_promo(promo: Promo, episodes, need=(4, 3), emotion="shock", strength=2, leave=(10, 20)) -> Promo:
+    """Give a promo a simple uniform audience reaction and its engagement score."""
+    from promo_finder_v2 import engagement
+    from promo_finder_v2.transcript import clip_lines
+
+    lines = clip_lines(promo, episodes)
+    promo.reaction = ClipReaction(clip="C01", understood="x", question="q", next=[("a", 50), ("b", 50)],
+                                  need_next=need, beats=[(l.line, emotion, strength, *leave) for l in lines])
+    promo.engagement = engagement.score(lines, promo.reaction)
+    return promo
+
+
+FIXTURE_VERSIONS = {  # one valid alternative cut per fixture episode, for fake editor replies
+    1: {"versions": {"segments": [{"start": "E01L001", "end": "E01L008"}], "hook_ref": "E01L002",
+                     "cliffhanger_ref": "E01L008"},
+        "refine": {"segments": [{"start": "E01L002", "end": "E01L007"}], "hook_ref": "E01L002",
+                   "cliffhanger_ref": "E01L007"}},
+    2: {"versions": {"segments": [{"start": "E02L001", "end": "E02L005"}], "hook_ref": "E02L001",
+                     "cliffhanger_ref": "E02L005"},
+        "refine": {"segments": [{"start": "E02L002", "end": "E02L005"}], "hook_ref": "E02L002",
+                   "cliffhanger_ref": "E02L005"}},
+}
+
+
+def editor_reply(user: str) -> str:
+    """One valid version per moment in an editor prompt: a 'sinker' re-cut, or a 'refine' when asked to improve."""
+    refine = "write 1 improved version" in user
+    moments = []
+    for moment_id, episode in re.findall(r"## MOMENT (M\d+)\nSCENE:\n=== EPISODE (\d+) ===", user):
+        cut = FIXTURE_VERSIONS[int(episode)]["refine" if refine else "versions"]
+        version = make_candidate(**cut, change="refine" if refine else "sinker").model_dump()
+        moments.append({"moment": moment_id, "versions": [version]})
+    return json.dumps({"moments": moments})
