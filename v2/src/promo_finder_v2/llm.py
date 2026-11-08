@@ -134,7 +134,10 @@ class LLM:
         for attempt in range(1, max_attempts + 1):
             if self.budget:
                 self.budget.check(tag)
-            text = self._call(messages)
+            try:
+                text = self._call(messages)
+            except Exception as err:  # network, quota, timeout or gateway error: fail this call, not the whole run
+                raise LLMError(f"{tag}: model call failed: {err}") from err
             self.log.append({"tag": tag, "key": key, "cached": False, "attempt": attempt, "text": text})
             try:
                 result = schema.model_validate(extract_json(text))
