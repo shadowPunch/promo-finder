@@ -62,6 +62,10 @@ class ClipReaction(BaseModel):
     need_next: tuple[NeedNext, NeedNext]  # viewer A, viewer B
 
 
+class RawAudience(BaseModel):
+    clips: list[dict]  # each clip is validated separately against its own line ids
+
+
 # --- Parsed screenplay ------------------------------------------------------
 
 @dataclass(frozen=True)
@@ -131,6 +135,10 @@ class Promo:
     candidate: Candidate
     segments: list[Segment]
     fixes: list[str] = field(default_factory=list)  # automatic repairs applied by the validator
+    moment_id: str | None = None          # set when the promo is a version of a shortlisted moment
+    reaction: ClipReaction | None = None  # simulated audience
+    engagement: Engagement | None = None
+    slate_role: str | None = None         # "proven", "challenger" or "wild card"
     rule_score: float = 0.0
     verdict: Verdict | None = None
     rank: int | None = None

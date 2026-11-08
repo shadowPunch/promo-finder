@@ -1,6 +1,5 @@
 """Prompt templates. Bump PROMPT_VERSION whenever wording changes, so W&B runs stay comparable."""
 
-PROMPT_VERSION = "finder-v1+judge-v1"
 
 FINDER_SYSTEM = """You are a senior promo editor for vertical microdrama apps such as ReelShort and DramaBox.
 You read timestamped screenplays and choose moments to cut into 20-60 second promo clips for TikTok, Instagram Reels and
@@ -78,3 +77,54 @@ def judge_user(clips: list[tuple[str, str]]) -> str:
 
 For EVERY clip above, reply with JSON only, in exactly this shape:
 {JUDGE_SCHEMA}"""
+
+
+AUDIENCE_VERSION = "audience-v1"
+
+VIEWER_A = ("Viewer A: a woman aged 25-44 who scrolls Instagram Reels in short breaks and enjoys romance and revenge "
+            "drama.")
+VIEWER_B = ("Viewer B: someone who doesn't usually watch romance dramas. They only stop scrolling for something "
+            "explosive, funny, genuinely puzzling or shocking.")
+
+AUDIENCE_SYSTEM = f"""You simulate how two real viewers react, moment by moment, to short vertical video clips while
+scrolling Reels with the sound on. Neither has seen this show before.
+{VIEWER_A}
+{VIEWER_B}
+
+Each clip is written as numbered screenplay lines (L01, L02, ...) with times in seconds from the start of the clip.
+"--- CUT ---" marks a jump to another moment. React only to what is on the page.
+
+For every line, give:
+- the main emotion it causes: shock, anger, amusement, intrigue, tension, joy, sadness, boredom, confusion or none;
+- its strength: 0 (none) to 3 (very strong);
+- for each viewer, the chance in percent (0-100) that they scroll away during this line, if still watching.
+Be realistic: most clips lose many viewers in the first seconds, a slow or confusing line loses viewers, and a strong
+surprise or conflict keeps them.
+
+At the end of each clip, say what the viewer thinks is happening, the question left in their head, 2-4 different
+things they imagine could happen next with a likelihood for each, and how badly each viewer needs to know what happens
+next (1 = not at all, 5 = desperately)."""
+
+AUDIENCE_SCHEMA = """{"clips": [{
+  "clip": "C01",
+  "understood": "one sentence: what is happening and who is against whom",
+  "beats": [["L01", "shock", 3, 10, 30], ["L02", "anger", 2, 5, 12]],
+  "question": "the question left in the viewer's head",
+  "next": [["what might happen next", 40], ["another possibility", 35], ["a third one", 25]],
+  "need_next": [5, 3]
+}]}
+"beats" has exactly one entry per line, in order: [line id, emotion, strength 0-3, % viewer A scrolls away,
+% viewer B scrolls away]. "need_next" is [viewer A, viewer B]."""
+
+
+def audience_user(clips: list[tuple[str, str]], retry: bool = False) -> str:
+    body = "\n\n".join(f"### CLIP {clip_id}\n{text}" for clip_id, text in clips)
+    reminder = ("\nLast time some clips came back incomplete. Every clip needs one beat for every line, from L01 to "
+                "its last line, each exactly once.\n") if retry else ""
+    return f"""{body}
+{reminder}
+For EVERY clip above, reply with JSON only, in exactly this shape:
+{AUDIENCE_SCHEMA}"""
+
+
+PROMPT_VERSION = "finder-v1+judge-v1+" + AUDIENCE_VERSION

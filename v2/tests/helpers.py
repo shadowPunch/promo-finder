@@ -1,4 +1,6 @@
 """Shared test builders. pytest puts tests/ on sys.path, so tests can `from helpers import ...`."""
+import json
+import re
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -64,3 +66,27 @@ def fake_llm(replies, cache_dir: Path):
 
     cfg = LLMConfig(model="fake-model", base_url="http://fake", api_key="test")
     return LLM(cfg, client=FakeClient(replies), cache_dir=cache_dir)
+
+
+def clip_blocks(user: str) -> dict[str, str]:
+    """Clip id -> its text, read from a screen or audience prompt."""
+    return {chunk.split("\n", 1)[0].strip(): chunk for chunk in user.split("### CLIP ")[1:]}
+
+
+def clips_in(user: str) -> dict[str, list[str]]:
+    """Clip id -> its line ids (L01, L02, ...), read from an audience prompt."""
+    return {clip_id: re.findall(r"^(L\d{2}) \[", text, re.M) for clip_id, text in clip_blocks(user).items()}
+
+
+def audience_reply(user: str, leave=(10, 20), need=(4, 3), emotion="shock", strength=2, skip=(), need_for=None) -> str:
+    """A valid audience reply for every clip in the prompt. `need_for(clip_text)` can vary need_next per clip;
+    clips in `skip` are left out."""
+    texts = clip_blocks(user)
+    clips = []
+    for clip_id, lines in clips_in(user).items():
+        if clip_id in skip:
+            continue
+        clips.append({"clip": clip_id, "understood": "x", "question": "q", "next": [["a", 50], ["b", 50]],
+                      "need_next": list(need_for(texts[clip_id]) if need_for else need),
+                      "beats": [[line, emotion, strength, leave[0], leave[1]] for line in lines]})
+    return json.dumps({"clips": clips})
