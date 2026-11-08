@@ -4,6 +4,11 @@ Reads a folder of timestamped microdrama screenplays and returns ranked 20–60 
 Shorts. For each clip you get the episode and exact start/end of every segment, the hook, the cliffhanger, and why it works.
 Built for Kuku's AI Generalist assignment (Problem 1).
 
+**Showcase site:** a four-page Streamlit site (Home, Methodology, Outputs, and an animated Demo of the tool turning four
+episodes into a promo) lives in [`showcase/`](showcase/README.md). Run it from this folder with
+`env -u PYTHONPATH uv run --project v2 streamlit run showcase/streamlit_app.py`. **v2** (engagement tournament with
+head-to-head duels) is in [`v2/`](v2/README.md); its submitted run's files are in `v2/results/155bsnqx/`.
+
 ## Quick start
 
 Needs Python 3.12 via [uv](https://docs.astral.sh/uv/), and for the default backend the

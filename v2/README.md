@@ -90,12 +90,18 @@ Model and provider come from `.env` (`LLM_*`; `JUDGE_*` overrides the screen and
 | `slate.py` | 70/20/10 posting slate |
 | `budget.py`, `llm.py`, `codex_client.py` | spending cap, model client, Codex backend |
 | `report.py`, `tracking.py`, `pipeline.py`, `cli.py` | outputs, W&B, the run, the command |
+| `site_data.py` | `export-site`: turns a run folder into the showcase site's JSON (`../showcase/data/`) |
 
 ## Outputs
 
 `outputs/<show>/<run_id>/`: `report.md` (slate first, then each winner with its score parts, drop-off sparklines,
 AIDA timeline, version history with duel win shares, and transcript), `promos.json/csv` (winners), `versions.json`
 (every version with per-second curves, and every duel with both picks and the reason), `screened.json`, `rejected.json`, `raw_llm.jsonl`, `run_meta.json`.
+
+The submitted run's shareable files (no scripts, no raw model log) are committed in `results/155bsnqx/`. To refresh
+the showcase site's data from a run: `uv run promo-finder-v2 export-site --kind results|demo --run <run folder>
+--input <episode folder> --out ../showcase/data/<results|demo>.json` (see `../showcase/README.md`). The demo uses an
+artificial show in `examples/demo-show/`.
 
 ## Business frameworks behind the design
 

@@ -13,7 +13,7 @@ st.title("Watch four episodes become a promo")
 st.write(f"*{demo['show']['title']}* is a four-episode microdrama written for this demo, because the Kuku scripts "
          f"are confidential. Everything the player shows is the tool's real output on it: run `{run['id']}`, "
          f"{run['calls']} model calls, about ${run['cost_usd']:.2f}. Press **Play**, or jump to any step.")
-components.html(build(demo, autoplay="autoplay" in st.query_params), height=880, scrolling=True)
+components.html(build(demo, autoplay="autoplay" in st.query_params), height=860, scrolling=True)
 
 with st.expander("Read the four scripts"):
     for ep in demo["show"]["episodes"]:

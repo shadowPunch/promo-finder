@@ -49,6 +49,9 @@ hr { border-color: var(--rule) !important; }
           border-radius: 3px; padding: .05rem .4rem; margin-left: .55rem; vertical-align: 3px; }
 .pf-tag.model { border-color: var(--red); color: var(--red); }
 
+/* inline code in ink on a paper tint, not Streamlit's default green */
+[data-testid="stMarkdownContainer"] code { color: var(--ink); background: #F0EBE1; }
+
 /* Streamlit metrics in the headline serif */
 [data-testid="stMetricValue"] { font-family: var(--serif); font-weight: 600; }
 

@@ -12,18 +12,18 @@ st.write("Every step that needs judgement goes to an AI model; every rule, times
 
 STEPS = [
     ("Parse", "code", "Screenplays become timed blocks: dialogue, action, camera and sound cues."),
-    ("Find", "model", "Ten episodes per call. Each promo names its engine (explosive, funny, puzzling or shocking) "
+    ("Find", "model", ("Ten episodes per call. Each promo names its engine (explosive, funny, puzzling or shocking) "
                       "and a sinker: one open question with 2–4 believable answers that the show really answers "
-                      "later."),
+                      "later.")),
     ("Rule checks", "code", "20–60 seconds, hook within 3 seconds, cuts snapped to block edges, at most 3 segments."),
     ("Quick screen", "model", "A cold viewer rates every valid promo; the best one per episode is shortlisted."),
-    ("Re-cut", "model", "An editor writes three versions of each moment, one change each: a new hook, a new ending, "
-                        "a new length or a new structure."),
-    ("Simulated audience", "model", "Two blind viewers react line by line: the emotion, how strong it is, who scrolls "
-                                    "away, and what they imagine happens next."),
+    ("Re-cut", "model", ("An editor writes three versions of each moment, one change each: a new hook, a new ending, "
+                        "a new length or a new structure.")),
+    ("Simulated audience", "model", ("Two blind viewers react line by line: the emotion, how strong it is, who scrolls "
+                                    "away, and what they imagine happens next.")),
     ("Engagement score", "code", "Hook, completion, punch and sinker, 25 points each, minus up to 15 for confusion."),
-    ("Head-to-head duels", "model", "Every pair of cuts of a moment, shown in both orders in separate calls. The cut "
-                                    "that wins the most duels is the moment's winner."),
+    ("Head-to-head duels", "model", ("Every pair of cuts of a moment, shown in both orders in separate calls. The cut "
+                                    "that wins the most duels is the moment's winner.")),
     ("Posting slate", "code", "70 / 20 / 10: proven winners, wild cards for new audiences, one experiment."),
 ]
 steps = "".join(f'<div class="pf-step {kind}"><b>{theme.esc(name)}</b><span class="pf-tag {kind}">{kind}</span>'

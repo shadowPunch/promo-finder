@@ -20,12 +20,12 @@ theme.stats([(str(funnel["promos proposed"]), "promos found in 50 episodes"),
              (str(funnel["promos to post"]), "promos to post")])
 
 STEPS = [
-    ("01", "Find", "An AI model reads ten episodes at a time and proposes promos by citing script block ids. Code "
-                   "checks every rule: length, hook within 3 seconds, clean cuts."),
-    ("02", "Test", "Each strong moment gets three re-cuts. Two simulated viewers react line by line, and code turns "
-                   "their reactions into an engagement score."),
-    ("03", "Pick", "The viewers compare cuts two at a time, in both orders. The cut that wins most duels goes into a "
-                   "70 / 20 / 10 posting slate."),
+    ("01", "Find", ("An AI model reads ten episodes at a time and proposes promos by citing script block ids. Code "
+                   "checks every rule: length, hook within 3 seconds, clean cuts.")),
+    ("02", "Test", ("Each strong moment gets three re-cuts. Two simulated viewers react line by line, and code turns "
+                   "their reactions into an engagement score.")),
+    ("03", "Pick", ("The viewers compare cuts two at a time, in both orders. The cut that wins most duels goes into a "
+                   "70 / 20 / 10 posting slate.")),
 ]
 for col, (num, head, body) in zip(st.columns(3), STEPS):
     with col:
