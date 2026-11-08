@@ -45,8 +45,15 @@ def main(argv: list[str] | None = None) -> int:
     e.add_argument("--run", required=True, type=Path, help="run folder, e.g. outputs/<show>/<run_id>")
     e.add_argument("--labels", type=Path, help="labels CSV (default: <run>/labels.csv)")
 
+    x = sub.add_parser("export-site", help="write a run's data for the showcase site (showcase/data/*.json)")
+    x.add_argument("--kind", required=True, choices=["results", "demo"])
+    x.add_argument("--run", required=True, type=Path, help="run folder, e.g. outputs/<show>/<run_id>")
+    x.add_argument("--input", required=True, type=Path, help="the episode folder the run used")
+    x.add_argument("--out", required=True, type=Path, help="e.g. showcase/data/demo.json")
+    x.add_argument("--title", default="", help="show title shown in the demo")
+
     args = parser.parse_args(argv)
-    return _run(args) if args.cmd == "run" else _eval(args)
+    return {"run": _run, "eval": _eval, "export-site": _export_site}[args.cmd](args)
 
 
 def _run(args: argparse.Namespace) -> int:
@@ -88,6 +95,18 @@ def _eval(args: argparse.Namespace) -> int:
     tracker.finish()
     (args.run / "eval.json").write_text(json.dumps(metrics, indent=2))
     print(json.dumps(metrics, indent=2))
+    return 0
+
+
+def _export_site(args: argparse.Namespace) -> int:
+    from .parser import parse_show
+    from .site_data import demo_data, load_run, results_data, write_json
+
+    run_data = load_run(args.run)
+    episodes = {e.number: e for e in parse_show(args.input)}
+    data = results_data(run_data, episodes) if args.kind == "results" else demo_data(run_data, episodes, args.title)
+    write_json(data, args.out)
+    print(f"Wrote {args.out}")
     return 0
 
 

@@ -4,7 +4,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
-from .models import Block, Episode, Promo
+from .models import Block, Episode, Promo, Segment
 from .timecode import format_tc
 
 _REF = re.compile(r"^E(\d+)L(\d+)$")
@@ -66,9 +66,14 @@ class ClipLine:
 
 
 def clip_lines(promo: Promo, episodes: dict[int, Episode]) -> list[ClipLine]:
+    return segment_lines(promo.segments, episodes)
+
+
+def segment_lines(segments: list[Segment], episodes: dict[int, Episode]) -> list[ClipLine]:
+    """The blocks of a cut as a viewer meets them: numbered, timed from the clip start."""
     lines: list[ClipLine] = []
     offset = 0.0
-    for i, seg in enumerate(promo.segments):
+    for i, seg in enumerate(segments):
         for j, b in enumerate(blocks_between(episodes[seg.episode], seg.start, seg.end)):
             lines.append(ClipLine(
                 line=f"L{len(lines) + 1:02d}",
