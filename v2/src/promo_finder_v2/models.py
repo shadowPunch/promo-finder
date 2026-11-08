@@ -14,6 +14,8 @@ Strength = Annotated[int, Field(ge=0, le=3)]
 Percent = Annotated[int, Field(ge=0, le=100)]
 NeedNext = Annotated[int, Field(ge=1, le=5)]
 Likelihood = Annotated[float, Field(ge=0)]
+Engine = Literal["explosive", "funny", "puzzling", "shocking"]
+Change = Literal["original", "hook", "sinker", "length", "structure", "refine"]
 
 
 # --- LLM response schemas -------------------------------------------------
@@ -24,22 +26,23 @@ class SegmentRef(BaseModel):
 
 
 class Candidate(BaseModel):
-    """A promo as proposed by the finder LLM, pointing at blocks by id."""
+    """A promo as proposed by the finder or the editor, pointing at blocks by id."""
     title: str
     segments: list[SegmentRef] = Field(min_length=1, max_length=3)
     hook_ref: str
     hook: str
-    cliffhanger_ref: str
+    cliffhanger_ref: str          # the sinker block the promo ends on
     cliffhanger: str
+    sinker_question: str
+    sinker_answers: list[str] = Field(min_length=2, max_length=4)
+    engine: Engine
     why: str
-    hook_score: int = Field(ge=1, le=5)
-    cliffhanger_score: int = Field(ge=1, le=5)
-    standalone_score: int = Field(ge=1, le=5)
     spoiler_risk: Literal["low", "medium", "high"] = "low"
+    change: Change = "original"   # what an editor version changed
 
 
 class Verdict(BaseModel):
-    """The cold-viewer judge's read of one clip."""
+    """The quick screen's read of one clip (v1's cold-viewer judge)."""
     clip: str
     understood: str
     stops_scroll: int = Field(ge=1, le=5)
@@ -48,7 +51,7 @@ class Verdict(BaseModel):
     overall: int = Field(ge=1, le=5)
 
 
-class JudgeResult(BaseModel):
+class ScreenResult(BaseModel):
     verdicts: list[Verdict]
 
 
@@ -136,20 +139,15 @@ class Promo:
     segments: list[Segment]
     fixes: list[str] = field(default_factory=list)  # automatic repairs applied by the validator
     moment_id: str | None = None          # set when the promo is a version of a shortlisted moment
+    verdict: Verdict | None = None        # quick screen
     reaction: ClipReaction | None = None  # simulated audience
     engagement: Engagement | None = None
     slate_role: str | None = None         # "proven", "challenger" or "wild card"
-    rule_score: float = 0.0
-    verdict: Verdict | None = None
     rank: int | None = None
 
     @property
     def duration(self) -> float:
         return sum(s.duration for s in self.segments)
-
-    @property
-    def final_score(self) -> float:
-        return self.rule_score + (self.verdict.overall if self.verdict else 0)
 
 
 @dataclass

@@ -11,8 +11,8 @@ from .timecode import format_tc
 from .transcript import render_promo
 
 REPORT_TRANSCRIPTS = 20  # full clip transcripts only for the top N, to keep the report readable
-CSV_COLUMNS = ["rank", "promo_id", "title", "duration_s", "segments", "hook", "cliffhanger", "why",
-               "rule_score", "judge_score", "final_score"]
+CSV_COLUMNS = ["rank", "promo_id", "title", "duration_s", "segments", "engine", "hook", "sinker_question", "why",
+               "screen"]
 
 
 def segments_text(p: Promo) -> str:
@@ -27,15 +27,14 @@ def promo_record(p: Promo) -> dict:
         "title": c.title,
         "duration_s": round(p.duration, 2),
         "segments": [{"episode": s.episode, "start": format_tc(s.start), "end": format_tc(s.end)} for s in p.segments],
+        "engine": c.engine,
         "hook": c.hook,
-        "cliffhanger": c.cliffhanger,
+        "sinker": c.cliffhanger,
+        "sinker_question": c.sinker_question,
+        "sinker_answers": c.sinker_answers,
         "why": c.why,
-        "scores": {
-            "hook": c.hook_score, "cliffhanger": c.cliffhanger_score, "standalone": c.standalone_score,
-            "spoiler_risk": c.spoiler_risk, "rule": p.rule_score,
-            "judge": p.verdict.overall if p.verdict else None, "final": round(p.final_score, 3),
-        },
-        "cold_viewer": p.verdict.model_dump() if p.verdict else None,
+        "spoiler_risk": c.spoiler_risk,
+        "screen": p.verdict.model_dump() if p.verdict else None,
         "auto_fixes": p.fixes,
     }
 
@@ -49,8 +48,8 @@ def write_outputs(out_dir: Path, ranked: list[Promo], rejections: list[Rejection
         writer = csv.writer(f)
         writer.writerow(CSV_COLUMNS)
         for p, r in zip(ranked, records):
-            writer.writerow([r["rank"], r["promo_id"], r["title"], r["duration_s"], segments_text(p), r["hook"],
-                             r["cliffhanger"], r["why"], r["scores"]["rule"], r["scores"]["judge"], r["scores"]["final"]])
+            writer.writerow([r["rank"], r["promo_id"], r["title"], r["duration_s"], segments_text(p), r["engine"],
+                             r["hook"], r["sinker_question"], r["why"], p.verdict.overall if p.verdict else None])
     _write_json(out_dir / "rejected.json", [{"reason": r.reason, "candidate": r.raw} for r in rejections])
     with (out_dir / "raw_llm.jsonl").open("w", encoding="utf-8") as f:
         f.writelines(json.dumps(entry, ensure_ascii=False) + "\n" for entry in raw_log)
@@ -64,18 +63,20 @@ def _write_json(path: Path, data) -> None:
 
 def _markdown(ranked: list[Promo], episodes: dict[int, Episode], meta: dict) -> str:
     lines = [f"# Promo picks: {meta.get('show', '')}", "",
-             f"Run `{meta.get('run_id')}` · model `{meta.get('model')}` · judge `{meta.get('judge_model')}` · "
+             f"Run `{meta.get('run_id')}` · model `{meta.get('model')}` · screen `{meta.get('judge_model')}` · "
              f"{len(ranked)} promos", ""]
     for p in ranked:
         c = p.candidate
-        lines += [f"## #{p.rank} {c.title} ({p.duration:.1f}s, score {p.final_score:.2f})", "",
+        screen = f"screen {p.verdict.overall}/5" if p.verdict else "not screened"
+        lines += [f"## #{p.rank} {c.title} ({p.duration:.1f}s, {screen})", "",
                   f"- **Segments:** {segments_text(p)}",
+                  f"- **Engine:** {c.engine}",
                   f"- **Hook:** {c.hook}",
-                  f"- **Cliffhanger:** {c.cliffhanger}",
+                  f"- **Sinker:** {c.sinker_question}",
                   f"- **Why:** {c.why}"]
         if p.verdict:
             unclear = f" Unclear: {p.verdict.confusing}" if p.verdict.confusing else ""
-            lines.append(f"- **Cold viewer ({p.verdict.overall}/5):** {p.verdict.understood}{unclear}")
+            lines.append(f"- **Cold viewer:** {p.verdict.understood}{unclear}")
         if p.fixes:
             lines.append(f"- **Auto-fixes:** {', '.join(p.fixes)}")
         if p.rank and p.rank <= REPORT_TRANSCRIPTS:

@@ -37,7 +37,7 @@ def run_finder(files, settings: Settings) -> RunResult:
         show_dir.mkdir()
         for f in files:
             (show_dir / f.name).write_bytes(f.getvalue())
-        return run(show_dir, Path("outputs"), LLM(cfg), LLM(judge_cfg) if settings.judge_top else None, settings,
+        return run(show_dir, Path("outputs"), LLM(cfg), LLM(judge_cfg), settings,
                    tags=["app"], progress=lambda i, n, tag: bar.progress(i / n, text=f"{tag} ({i}/{n})"))
 
 
@@ -52,7 +52,7 @@ def review(result: RunResult) -> None:
     for p in result.ranked[:REVIEW_LIMIT]:
         c = p.candidate
         with st.expander(f"#{p.rank} · {c.title} · {p.duration:.0f}s · {segments_text(p)}", expanded=p.rank <= 3):
-            st.markdown(f"**Hook:** {c.hook}  \n**Cliffhanger:** {c.cliffhanger}  \n**Why:** {c.why}")
+            st.markdown(f"**Engine:** {c.engine}  \n**Hook:** {c.hook}  \n**Sinker:** {c.sinker_question}")
             if p.verdict:
                 st.markdown(f"**Cold viewer ({p.verdict.overall}/5):** {p.verdict.understood}")
             st.code(render_promo(p, result.episodes), language=None)
@@ -75,7 +75,7 @@ def main() -> None:
         settings = Settings(
             per_call=st.slider("Episodes per LLM call", 1, 10, 5),
             per_episode=st.slider("Candidates per episode", 1, 4, 2),
-            judge_top=st.slider("Cold-viewer judge on top N (0 = off)", 0, 25, 15),
+            shortlist=st.slider("Moments for the tournament", 2, 20, 12),
         )
     files = st.file_uploader("Screenplay .txt files (one per episode)", type="txt", accept_multiple_files=True)
     if files and st.button("Find promos", type="primary"):

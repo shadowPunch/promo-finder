@@ -23,10 +23,10 @@ def make_candidate(**overrides) -> Candidate:
         "hook": "The stepmother slaps Mara in front of the guests",
         "cliffhanger_ref": "E01L007",
         "cliffhanger": "Mara hints she knows the stepmother's secret",
+        "sinker_question": "What does Mara know about the stepmother?",
+        "sinker_answers": ["She is not who she claims", "She stole the ring", "She caused a death"],
+        "engine": "explosive",
         "why": "Public slap, then a threat we need explained",
-        "hook_score": 5,
-        "cliffhanger_score": 4,
-        "standalone_score": 4,
         "spoiler_risk": "low",
     }
     data.update(overrides)

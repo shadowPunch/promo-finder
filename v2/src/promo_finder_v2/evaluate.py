@@ -1,5 +1,5 @@
 """Compare a run's ranking with human labels: how many top picks an editor would post, why the rest fail,
-and whether the automatic cold-viewer judge agrees with the human."""
+and whether the engagement score agrees with the human."""
 from __future__ import annotations
 
 import csv
@@ -47,10 +47,11 @@ def evaluate(run_dir: Path, labels_path: Path) -> dict:
     labels = load_labels(labels_path)
     labeled = [(p, labels[p["promo_id"]]) for p in promos if p["promo_id"] in labels]  # rank order
     ranked_labels = [label["label"] for _, label in labeled]
-    judge_by_label: dict[str, list[int]] = defaultdict(list)
+    engagement_by_label: dict[str, list[float]] = defaultdict(list)
     for p, label in labeled:
-        if p["scores"]["judge"] is not None:
-            judge_by_label[label["label"]].append(p["scores"]["judge"])
+        score = (p.get("engagement") or {}).get("score")
+        if score is not None:
+            engagement_by_label[label["label"]].append(score)
     return {
         "labeled": len(labeled),
         **{f"precision@{k}_post": precision_at(ranked_labels, k, ("post",)) for k in (5, 10, 20)},
@@ -58,5 +59,5 @@ def evaluate(run_dir: Path, labels_path: Path) -> dict:
         "label_counts": dict(Counter(ranked_labels)),
         "reject_reasons": dict(Counter((label["reason"] or "").strip() or "unspecified"
                                        for _, label in labeled if label["label"] == "reject")),
-        "mean_judge_score_by_label": {k: round(mean(v), 2) for k, v in judge_by_label.items()},
+        "mean_engagement_by_label": {k: round(mean(v), 2) for k, v in engagement_by_label.items()},
     }

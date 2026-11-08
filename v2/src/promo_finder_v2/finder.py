@@ -11,8 +11,9 @@ from typing import Callable
 from pydantic import BaseModel, ValidationError
 
 from . import prompts
+from .budget import BudgetExceeded
 from .llm import LLM, LLMError
-from .models import Candidate, Episode, Rejection
+from .models import Candidate, Episode, Promo, Rejection
 from .transcript import render_episode
 
 log = logging.getLogger(__name__)
@@ -48,7 +49,7 @@ def find_candidates(
         user = prompts.finder_user(context, [render_episode(e) for e in group], per_episode * len(group))
         try:
             batch = llm.complete_json(prompts.FINDER_SYSTEM, user, RawBatch, tag=tag)
-        except LLMError as err:
+        except (LLMError, BudgetExceeded) as err:
             log.error("%s skipped: %s", tag, err)
             failed.append(tag)
             continue
@@ -63,3 +64,9 @@ def find_candidates(
         if on_batch:
             on_batch(i, len(groups), tag, found)
     return candidates, rejections, failed
+
+
+def uncovered(episodes: list[Episode], promos: list[Promo]) -> list[int]:
+    """Episode numbers that no valid promo uses (reported, never silently ignored)."""
+    covered = {s.episode for p in promos for s in p.segments}
+    return [e.number for e in episodes if e.number not in covered]

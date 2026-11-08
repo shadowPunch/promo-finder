@@ -27,7 +27,8 @@ def main(argv: list[str] | None = None) -> int:
     r.add_argument("--out", default=Path("outputs"), type=Path)
     r.add_argument("--per-call", type=int, default=5, help="episodes per finder LLM call")
     r.add_argument("--per-episode", type=int, default=2, help="candidates requested per episode")
-    r.add_argument("--judge-top", type=int, default=15, help="promos for the cold-viewer judge; 0 disables it")
+    r.add_argument("--screen-batch", type=int, default=30, help="promos per quick-screen call")
+    r.add_argument("--shortlist", type=int, default=12, help="moments that go on to the tournament")
     r.add_argument("--max-episodes", type=int, help="only the first N episodes (quick dev runs)")
     r.add_argument("--no-cache", action="store_true", help="ignore cached LLM replies")
     r.add_argument("--tag", action="append", default=[], help="W&B tag (repeatable), e.g. dev, full-pack")
@@ -44,16 +45,15 @@ def _run(args: argparse.Namespace) -> int:
     cfg = LLMConfig.from_env("LLM")
     judge_cfg = LLMConfig.from_env("JUDGE", fallback=cfg)
     cache = None if args.no_cache else Path(".cache/llm")
-    settings = Settings(per_call=args.per_call, per_episode=args.per_episode, judge_top=args.judge_top,
-                        max_episodes=args.max_episodes)
-    judge_llm = LLM(judge_cfg, cache_dir=cache) if args.judge_top else None
-    result = run(args.input, args.out, LLM(cfg, cache_dir=cache), judge_llm, settings, tags=args.tag)
-
+    settings = Settings(per_call=args.per_call, per_episode=args.per_episode, screen_batch=args.screen_batch,
+                        shortlist=args.shortlist, max_episodes=args.max_episodes)
+    result = run(args.input, args.out, LLM(cfg, cache_dir=cache), LLM(judge_cfg, cache_dir=cache), settings,
+                 tags=args.tag)
     counts = result.meta["counts"]
-    print(f"\n{counts['proposed']} proposed -> {counts['valid']} valid -> {counts['unique']} unique "
+    print(f"\n{counts['proposed']} proposed -> {counts['valid']} valid -> {counts['shortlisted']} shortlisted "
           f"(rejected: {counts['rejected_by_reason']})")
     for p in result.ranked[:5]:
-        print(f"  #{p.rank} [{p.final_score:.2f}] {segments_text(p)}  {p.candidate.title}")
+        print(f"  #{p.rank} {segments_text(p)}  {p.candidate.title}")
     print(f"Outputs: {result.out_dir}")
     if result.meta["wandb_url"]:
         print(f"W&B: {result.meta['wandb_url']}")

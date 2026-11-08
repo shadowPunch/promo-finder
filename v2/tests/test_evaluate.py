@@ -7,8 +7,8 @@ from promo_finder_v2.evaluate import evaluate, write_template
 
 
 def _write_run(run_dir):
-    promos = [{"rank": i, "promo_id": f"p{i}", "title": f"T{i}", "scores": {"judge": judge}}
-              for i, judge in [(1, 5), (2, 4), (3, 2), (4, None)]]
+    promos = [{"rank": i, "promo_id": f"p{i}", "title": f"T{i}", "engagement": {"score": score} if score else None}
+              for i, score in [(1, 80.0), (2, 60.0), (3, 20.0), (4, None)]]
     (run_dir / "promos.json").write_text(json.dumps(promos))
 
 
@@ -20,7 +20,7 @@ def test_writes_a_template_in_rank_order(tmp_path):
     assert rows[0]["label"] == ""
 
 
-def test_precision_reasons_and_judge_agreement(tmp_path):
+def test_precision_reasons_and_engagement_agreement(tmp_path):
     _write_run(tmp_path)
     labels = tmp_path / "labels.csv"
     labels.write_text("rank,promo_id,title,label,reason\n"
@@ -30,7 +30,7 @@ def test_precision_reasons_and_judge_agreement(tmp_path):
     assert metrics["precision@5_post"] == 0.5
     assert metrics["precision@5_post_or_maybe"] == 0.75
     assert metrics["reject_reasons"] == {"needs_context": 1}
-    assert metrics["mean_judge_score_by_label"] == {"post": 5.0, "maybe": 4.0, "reject": 2.0}
+    assert metrics["mean_engagement_by_label"] == {"post": 80.0, "maybe": 60.0, "reject": 20.0}
 
 
 def test_unknown_label_is_an_error(tmp_path):
