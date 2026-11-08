@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import re
+from dataclasses import dataclass
 
 from .models import Block, Episode, Promo
 from .timecode import format_tc
@@ -52,3 +53,38 @@ def render_promo(promo: Promo, episodes: dict[int, Episode]) -> str:
             lines.append(f"+{offset + b.start - seg.start:04.1f}s {_label(b)}: {b.text}")
         offset += seg.duration
     return "\n".join(lines)
+
+
+@dataclass(frozen=True)
+class ClipLine:
+    """One block as a viewer meets it: numbered, with times from the clip start."""
+    line: str          # "L01"
+    start: float
+    end: float
+    text: str          # "SPEAKER (Tone): words"
+    cut_before: bool   # first line after a cut
+
+
+def clip_lines(promo: Promo, episodes: dict[int, Episode]) -> list[ClipLine]:
+    lines: list[ClipLine] = []
+    offset = 0.0
+    for i, seg in enumerate(promo.segments):
+        for j, b in enumerate(blocks_between(episodes[seg.episode], seg.start, seg.end)):
+            lines.append(ClipLine(
+                line=f"L{len(lines) + 1:02d}",
+                start=round(offset + b.start - seg.start, 2),
+                end=round(offset + min(b.end, seg.end) - seg.start, 2),
+                text=f"{_label(b)}: {b.text}",
+                cut_before=i > 0 and j == 0,
+            ))
+        offset += seg.duration
+    return lines
+
+
+def render_clip(lines: list[ClipLine]) -> str:
+    out: list[str] = []
+    for line in lines:
+        if line.cut_before:
+            out.append("--- CUT ---")
+        out.append(f"{line.line} [+{line.start:04.1f}-{line.end:04.1f}] {line.text}")
+    return "\n".join(out)

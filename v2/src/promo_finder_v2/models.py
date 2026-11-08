@@ -4,9 +4,16 @@ Pydantic models describe what the LLM must return; dataclasses hold parsed and v
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Literal
+from typing import Annotated, Literal
 
 from pydantic import BaseModel, Field
+
+Emotion = Literal["shock", "anger", "amusement", "intrigue", "tension", "joy", "sadness", "boredom", "confusion",
+                  "none"]
+Strength = Annotated[int, Field(ge=0, le=3)]
+Percent = Annotated[int, Field(ge=0, le=100)]
+NeedNext = Annotated[int, Field(ge=1, le=5)]
+Likelihood = Annotated[float, Field(ge=0)]
 
 
 # --- LLM response schemas -------------------------------------------------
@@ -43,6 +50,16 @@ class Verdict(BaseModel):
 
 class JudgeResult(BaseModel):
     verdicts: list[Verdict]
+
+
+class ClipReaction(BaseModel):
+    """The simulated audience's line-by-line read of one clip."""
+    clip: str
+    understood: str
+    beats: list[tuple[str, Emotion, Strength, Percent, Percent]]  # line id, emotion, strength, % A / % B scroll away
+    question: str
+    next: list[tuple[str, Likelihood]] = Field(min_length=2, max_length=4)  # imagined next scenes
+    need_next: tuple[NeedNext, NeedNext]  # viewer A, viewer B
 
 
 # --- Parsed screenplay ------------------------------------------------------
@@ -86,6 +103,26 @@ class Segment:
     @property
     def duration(self) -> float:
         return self.end - self.start
+
+
+@dataclass(frozen=True)
+class ViewerScore:
+    hook: float          # share still watching at 3 s, 0-1
+    completion: float    # share still watching at the end, 0-1
+    sinker: float        # 0-1
+    score: float         # 0-100
+    curve: list[float]   # share still watching at each whole second
+
+
+@dataclass(frozen=True)
+class Engagement:
+    a: ViewerScore
+    b: ViewerScore
+    punch: float         # 0-1, shared by both viewers
+    engine: str | None   # engine holding the emotional peak, as measured from the reactions
+    spread: float        # 0-1, how varied the imagined next scenes are
+    penalty: float       # confusion points taken off, 0-15
+    score: float         # 0-100, viewer blend
 
 
 @dataclass

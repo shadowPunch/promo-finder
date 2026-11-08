@@ -1,7 +1,8 @@
 import pytest
 
 from helpers import fixture_episodes, make_promo
-from promo_finder_v2.transcript import parse_ref, ref, render_block, render_episode, render_promo
+from promo_finder_v2.transcript import (clip_lines, parse_ref, ref, render_block, render_clip, render_episode,
+                                       render_promo)
 
 
 def test_ref_round_trip():
@@ -29,3 +30,13 @@ def test_render_promo_uses_clip_relative_times_and_marks_cuts():
     assert lines[0] == '+00.0s STEPMOTHER (Cold): "You will never marry him."'
     assert "--- CUT ---" in lines
     assert lines[lines.index("--- CUT ---") + 1].startswith("+24.0s ACTION:")
+
+
+def test_clip_lines_number_blocks_with_clip_times_and_mark_cuts():
+    episodes = fixture_episodes()
+    lines = clip_lines(make_promo([(1, 20.0, 26.0), (2, 0.0, 6.0)]), episodes)
+    assert [(l.line, l.start, l.end, l.cut_before) for l in lines] == [
+        ("L01", 0.0, 6.0, False), ("L02", 6.0, 9.0, True), ("L03", 9.0, 12.0, False)]
+    text = render_clip(lines)
+    assert text.splitlines()[0] == 'L01 [+00.0-06.0] MARA (O.S.) (Whispering): "Because he knows who you really are."'
+    assert text.splitlines()[1] == "--- CUT ---"
