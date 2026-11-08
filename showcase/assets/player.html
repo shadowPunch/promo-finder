@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+/* Same palette as the site: paper, ink, one red accent; blue only marks viewer B. */
+:root { --paper:#FAF7F0; --card:#FFFFFF; --ink:#1C1B19; --muted:#6B6560; --rule:#E4DED3; --red:#B42318;
+        --blue:#1F63A8; --tint:#F8E7E3; --serif:"Fraunces",Georgia,serif;
+        --sans:"IBM Plex Sans",system-ui,sans-serif; --mono:"Courier Prime","Courier New",monospace; }
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--paper); color: var(--ink); font: 14px/1.45 var(--sans); }
+button { font: inherit; color: inherit; cursor: pointer; }
+.player { border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; background: var(--paper); }
+
+/* stage rail, controls, progress */
+.rail { display: flex; border-bottom: 1px solid var(--rule); overflow-x: auto; scrollbar-width: none; }
+.rail button { flex: 1 0 auto; background: none; border: 0; border-bottom: 2px solid transparent; padding: .75rem .9rem .6rem;
+               text-align: left; color: var(--muted); white-space: nowrap; }
+.rail b { display: block; font: 400 .7rem var(--mono); letter-spacing: .1em; }
+.rail span { font: 600 1rem var(--serif); }
+.rail button.done { color: var(--ink); }
+.rail button.on { color: var(--red); border-bottom-color: var(--red); }
+.bar { display: flex; align-items: center; gap: .5rem; padding: .55rem .9rem; border-bottom: 1px solid var(--rule); flex-wrap: wrap; }
+.btn { background: var(--card); border: 1px solid var(--rule); border-radius: 4px; padding: .3rem .8rem; font-weight: 500; }
+.btn.main { background: var(--ink); border-color: var(--ink); color: var(--paper); min-width: 5.5rem; }
+#caption { margin: 0 0 0 .4rem; color: var(--muted); flex: 1 1 18rem; }
+.progress { height: 2px; background: var(--rule); }
+.progress i { display: block; height: 100%; width: 0; background: var(--red); transition: width .6s; }
+#stage { padding: 1rem; min-height: 690px; }
+.fade-in { animation: fade .35s ease both; }
+@keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+.label { font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin: 0 0 .3rem; }
+h3.title { font: 600 1.15rem/1.25 var(--serif); margin: 0 0 .5rem; }
+
+/* cover */
+.cover { display: grid; place-items: center; min-height: 660px; text-align: center; }
+.cover h2 { font: 600 clamp(1.8rem, 5vw, 2.6rem)/1.1 var(--serif); margin: .3rem 0 .6rem; }
+.cover p { color: var(--muted); max-width: 30rem; margin: 0 auto; }
+.bigplay { margin-top: 1.4rem; background: var(--red); color: #fff; border: 0; border-radius: 99px; padding: .8rem 1.7rem;
+           font-size: 1rem; font-weight: 600; }
+
+/* 1-2: script pages */
+.find { display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 1rem; }
+.pages { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .6rem; }
+.page { background: var(--card); border: 1px solid var(--rule); border-radius: 4px; box-shadow: 0 1px 2px rgba(28,27,25,.06);
+        display: flex; flex-direction: column; height: 620px; min-width: 0; }
+.page header { padding: .65rem .75rem .5rem; border-bottom: 1px solid var(--rule); }
+.page header b { font: 700 .72rem var(--mono); letter-spacing: .14em; }
+.page header p { margin: .25rem 0 0; font: .8rem/1.3 var(--serif); color: var(--muted); display: -webkit-box;
+                 -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.blocks { flex: 1; overflow-y: auto; scrollbar-width: thin; padding: .25rem 0; }
+.blk { display: grid; grid-template-columns: 3.3rem 1fr; gap: .3rem; padding: .2rem .55rem; font: .72rem/1.35 var(--mono);
+       border-left: 3px solid transparent; transition: background .3s, border-color .3s; }
+.blk .tc { color: var(--muted); }
+.blk .txt { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.blk .who { font-weight: 700; }
+.blk.cue .txt { color: var(--muted); font-style: italic; }
+.blk.cue .who { font-weight: 400; font-style: normal; }
+.blk.lit { background: var(--tint); border-left-color: var(--red); }
+.blk.seen { background: #FCF5F3; border-left-color: #EBC0B8; }
+.cands { display: flex; flex-direction: column; gap: .45rem; max-height: 620px; overflow-y: auto; }
+.cand { background: var(--card); border: 1px solid var(--rule); border-radius: 4px; padding: .5rem .7rem; }
+.cand.now { border-color: var(--red); box-shadow: 0 0 0 1px var(--red); }
+.cand h4 { margin: .2rem 0 .15rem; font: 600 .95rem/1.25 var(--serif); }
+.cand p { margin: 0; color: var(--muted); font-size: .8rem; line-height: 1.35; }
+.tag { display: inline-block; font-size: .6rem; letter-spacing: .12em; text-transform: uppercase; border: 1px solid var(--ink);
+       border-radius: 3px; padding: 0 .35rem; }
+.meta { font: .7rem var(--mono); color: var(--muted); margin-left: .35rem; }
+
+/* 3: rule checks */
+.checks { display: flex; flex-direction: column; gap: .45rem; }
+.chk { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 2fr) 9rem; align-items: center; gap: .8rem;
+       background: var(--card); border: 1px solid var(--rule); border-radius: 4px; padding: .6rem .85rem; transition: opacity .5s; }
+.chk h4 { margin: 0; font: 600 .95rem var(--serif); }
+.chk.out { opacity: .38; }
+.rules { display: flex; flex-wrap: wrap; gap: .35rem; }
+.rule { font-size: .72rem; border: 1px solid var(--rule); border-radius: 99px; padding: .05rem .55rem; color: var(--muted);
+        transition: color .3s, border-color .3s; }
+.rule.ok { color: var(--ink); border-color: #CBC3B6; }
+.rule.bad { color: var(--red); border-color: var(--red); }
+.verdict { justify-self: end; display: flex; flex-direction: column; align-items: flex-end; gap: .25rem; }
+.stamp { font: 700 .8rem var(--mono); letter-spacing: .16em; border: 2px solid var(--ink); padding: .08rem .45rem;
+         transform: rotate(-4deg); opacity: 0; }
+.stamp.show { animation: stamp .35s cubic-bezier(.2, 1.4, .4, 1) both; }
+.stamp.bad { color: var(--red); border-color: var(--red); }
+@keyframes stamp { from { opacity: 0; transform: rotate(-4deg) scale(1.8); } to { opacity: 1; transform: rotate(-4deg) scale(1); } }
+.go { color: var(--red); font-size: .68rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+
+/* 4: versions on a timeline */
+.moments { display: flex; flex-direction: column; gap: .8rem; }
+.mom { background: var(--card); border: 1px solid var(--rule); border-radius: 4px; padding: .7rem .9rem .8rem; }
+.mom header { display: flex; align-items: baseline; gap: .6rem; margin-bottom: .35rem; }
+.mom header h4 { margin: 0; font: 600 1rem var(--serif); }
+.ticks { position: relative; height: 1.1rem; margin-left: 8.6rem; border-bottom: 1px solid var(--rule); }
+.ticks span { position: absolute; bottom: .15rem; font: .64rem var(--mono); color: var(--muted); transform: translateX(-50%); }
+.lane { display: grid; grid-template-columns: 8rem 1fr; gap: .6rem; align-items: center; height: 26px; }
+.lane .name { font-size: .8rem; color: var(--muted); text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.road { position: relative; height: 100%; border-bottom: 1px dashed #EFEAE1; }
+.seg { position: absolute; top: 6px; height: 14px; border-radius: 0 4px 4px 0; background: var(--ink); transform-origin: left;
+       transform: scaleX(0); transition: transform .6s ease; color: #fff; font: 700 .6rem/14px var(--mono); padding-left: 4px; }
+.seg.grow { transform: scaleX(1); }
+.lane.orig .seg { background: var(--muted); }
+.lane.rej .name { color: var(--red); text-decoration: line-through; }
+.lane.rej .road { color: var(--red); font-size: .75rem; display: flex; align-items: center; }
+
+/* 5: audience */
+.legend { display: flex; gap: 1.2rem; flex-wrap: wrap; margin: 0 0 .6rem; font-size: .82rem; }
+.dot { display: inline-block; width: .6rem; height: .6rem; border-radius: 50%; margin-right: .35rem; }
+.vrows { background: var(--card); border: 1px solid var(--rule); border-radius: 4px; padding: .3rem .9rem; }
+.vrow { display: grid; grid-template-columns: 8rem minmax(0, 1fr) minmax(0, 1fr) 5rem; gap: 1rem; align-items: center;
+        padding: .55rem 0; border-bottom: 1px solid var(--rule); }
+.vrow:last-child { border-bottom: 0; }
+.vrow .name { font-weight: 600; }
+.vrow .name small { display: block; font: .7rem var(--mono); color: var(--muted); font-weight: 400; }
+.vrow svg { width: 100%; height: 56px; display: block; overflow: visible; }
+.vrow polyline { fill: none; stroke-width: 2; vector-effect: non-scaling-stroke; stroke-dasharray: 1; stroke-dashoffset: 1;
+                 transition: stroke-dashoffset 1.2s ease; }
+.vrow polyline.drawn { stroke-dashoffset: 0; }
+.vrow .score { font: 600 1.7rem var(--serif); text-align: right; }
+.vhead { display: grid; grid-template-columns: 8rem minmax(0, 1fr) minmax(0, 1fr) 5rem; gap: 1rem; padding: .5rem 0 .2rem;
+         font-size: .72rem; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
+.vhead span:last-child { text-align: right; }
+.others { margin-top: .9rem; display: grid; gap: .35rem; }
+.other { font-size: .82rem; color: var(--muted); }
+.other b { color: var(--ink); font-weight: 600; margin-right: .4rem; }
+
+/* 6: duels */
+.duels { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 1.2rem; align-items: start; }
+.dlist { display: flex; flex-direction: column; gap: .35rem; }
+.drow { display: grid; grid-template-columns: 1.8rem minmax(0, 1fr) 1.6rem minmax(0, 1fr); align-items: center; gap: .4rem; }
+.drow .n { font: .68rem var(--mono); color: var(--muted); }
+.drow .vs { text-align: center; font: italic .75rem var(--serif); color: var(--muted); }
+.pill { display: flex; justify-content: space-between; align-items: center; gap: .3rem; background: var(--card);
+        border: 1px solid var(--rule); border-radius: 4px; padding: .28rem .5rem; font-size: .8rem; min-height: 1.9rem;
+        transition: border-color .3s; }
+.pill.won { border-color: var(--ink); }
+.pill em { font-style: normal; font: .62rem var(--mono); color: var(--muted); margin-right: .25rem; }
+.marks { display: flex; gap: .2rem; }
+.mark { width: 1.15rem; height: 1.15rem; border-radius: 50%; display: inline-grid; place-items: center; color: #fff;
+        font: 700 .6rem var(--mono); animation: pop .3s cubic-bezier(.2, 1.4, .4, 1) both; }
+.mark.a { background: var(--red); } .mark.b { background: var(--blue); }
+@keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
+.tally { background: var(--card); border: 1px solid var(--rule); border-radius: 4px; padding: .8rem .9rem; }
+.trow { display: grid; grid-template-columns: 6.5rem 1fr 2.6rem; gap: .5rem; align-items: center; margin: .35rem 0; font-size: .8rem; }
+.trow .track { height: 10px; background: #F1ECE3; border-radius: 0 4px 4px 0; }
+.trow .fill { height: 100%; width: 0; background: var(--muted); border-radius: 0 4px 4px 0; transition: width .35s; }
+.trow.win .fill { background: var(--red); }
+.trow.win { font-weight: 600; }
+.trow .v { text-align: right; font: .75rem var(--mono); }
+.crown { margin-top: .9rem; padding-top: .8rem; border-top: 1px solid var(--rule); opacity: 0; transition: opacity .5s; }
+.crown.show { opacity: 1; }
+.crown h4 { margin: 0 0 .3rem; font: 600 1.3rem var(--serif); color: var(--red); }
+.crown .note { font-size: .8rem; color: var(--muted); margin: .5rem 0 0; }
+.crown blockquote { margin: .5rem 0 0; font: italic .82rem/1.45 var(--serif); color: var(--muted); }
+
+/* 7: the promo on a phone */
+.promo { display: grid; grid-template-columns: 290px minmax(0, 1fr); gap: 2rem; align-items: start; }
+.phone { width: 280px; aspect-ratio: 9 / 16; border-radius: 30px; background: #0E0D0C; padding: 9px;
+         box-shadow: 0 2px 12px rgba(28,27,25,.18); }
+.screen { position: relative; width: 100%; height: 100%; border-radius: 22px; background: var(--ink); overflow: hidden; color: #fff; }
+.pbar { position: absolute; top: 14px; left: 14px; right: 14px; height: 3px; background: rgba(255,255,255,.18); border-radius: 2px; }
+.pbar .hook { position: absolute; left: 0; top: 0; height: 100%; background: rgba(230,90,70,.75); border-radius: 2px; }
+.pbar i { position: absolute; left: 0; top: 0; height: 100%; width: 0; background: #fff; border-radius: 2px; }
+.hooklbl { position: absolute; top: 24px; left: 14px; font-size: .58rem; letter-spacing: .16em; color: #F2B3A9; transition: opacity .3s; }
+.timer { position: absolute; top: 24px; right: 14px; font: .68rem var(--mono); color: rgba(255,255,255,.7); }
+.scene { position: absolute; top: 24%; left: 18px; right: 18px; text-align: center; font: italic .86rem/1.45 var(--sans);
+         color: rgba(250,247,240,.72); }
+.cap { position: absolute; bottom: 13%; left: 14px; right: 14px; text-align: center; }
+.cap small { display: block; font-size: .6rem; letter-spacing: .18em; color: #EBB7AE; text-transform: uppercase; margin-bottom: .35rem; }
+.cap span { font-weight: 600; font-size: 1rem; line-height: 1.5; background: rgba(0,0,0,.4); padding: .05rem .3rem;
+            -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+.flash { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; }
+.flash.on { animation: flash .3s; }
+@keyframes flash { 0% { opacity: .7; } 100% { opacity: 0; } }
+.endcard { position: absolute; inset: 0; background: rgba(28,27,25,.94); display: flex; flex-direction: column;
+           justify-content: center; padding: 1.4rem; text-align: center; opacity: 0; transition: opacity .6s; pointer-events: none; }
+.endcard.show { opacity: 1; }
+.endcard h3 { font: 600 1.3rem/1.3 var(--serif); margin: .4rem 0 1.1rem; }
+.endcard .cta { align-self: center; background: var(--red); border-radius: 99px; padding: .45rem 1.1rem; font-weight: 600; font-size: .85rem; }
+.winfo h2 { font: 600 clamp(1.5rem, 4vw, 2.2rem)/1.1 var(--serif); margin: .2rem 0 .7rem; }
+.chips { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1rem; }
+.chip { font: .72rem var(--mono); border: 1px solid var(--rule); background: var(--card); border-radius: 99px; padding: .1rem .6rem; }
+.stats { display: flex; gap: 2rem; margin: 0 0 1rem; }
+.stats b { display: block; font: 600 2rem/1 var(--serif); }
+.stats span { color: var(--muted); font-size: .8rem; }
+.winfo p { margin: 0 0 .6rem; line-height: 1.5; }
+.winfo ul { margin: .3rem 0 0; padding-left: 1.1rem; color: var(--muted); }
+
+@media (max-width: 760px) {
+  #stage { padding: .75rem; min-height: 0; }
+  .find, .duels, .promo { grid-template-columns: 1fr; }
+  .pages { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; }
+  .page { flex: 0 0 82%; height: 430px; scroll-snap-align: start; }
+  .cands { max-height: none; }
+  .chk { grid-template-columns: 1fr; gap: .4rem; }
+  .verdict { justify-self: start; flex-direction: row; align-items: center; gap: .6rem; }
+  .ticks { margin-left: 5.6rem; }
+  .lane { grid-template-columns: 5rem 1fr; }
+  .vrow, .vhead { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 3.6rem; gap: .6rem; }
+  .vrow .name, .vhead span:first-child { grid-column: 1 / -1; }
+  .phone { margin: 0 auto; width: 260px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<div class="player">
+  <nav class="rail" id="rail"></nav>
+  <div class="bar">
+    <button class="btn main" id="play">Play</button>
+    <button class="btn" id="replay">Replay</button>
+    <button class="btn" id="speed" title="Playback speed">1×</button>
+    <p id="caption"></p>
+  </div>
+  <div class="progress"><i id="progress"></i></div>
+  <main id="stage"></main>
+</div>
+<script id="demo-data" type="application/json">__DEMO_DATA__</script>
+<script>
+const AUTOPLAY = __AUTOPLAY__;
+const D = JSON.parse(document.getElementById("demo-data").textContent);
+const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const $ = id => document.getElementById(id);
+const stage = $("stage"), caption = $("caption"), playBtn = $("play"), speedBtn = $("speed");
+
+// ---------- data helpers ----------
+const EPISODES = D.show.episodes;
+const BLOCKS = Object.fromEntries(EPISODES.flatMap(e => e.blocks.map(b => [b.id, b])));
+const VERSIONS = Object.fromEntries(D.moments.flatMap(m => m.versions.map(v => [v.id, v])));
+const TOP = D.moments.find(m => m.id === D.promo.moment) || D.moments[0];
+const N_BLOCKS = EPISODES.reduce((n, e) => n + e.blocks.length, 0);
+const episodeOf = id => +id.slice(1, 3);
+const CANDS = [...D.candidates].sort((a, b) => (a.blocks[0] || "").localeCompare(b.blocks[0] || ""));
+const momentTitle = m => (m.versions.find(v => v.change === "original") || m.versions[0]).title;
+const episodeOfMoment = m => m.versions[0].segments[0].episode;
+
+// ---------- small DOM + format helpers (all data goes in as textContent) ----------
+function el(tag, cls, text) {
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text !== undefined && text !== null) n.textContent = text;
+  return n;
+}
+const add = (parent, ...kids) => { parent.append(...kids.filter(k => k !== null && k !== undefined && k !== "")); return parent; };
+const fmt = s => `${String(Math.floor(s / 60)).padStart(2, "0")}:${(s % 60).toFixed(1).padStart(4, "0")}`;
+const pct = x => `${Math.round(x * 100)}%`;
+const unquote = t => t.replace(/^"+|"+$/g, "");
+const speakerName = label => label.replace(/\s*\(.*$/, "");
+
+// ---------- timing: a pausable, speed-aware sleep that cancels when a new run starts ----------
+let token = 0, paused = true, speed = 1, current = -1, finished = false;
+function wait(ms) {
+  const mine = token;
+  let left = ms, last = performance.now();
+  return new Promise((resolve, reject) => {
+    (function tick(now) {
+      if (mine !== token) return reject("cancelled");
+      if (!paused) left -= (now - last) * speed;
+      last = now;
+      if (left <= 0) resolve(); else requestAnimationFrame(tick);
+    })(last);
+  });
+}
+const stagger = ms => wait(REDUCED ? 0 : ms);
+
+// ---------- stages ----------
+const STAGES = [
+  ["Scripts", () => `${EPISODES.length} episodes go in: ${N_BLOCKS} timed blocks of dialogue, action, camera and sound.`, scripts],
+  ["Find", () => `The AI model reads all ${EPISODES.length} episodes and proposes ${CANDS.length} promos, citing block ids.`, find],
+  ["Check", () => "Code checks every rule. The best promo from each episode goes on to testing.", check],
+  ["Versions", () => "An AI editor re-cuts each moment, one change per version. Code throws out cuts that break the rules.", versions],
+  ["Audience", () => "Two simulated viewers react line by line; code turns who keeps watching into a score out of 100.", audience],
+  ["Duels", () => "The viewers compare every pair of cuts, in both orders, and pick the one they'd keep watching.", duels],
+  ["Promo", () => "The winning cut, as a viewer meets it on their phone.", promo],
+];
+
+function scriptPages(withRows) {
+  const wrap = el("div", "pages"), rows = {}, lists = {};
+  for (const ep of EPISODES) {
+    const page = el("section", "page"), head = el("header");
+    add(head, el("b", null, `EPISODE ${ep.number}`), el("p", null, ep.logline));
+    const list = el("div", "blocks");
+    lists[ep.number] = list;
+    add(wrap, add(page, head, list));
+    for (const b of ep.blocks) {
+      rows[b.id] = blockRow(b);
+      if (withRows) list.appendChild(rows[b.id]);
+    }
+  }
+  return { wrap, rows, lists };
+}
+
+function blockRow(b) {
+  const row = el("div", b.kind === "dialogue" ? "blk" : "blk cue"), txt = el("div", "txt");
+  add(txt, el("span", "who", b.kind === "dialogue" ? b.speaker : (b.kind === "sfx" ? "SOUND" : b.kind.toUpperCase())));
+  txt.append(" " + unquote(b.text));
+  return add(row, el("span", "tc", fmt(b.start)), txt);
+}
+
+async function scripts(root) {
+  const { wrap, rows, lists } = scriptPages(false);
+  root.appendChild(wrap);
+  const longest = Math.max(...EPISODES.map(e => e.blocks.length));
+  for (let i = 0; i < longest; i++) {
+    for (const ep of EPISODES) {
+      const b = ep.blocks[i];
+      if (b) { rows[b.id].classList.add("fade-in"); lists[ep.number].appendChild(rows[b.id]); }
+    }
+    if (i < 16) await stagger(85);
+  }
+  await wait(500);
+  for (const list of Object.values(lists)) list.scrollTo({ top: list.scrollHeight, behavior: REDUCED ? "auto" : "smooth" });
+  await wait(2200);
+  for (const list of Object.values(lists)) list.scrollTo({ top: 0, behavior: REDUCED ? "auto" : "smooth" });
+  await wait(600);
+}
+
+function candCard(c) {
+  const card = el("article", "cand"), top = el("div");
+  const where = [...new Set(c.blocks.map(episodeOf))].map(n => `E${String(n).padStart(2, "0")}`).join("+");
+  add(top, el("span", "tag", c.engine), el("span", "meta", `${where}${c.duration_s ? ` · ${Math.round(c.duration_s)} s` : ""}`));
+  return add(card, top, el("h4", null, c.title), el("p", null, `? ${c.sinker_question}`));
+}
+
+async function find(root) {
+  const layout = el("div", "find"), { wrap, rows, lists } = scriptPages(true), list = el("div", "cands");
+  root.appendChild(add(layout, wrap, list));
+  let previous = [], previousCard = null;
+  for (const c of CANDS) {
+    previous.forEach(r => { r.classList.remove("lit"); r.classList.add("seen"); });
+    previous = c.blocks.map(id => rows[id]).filter(Boolean);
+    previous.forEach(r => r.classList.add("lit"));
+    if (previous[0]) {
+      const pane = lists[episodeOf(c.blocks[0])];
+      pane.scrollTo({ top: previous[0].offsetTop - pane.offsetTop - 30, behavior: REDUCED ? "auto" : "smooth" });
+    }
+    if (previousCard) previousCard.classList.remove("now");
+    previousCard = add(list, candCard(c)).lastChild;
+    previousCard.classList.add("now", "fade-in");
+    list.scrollTo({ top: list.scrollHeight, behavior: "smooth" });
+    await stagger(1150);
+  }
+  if (previousCard) previousCard.classList.remove("now");
+  await wait(400);
+}
+
+async function check(root) {
+  const list = el("div", "checks"), items = [];
+  root.appendChild(list);
+  for (const c of CANDS) {
+    const row = el("div", "chk"), name = el("div"), rules = el("div", "rules"), verdict = el("div", "verdict");
+    const where = [...new Set(c.blocks.map(episodeOf))].map(n => `Episode ${n}`).join(" + ");
+    add(name, el("h4", null, c.title), el("span", "meta", where));
+    const chips = [c.duration_s ? `${Math.round(c.duration_s)} s (20–60)` : "20–60 s", "hook within 3 s", "cuts on block edges"]
+      .map(t => add(rules, el("span", "rule", t)).lastChild);
+    const bad = c.status === "rejected";
+    const stamp = el("span", bad ? "stamp bad" : "stamp", bad ? "REJECTED" : c.status === "fixed" ? "FIXED" : "PASS");
+    add(verdict, stamp);
+    if (c.reason) add(rules, el("span", bad ? "rule bad" : "rule", c.reason));
+    list.appendChild(add(row, name, rules, verdict));
+    items.push({ c, row, chips, stamp, verdict, bad });
+  }
+  for (const it of items) {
+    it.chips.forEach(chip => chip.classList.add(it.bad ? "bad" : "ok"));
+    it.stamp.classList.add("show");
+    await stagger(380);
+  }
+  await wait(900);
+  for (const it of items) {
+    if (it.c.moment) add(it.verdict, el("span", "go", `→ tested · ${it.c.moment}`));
+    else it.row.classList.add("out");
+  }
+  await wait(2400);
+}
+
+async function versions(root) {
+  const list = el("div", "moments"), grow = [];
+  root.appendChild(list);
+  for (const m of D.moments) {
+    const ep = EPISODES.find(e => e.number === episodeOfMoment(m));
+    const segs = m.versions.flatMap(v => v.segments);
+    const lo = Math.max(0, Math.min(...segs.map(s => s.start)) - 6);
+    const hi = Math.min(ep.duration, Math.max(...segs.map(s => s.end)) + 6);
+    const x = t => `${((t - lo) / (hi - lo)) * 100}%`;
+    const card = el("section", "mom"), head = el("header"), ticks = el("div", "ticks");
+    add(head, el("span", "tag", m.id), el("h4", null, momentTitle(m)), el("span", "meta", `Episode ${ep.number}`));
+    for (let t = Math.ceil(lo / 10) * 10; t <= hi; t += 10) ticks.appendChild(Object.assign(el("span", null, fmt(t).slice(0, 5)), { style: `left:${x(t)}` }));
+    add(card, head, ticks);
+    for (const v of m.versions) {
+      const lane = el("div", v.change === "original" ? "lane orig" : "lane"), road = el("div", "road");
+      add(lane, el("span", "name", v.label), road);
+      v.segments.forEach((s, k) => {
+        const seg = el("i", "seg", v.segments.length > 1 ? String(k + 1) : "");
+        seg.style.left = x(s.start);
+        seg.style.width = `${((s.end - s.start) / (hi - lo)) * 100}%`;
+        road.appendChild(seg);
+        grow.push(seg);
+      });
+      card.appendChild(lane);
+    }
+    for (const r of m.rejected || []) {
+      add(card, add(el("div", "lane rej"), el("span", "name", r.label), el("div", "road", `rejected: ${r.reason}`)));
+    }
+    list.appendChild(card);
+  }
+  for (const seg of grow) { seg.classList.add("grow"); await stagger(170); }
+  await wait(2600);
+}
+
+function curve(points, colour, maxSeconds) {
+  const ns = "http://www.w3.org/2000/svg", svg = document.createElementNS(ns, "svg");
+  svg.setAttribute("viewBox", "0 0 300 60");
+  svg.setAttribute("preserveAspectRatio", "none");
+  for (const y of [4, 30, 56]) {
+    const g = document.createElementNS(ns, "line");
+    Object.entries({ x1: 0, x2: 300, y1: y, y2: y, stroke: "#E4DED3", "stroke-width": 1, "vector-effect": "non-scaling-stroke" })
+      .forEach(([k, v]) => g.setAttribute(k, v));
+    svg.appendChild(g);
+  }
+  const X = s => (s / maxSeconds) * 300, Y = share => 56 - share * 52;
+  const pts = [];
+  points.forEach((share, i) => { if (i) pts.push(`${X(i)},${Y(points[i - 1])}`); pts.push(`${X(i)},${Y(share)}`); });
+  const line = document.createElementNS(ns, "polyline");
+  line.setAttribute("points", pts.join(" "));
+  line.setAttribute("stroke", colour);
+  line.setAttribute("pathLength", "1");
+  svg.appendChild(line);
+  return { svg, line };
+}
+
+async function countTo(node, value, ms) {
+  const steps = REDUCED ? 1 : 20;
+  for (let k = 1; k <= steps; k++) { node.textContent = (value * k / steps).toFixed(1); await wait(ms / steps); }
+}
+
+async function audience(root) {
+  const legend = el("div", "legend");
+  add(legend, add(el("span"), Object.assign(el("i", "dot"), { style: "background:var(--red)" }), "Viewer A · core fan (65%)"),
+              add(el("span"), Object.assign(el("i", "dot"), { style: "background:var(--blue)" }), "Viewer B · newcomer (35%)"));
+  const box = el("div", "vrows"), head = el("div", "vhead");
+  add(head, el("span", null, `${TOP.id} · ${momentTitle(TOP)}`), el("span", null, "A · still watching, 0–100%"),
+            el("span", null, "B · still watching, 0–100%"), el("span", null, "score"));
+  add(root, el("p", "label", "Each line of the cut, as the two viewers meet it"), legend, add(box, head));
+  const maxSeconds = Math.max(...TOP.versions.map(v => v.curve_a.length - 1));
+  const rows = TOP.versions.map(v => {
+    const row = el("div", "vrow"), name = el("div", "name", v.label), score = el("div", "score", "0.0");
+    name.appendChild(el("small", null, `${Math.round(v.duration_s)} s`));
+    const a = curve(v.curve_a, "#B42318", maxSeconds), b = curve(v.curve_b, "#1F63A8", maxSeconds);
+    box.appendChild(add(row, name, a.svg, b.svg, score));
+    return { v, a, b, score };
+  });
+  for (const r of rows) {
+    r.a.line.getBoundingClientRect();  // commit the undrawn state before animating
+    r.a.line.classList.add("drawn");
+    r.b.line.classList.add("drawn");
+    await countTo(r.score, r.v.score, 1200);
+    await stagger(250);
+  }
+  const others = el("div", "others");
+  add(others, el("p", "label", "The other moments"));
+  for (const m of D.moments.filter(m => m !== TOP)) {
+    const line = el("div", "other");
+    add(line, el("b", null, momentTitle(m)), m.versions.map(v => `${v.label} ${v.score.toFixed(1)}`).join(" · "));
+    others.appendChild(line);
+  }
+  root.appendChild(others);
+  others.classList.add("fade-in");
+  await wait(2600);
+}
+
+async function duels(root) {
+  const layout = el("div", "duels"), list = el("div", "dlist"), tally = el("div", "tally");
+  add(tally, el("p", "label", "Share of duels won"));
+  const bars = {}, won = {}, played = {};
+  for (const v of TOP.versions) {
+    const row = el("div", "trow"), track = el("div", "track"), fill = el("div", "fill"), val = el("span", "v", "–");
+    add(tally, add(row, el("span", null, v.label), add(track, fill), val));
+    bars[v.id] = { row, fill, val };
+    won[v.id] = 0; played[v.id] = 0;
+  }
+  const crown = el("div", "crown");
+  tally.appendChild(crown);
+  add(root, el("p", "label", `${TOP.id} · ${momentTitle(TOP)} · ${TOP.duels.length} duels`), add(layout, list, tally));
+  for (const [i, d] of TOP.duels.entries()) {
+    const row = el("div", "drow fade-in"), pills = {};
+    for (const [side, id] of [["X", d.x], ["Y", d.y]]) {
+      const pill = el("div", "pill"), name = el("span");
+      add(name, el("em", null, side), VERSIONS[id] ? VERSIONS[id].label : id);
+      pills[id] = { pill, marks: add(pill, name, el("span", "marks")).lastChild };
+    }
+    add(row, el("span", "n", String(i + 1).padStart(2, "0")), pills[d.x].pill, el("span", "vs", "vs"), pills[d.y].pill);
+    list.appendChild(row);
+    await stagger(220);
+    for (const [who, id, weight] of [["a", d.pick_a, 0.65], ["b", d.pick_b, 0.35]]) {
+      if (!pills[id]) continue;
+      pills[id].marks.appendChild(el("span", `mark ${who}`, who.toUpperCase()));
+      pills[id].pill.classList.add("won");
+      won[id] = (won[id] || 0) + weight;
+      await stagger(170);
+    }
+    for (const id of [d.x, d.y]) {
+      if (!bars[id]) continue;
+      played[id] += 1;
+      const share = won[id] / played[id];
+      bars[id].fill.style.width = pct(share);
+      bars[id].val.textContent = pct(share);
+    }
+  }
+  for (const v of TOP.versions) {  // settle on the run's own shares (same formula, no rounding drift)
+    bars[v.id].fill.style.width = pct(v.win_share);
+    bars[v.id].val.textContent = pct(v.win_share);
+  }
+  const winner = VERSIONS[TOP.winner];
+  const topScore = TOP.versions.reduce((a, b) => (b.score > a.score ? b : a));
+  if (bars[TOP.winner]) bars[TOP.winner].row.classList.add("win");
+  const quote = TOP.duels.find(d => d.pick_a === TOP.winner);
+  add(crown, el("h4", null, `${winner.label} wins`),
+      el("p", null, `It won ${pct(winner.win_share)} of its duels (viewer A counts 65%, B 35%).`),
+      topScore !== winner ? el("p", "note", `${topScore.label} had the highest absolute score (${topScore.score.toFixed(1)}) `
+        + `but lost head to head. One absolute score is too noisy to pick a cut; duels decide.`) : null,
+      quote ? el("blockquote", null, `"${quote.why}"`) : null);
+  await wait(300);
+  crown.classList.add("show");
+  await wait(3200);
+}
+
+async function promo(root) {
+  const P = D.promo, winner = VERSIONS[P.id] || {};
+  const layout = el("div", "promo"), phone = el("div", "phone"), screen = el("div", "screen");
+  const pbar = el("div", "pbar"), hook = el("span", "hook"), fill = el("i"), hookLbl = el("span", "hooklbl", "HOOK · FIRST 3 S");
+  const timer = el("span", "timer"), scene = el("div", "scene"), cap = el("div", "cap"), flash = el("div", "flash");
+  const end = el("div", "endcard");
+  hook.style.width = pct(Math.min(1, 3 / P.duration_s));
+  add(end, el("p", "label", "Will you watch next?"), el("h3", null, P.sinker_question), el("span", "cta", `Watch episode ${P.next_episode} →`));
+  add(screen, add(pbar, hook, fill), hookLbl, timer, scene, cap, flash, end);
+  phone.appendChild(screen);
+
+  const info = el("div", "winfo"), chips = el("div", "chips"), stats = el("div", "stats");
+  [`${Math.round(P.duration_s)} s`, `Episode ${episodeOfMoment(TOP)}`, `${winner.label || ""} cut`, `run ${D.run.id}`]
+    .forEach(t => add(chips, el("span", "chip", t)));
+  add(stats, add(el("div"), el("b", null, P.score.toFixed(1)), el("span", null, "engagement score")),
+             add(el("div"), el("b", null, pct(P.win_share)), el("span", null, "of duels won")));
+  const guesses = el("ul");
+  P.sinker_answers.forEach(a => add(guesses, el("li", null, a)));
+  add(info, el("p", "label", "The winning cut"), el("h2", null, P.title), chips, stats,
+      add(el("p"), add(el("b"), "Hook: "), P.hook),
+      add(el("p"), add(el("b"), "Open question: "), P.sinker_question),
+      el("p", "label", "What viewers might guess next"), guesses);
+  root.appendChild(add(layout, phone, info));
+
+  let shownCap = null, shownScene = null, nextCut = 0;
+  const cuts = P.lines.filter(l => l.cut_before).map(l => l.t0);
+  const step = 0.1;
+  for (let t = 0; t <= P.duration_s + 0.01; t += step) {
+    fill.style.width = pct(Math.min(1, t / P.duration_s));
+    timer.textContent = `${fmt(t).slice(0, 5)} / ${fmt(P.duration_s).slice(0, 5)}`;
+    hookLbl.style.opacity = t < 3 ? 1 : 0;
+    const active = l => l.t0 <= t && t < l.t1 + 0.4;
+    const dialogue = [...P.lines].reverse().find(l => l.kind === "dialogue" && active(l)) || null;
+    const cue = [...P.lines].reverse().find(l => l.kind !== "dialogue" && active(l)) || null;
+    if (dialogue !== shownCap) {
+      shownCap = dialogue;
+      cap.replaceChildren();
+      if (dialogue) add(cap, el("small", null, speakerName(dialogue.label)), el("span", null, unquote(dialogue.text)));
+    }
+    if (cue !== shownScene) {
+      shownScene = cue;
+      scene.textContent = cue ? `[${cue.text}]` : "";
+    }
+    if (nextCut < cuts.length && t >= cuts[nextCut]) {
+      flash.classList.remove("on"); void flash.offsetWidth; flash.classList.add("on"); nextCut += 1;
+    }
+    await wait(step * 1000);
+  }
+  end.classList.add("show");
+  await wait(1500);
+}
+
+// ---------- controls ----------
+function markStage(i) {
+  [...$("rail").children].forEach((b, k) => { b.classList.toggle("on", k === i); b.classList.toggle("done", k < i); });
+  $("progress").style.width = pct((i + 1) / STAGES.length);
+  caption.textContent = STAGES[i][1]();
+}
+function setPlay() { playBtn.textContent = finished ? "Play again" : paused ? (current < 0 ? "Play" : "Resume") : "Pause"; }
+
+async function runFrom(i) {
+  const mine = ++token;
+  paused = false; finished = false; setPlay();
+  try {
+    for (; i < STAGES.length; i++) {
+      current = i;
+      markStage(i);
+      stage.replaceChildren();
+      await STAGES[i][2](stage);
+      if (i < STAGES.length - 1) await wait(900);
+    }
+    if (mine === token) { finished = true; paused = true; setPlay(); }
+  } catch (err) {
+    if (err !== "cancelled") throw err;
+  }
+}
+
+function cover() {
+  const box = el("div", "cover"), inner = el("div"), go = el("button", "bigplay", "▶  Play the demo");
+  add(inner, el("p", "label", "An artificial show · the real tool"), el("h2", null, D.show.title),
+      el("p", null, `${EPISODES.length} episodes and ${N_BLOCKS} script blocks go in. About two minutes later, one promo comes out.`), go);
+  go.onclick = () => runFrom(0);
+  stage.replaceChildren(add(box, inner));
+}
+
+STAGES.forEach(([name], i) => {
+  const b = el("button");
+  add(b, el("b", null, String(i + 1).padStart(2, "0")), el("span", null, name));
+  b.onclick = () => runFrom(i);
+  $("rail").appendChild(b);
+});
+playBtn.onclick = () => {
+  if (current < 0 || finished) return runFrom(0);
+  paused = !paused;
+  setPlay();
+};
+$("replay").onclick = () => runFrom(0);
+speedBtn.onclick = () => { speed = speed === 1 ? 2 : 1; speedBtn.textContent = `${speed}×`; };
+caption.textContent = "Press Play, or jump to any step.";
+if (AUTOPLAY) runFrom(0); else cover();
+</script>
+</body>
+</html>

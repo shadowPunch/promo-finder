@@ -21,3 +21,13 @@ def test_missing_data_shows_a_friendly_error(monkeypatch, tmp_path):
     at = AppTest.from_file(APP, default_timeout=30).run()
     loaders.read.clear()
     assert not at.exception and "export-site" in at.error[0].value
+
+
+def test_player_inlines_data_safely():
+    import json
+
+    from demo_player import build
+    html = build({"show": {"title": "</script><b>x"}}, autoplay=True)
+    payload = html.split('<script id="demo-data" type="application/json">', 1)[1].split("</script>", 1)[0]
+    assert json.loads(payload)["show"]["title"] == "</script><b>x"
+    assert "const AUTOPLAY = true;" in html and "__" not in html.split("<script>", 1)[1][:200]
