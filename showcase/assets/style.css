@@ -1,0 +1,63 @@
+/* Screenplay paper: warm paper, ink, one red accent. Colours match .streamlit/config.toml. */
+:root {
+  --paper: #FAF7F0; --card: #FFFFFF; --ink: #1C1B19; --muted: #6B6560; --rule: #E4DED3; --red: #B42318;
+  --serif: "Fraunces", Georgia, serif; --mono: "Courier Prime", "Courier New", monospace;
+}
+
+.block-container { max-width: 1100px; padding-top: 5.5rem; padding-bottom: 4rem; }
+h1, h2, h3, h4 { font-family: var(--serif); letter-spacing: -0.01em; color: var(--ink); }
+h1 { font-weight: 600; line-height: 1.08; }
+h3 { font-weight: 600; }
+hr { border-color: var(--rule) !important; }
+
+/* small uppercase label above a heading */
+.pf-label { font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin: 0 0 .3rem; }
+
+.pf-hero { font-family: var(--serif); font-weight: 600; font-size: clamp(2.3rem, 5.4vw, 3.9rem); line-height: 1.04;
+           letter-spacing: -0.02em; margin: .3rem 0 1.1rem; max-width: 19ch; }
+.pf-hero em { color: var(--red); }
+.pf-lede { font-size: 1.14rem; line-height: 1.65; max-width: 44rem; margin: 0; }
+
+/* big-number row */
+.pf-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); border-top: 1.5px solid var(--ink);
+            border-bottom: 1px solid var(--rule); margin: 2rem 0 1.5rem; }
+.pf-stat { padding: 1rem 1rem 1.1rem 0; }
+.pf-stat b { display: block; font-family: var(--serif); font-size: 2.6rem; font-weight: 600; line-height: 1; }
+.pf-stat span { display: block; margin-top: .35rem; color: var(--muted); font-size: .86rem; line-height: 1.35; }
+
+/* screenplay excerpt */
+.pf-script { font-family: var(--mono); font-size: .88rem; line-height: 1.55; background: var(--card);
+             border: 1px solid var(--rule); border-left: 3px solid var(--red); padding: 1rem 1.2rem;
+             max-height: 30rem; overflow-y: auto; }
+.pf-line { display: grid; grid-template-columns: 2.6rem 10rem 1fr; gap: .7rem; padding: .12rem 0; }
+.pf-tc { color: var(--muted); }
+.pf-speaker { font-weight: 700; text-transform: uppercase; overflow-wrap: anywhere; }
+.pf-cue { color: var(--muted); text-transform: uppercase; }
+.pf-cut { color: var(--red); text-align: center; letter-spacing: .4em; text-transform: uppercase; font-size: .7rem;
+          border-top: 1px dashed var(--rule); margin: .5rem 0; padding-top: .3rem; }
+
+/* pipeline steps */
+.pf-steps { border-left: 1.5px solid var(--ink); margin: 1.2rem 0 2rem .4rem; }
+.pf-step { position: relative; padding: .1rem 0 1.1rem 1.5rem; }
+.pf-step::before { content: ""; position: absolute; left: -6px; top: .5rem; width: 10px; height: 10px; border-radius: 50%;
+                   background: var(--paper); border: 1.5px solid var(--ink); }
+.pf-step.model::before { border-color: var(--red); background: var(--red); }
+.pf-step b { font-family: var(--serif); font-size: 1.12rem; font-weight: 600; }
+.pf-step p { margin: .2rem 0 0; color: var(--muted); max-width: 44rem; line-height: 1.5; }
+.pf-tag { font-size: .64rem; letter-spacing: .12em; text-transform: uppercase; border: 1px solid var(--ink);
+          border-radius: 3px; padding: .05rem .4rem; margin-left: .55rem; vertical-align: 3px; }
+.pf-tag.model { border-color: var(--red); color: var(--red); }
+
+/* plain card */
+.pf-card { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: 1.1rem 1.25rem;
+           min-height: 14rem; }
+.pf-card h4 { margin: 0 0 .4rem; font-size: 1.15rem; }
+.pf-card p { margin: 0; color: var(--ink); line-height: 1.55; }
+.pf-card .pf-num { font-family: var(--serif); color: var(--red); font-size: .95rem; font-weight: 600; }
+
+@media (max-width: 640px) {
+  .block-container { padding-top: 4.5rem; }
+  .pf-card { min-height: 0; }
+  .pf-line { grid-template-columns: 2.4rem 1fr; }
+  .pf-line span:last-child { grid-column: 2; }
+}
