@@ -89,7 +89,8 @@ def demo_data(run: Run, episodes: dict[int, Episode], title: str) -> dict:
         "show": {"title": title, "episodes": [episode_record(episodes[n]) for n in sorted(episodes)]},
         "candidates": [candidate(p, episodes, moment_of) for p in run.screened]
         + [rejected_candidate(r, i) for i, r in enumerate(rule_rejects, 1)],
-        "moments": [moment_record(m) for m in run.versions],
+        "moments": [moment_record(m, [r for r in run.rejected if r["moment_id"] == m["moment_id"]])
+                    for m in run.versions],
         "promo": {"id": top["promo_id"], "moment": top["moment_id"], "title": top["title"],
                   "duration_s": top["duration_s"], "score": top["engagement"]["score"], "win_share": top["win_share"],
                   "hook": top["hook"], "sinker_question": top["sinker_question"],
@@ -175,6 +176,11 @@ def split_half(versions: list[dict]) -> float | None:
     return split_half_agreement(moments)
 
 
+def reason_text(reason: str) -> str:
+    """'hook_too_late_after_snapping' -> 'hook too late after snapping'; schema errors in plain words."""
+    return "didn't follow the format" if reason.startswith("schema") else reason.replace("_", " ")
+
+
 def episode_record(e: Episode) -> dict:
     return {"number": e.number, "logline": e.logline, "duration": round(e.duration, 2),
             "blocks": [{"id": ref(e.number, b.line_id), "kind": b.kind, "speaker": b.speaker, "tone": b.tone,
@@ -197,12 +203,15 @@ def rejected_candidate(r: dict, i: int) -> dict:
         ids += [ref(episode, n) for n in range(first, last + 1)]
     return {"id": f"R{i}", "title": c["title"], "engine": c["engine"], "hook": c["hook"],
             "sinker_question": c["sinker_question"], "duration_s": None, "blocks": ids, "status": "rejected",
-            "reason": r["reason"].replace("_", " "), "moment": None}
+            "reason": reason_text(r["reason"]), "moment": None}
 
 
-def moment_record(m: dict) -> dict:
+def moment_record(m: dict, rejected: list[dict]) -> dict:
+    """A tested moment: its scored versions, the re-cuts the rule checks threw out, and every duel."""
     return {"id": m["moment_id"], "winner": m["winner"],
             "versions": [version_record(v) for v in m["versions"] if v["engagement"]],
+            "rejected": [{"label": CHANGE_LABELS.get(r["candidate"]["change"], r["candidate"]["change"]),
+                          "reason": reason_text(r["reason"])} for r in rejected],
             "duels": [{"x": d["shown_first"], "y": d["shown_second"], "pick_a": d["pick_a"], "pick_b": d["pick_b"],
                        "why": d["why"]} for d in m["duels"]]}
 

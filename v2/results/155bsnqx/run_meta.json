@@ -1,0 +1,168 @@
+{
+  "version": 2,
+  "show": "I Married a Broken Soldier. He was a Duke-scripts (2)",
+  "data_version": "3c039fefeaff",
+  "n_episodes": 50,
+  "model": "gpt-5.6-sol",
+  "base_url": "https://agentrouter.org/v1",
+  "temperature": null,
+  "reasoning_effort": "low",
+  "judge_model": "gpt-5.6-sol",
+  "judge_reasoning_effort": "minimal",
+  "prompt_version": "finder-v2+screen-v1+editor-v1+audience-v2+duel-v1",
+  "per_call": 10,
+  "per_episode": 2,
+  "screen_batch": 50,
+  "shortlist": 12,
+  "versions": 3,
+  "refine_top": 5,
+  "reliability": {
+    "n": 8,
+    "spearman": 0.119,
+    "mean_abs_change": 4.55
+  },
+  "duels": {
+    "n": 140,
+    "pairs_both_orders": 70,
+    "order_agreement": 0.857,
+    "order_agreement_a": 0.829,
+    "order_agreement_b": 0.886,
+    "first_shown_win_rate": 0.486,
+    "missing": 0,
+    "same_winner_as_score": 0.25
+  },
+  "duel_batch": 12,
+  "audience_weight": 0.65,
+  "max_cost": 4.0,
+  "seed": 0,
+  "max_episodes": null,
+  "rules": {
+    "min_s": 20.0,
+    "max_s": 60.0,
+    "hook_window_s": 3.0,
+    "cliff_tail_s": 2.0
+  },
+  "scoring": {
+    "part_points": 25.0,
+    "max_confusion_penalty": 15.0,
+    "hook_at_s": 3.0,
+    "punch_bonus": 0.1,
+    "early_episode_max": 10,
+    "early_bonus": 0.25
+  },
+  "viewers": {
+    "a": "Viewer A: a woman aged 25-44 who scrolls Instagram Reels in short breaks and enjoys romance and revenge drama.",
+    "b": "Viewer B: someone who doesn't usually watch romance dramas. They only stop scrolling for something explosive, funny, genuinely puzzling or shocking."
+  },
+  "run_id": "155bsnqx",
+  "wandb_url": "https://forge.coreweave.com/wandb/nithish232005-iit-roorkee/kuku-promo-finder/runs/155bsnqx",
+  "failed_calls": [],
+  "seconds": 630.1,
+  "episodes_without_promo": [
+    6,
+    10,
+    17
+  ],
+  "counts": {
+    "proposed": 93,
+    "valid": 92,
+    "rejected_by_rules": 1,
+    "rejected_by_reason": {
+      "hook_too_late_after_snapping": 1
+    },
+    "auto_fixed": 2,
+    "screened": 92,
+    "shortlisted": 12,
+    "versions_valid": 38,
+    "versions_rejected": 3,
+    "versions_scored": 50,
+    "unscored": 0,
+    "refined": 4,
+    "winners": 12,
+    "slate": 10
+  },
+  "change_win_rates": {
+    "hook": 0.455,
+    "length": 0.0,
+    "original": 0.417,
+    "refine": 0.5,
+    "sinker": 0.0,
+    "structure": 0.0
+  },
+  "refine": {
+    "tried": 4,
+    "won": 2,
+    "mean_gain": -9.01
+  },
+  "slate": [
+    {
+      "promo_id": "019541e5",
+      "rank": 1,
+      "role": "proven"
+    },
+    {
+      "promo_id": "28952d57",
+      "rank": 2,
+      "role": "proven"
+    },
+    {
+      "promo_id": "6b1b033d",
+      "rank": 3,
+      "role": "proven"
+    },
+    {
+      "promo_id": "71a1f988",
+      "rank": 4,
+      "role": "proven"
+    },
+    {
+      "promo_id": "102d2176",
+      "rank": 5,
+      "role": "proven"
+    },
+    {
+      "promo_id": "44b24bc4",
+      "rank": 6,
+      "role": "proven"
+    },
+    {
+      "promo_id": "9ed4c485",
+      "rank": 7,
+      "role": "proven"
+    },
+    {
+      "promo_id": "e25f595e",
+      "rank": 8,
+      "role": "wild card"
+    },
+    {
+      "promo_id": "b3059f23",
+      "rank": 9,
+      "role": "proven"
+    },
+    {
+      "promo_id": "742ceaa1",
+      "rank": 10,
+      "role": "proven"
+    }
+  ],
+  "usage": {
+    "llm": {
+      "calls": 1,
+      "cache_hits": 9,
+      "prompt_tokens": 28046,
+      "completion_tokens": 7734,
+      "seconds": 45.99763007799629
+    },
+    "judge": {
+      "calls": 16,
+      "cache_hits": 9,
+      "prompt_tokens": 478586,
+      "completion_tokens": 85595,
+      "seconds": 584.0118540450931
+    },
+    "cost_usd": 3.1185,
+    "cap_usd": 4.0
+  },
+  "partial": false
+}

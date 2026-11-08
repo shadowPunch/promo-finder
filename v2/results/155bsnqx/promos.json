@@ -1,0 +1,890 @@
+[
+  {
+    "rank": 1,
+    "promo_id": "019541e5",
+    "moment_id": "M07",
+    "slate_role": "proven",
+    "title": "They Know the Intruder",
+    "change": "refine",
+    "duration_s": 32.69,
+    "segments": [
+      {
+        "episode": 41,
+        "start": "01:21.00",
+        "end": "01:36.09"
+      },
+      {
+        "episode": 42,
+        "start": "00:11.20",
+        "end": "00:28.80"
+      }
+    ],
+    "engine": "shocking",
+    "hook": "An ear-splitting explosion destroys the cathedral entrance as armed figures emerge through the smoke.",
+    "sinker": "The royal guards refuse an order to arrest the mysterious intruder, saying they know who he is.",
+    "sinker_question": "Who is the stranger powerful enough to command the royal guards' loyalty?",
+    "sinker_answers": [
+      "The rightful Duke believed to be dead",
+      "A royal heir traveling under another identity",
+      "The guards' former commander",
+      "An agent carrying secret authority from the Crown"
+    ],
+    "why": "Starting directly on the blast removes the opening dead air, while skipping the slow entrance keeps the identity mystery clear and fast.",
+    "spoiler_risk": "medium",
+    "screen": null,
+    "engagement": {
+      "score": 78.52,
+      "viewer_a": {
+        "score": 80.48,
+        "hook": 0.9605,
+        "completion": 0.5836,
+        "sinker": 0.6752
+      },
+      "viewer_b": {
+        "score": 74.89,
+        "hook": 0.9603,
+        "completion": 0.3602,
+        "sinker": 0.6752
+      },
+      "punch": 1.0,
+      "measured_engine": "shocking",
+      "spread": 0.8005,
+      "penalty": 0.0
+    },
+    "win_share": 1.0,
+    "audience": {
+      "understood": "Alexander violently interrupts Catherine and Rupert's cathedral wedding to reach the imprisoned Juliana, while Rupert demands his arrest and the royal guards side with Alexander.",
+      "question": "Who is Alexander really, and what will he do to Rupert now that the guards recognize him?",
+      "next": [
+        [
+          "The guards proclaim Alexander's true rank and arrest Rupert",
+          55.0
+        ],
+        [
+          "Rupert refuses to surrender and starts an armed fight",
+          25.0
+        ],
+        [
+          "Alexander escapes with Juliana before explaining his identity",
+          15.0
+        ],
+        [
+          "One of Alexander's apparent allies suddenly betrays him",
+          5.0
+        ]
+      ]
+    },
+    "auto_fixes": []
+  },
+  {
+    "rank": 2,
+    "promo_id": "28952d57",
+    "moment_id": "M06",
+    "slate_role": "proven",
+    "title": "She Is to Be Executed",
+    "change": "hook",
+    "duration_s": 45.8,
+    "segments": [
+      {
+        "episode": 36,
+        "start": "02:14.50",
+        "end": "02:43.00"
+      },
+      {
+        "episode": 36,
+        "start": "02:59.50",
+        "end": "03:16.80"
+      }
+    ],
+    "engine": "explosive",
+    "hook": "A devastated mother tells her son that his wife is to be executed.",
+    "sinker": "Facing the blizzard, the supposedly dead Duke vows to return before his enemies' wedding begins.",
+    "sinker_question": "What will the dead Duke do when he reaches the wedding before his wife's execution?",
+    "sinker_answers": [
+      "Storm the ceremony",
+      "Expose the conspiracy publicly",
+      "Trade himself for his wife",
+      "Arrive after the sentence is carried out"
+    ],
+    "why": "Opening directly on the death sentence delivers the stakes faster than beginning with his demand for the verdict.",
+    "spoiler_risk": "high",
+    "screen": null,
+    "engagement": {
+      "score": 72.23,
+      "viewer_a": {
+        "score": 77.01,
+        "hook": 0.8205,
+        "completion": 0.306,
+        "sinker": 0.9539
+      },
+      "viewer_b": {
+        "score": 63.34,
+        "hook": 0.6924,
+        "completion": 0.1257,
+        "sinker": 0.7154
+      },
+      "punch": 1.0,
+      "measured_engine": "shocking",
+      "spread": 0.9078,
+      "penalty": 0.0
+    },
+    "win_share": 0.913,
+    "audience": {
+      "understood": "Alexander learns that his wife will be executed after Rupert marries Catherine, and he vows to return from presumed death to stop them.",
+      "question": "How will the supposedly dead Alexander stop the wedding and save his wife within two days?",
+      "next": [
+        [
+          "Alexander storms the wedding and publicly reveals that he is alive",
+          55.0
+        ],
+        [
+          "Alexander secretly rescues his wife before confronting Rupert",
+          25.0
+        ],
+        [
+          "Rupert learns Alexander survived and sets a trap for him",
+          20.0
+        ]
+      ]
+    },
+    "auto_fixes": [
+      "snapped_to_dialogue"
+    ]
+  },
+  {
+    "rank": 3,
+    "promo_id": "6b1b033d",
+    "moment_id": "M03",
+    "slate_role": "proven",
+    "title": "Bare Hands",
+    "change": "hook",
+    "duration_s": 27.4,
+    "segments": [
+      {
+        "episode": 12,
+        "start": "00:57.30",
+        "end": "01:24.70"
+      }
+    ],
+    "engine": "explosive",
+    "hook": "A smiling tormentor orders the woman to retrieve something with her bare hands before the magistrate arrives.",
+    "sinker": "Despite the threat of shredded hands, the woman accepts the ordeal and demands to know where the garden is.",
+    "sinker_question": "Can she survive the garden ordeal and save her husband?",
+    "sinker_answers": [
+      "She retrieves the hidden ring",
+      "The thorns injure her before she succeeds",
+      "Her husband prevents her from going",
+      "Her tormentor refuses to honor the bargain"
+    ],
+    "why": "The concrete bare-hands demand is more visceral than the original verbal taunt while preserving the sacrifice arc.",
+    "spoiler_risk": "low",
+    "screen": null,
+    "engagement": {
+      "score": 72.04,
+      "viewer_a": {
+        "score": 77.13,
+        "hook": 0.88,
+        "completion": 0.5276,
+        "sinker": 0.6776
+      },
+      "viewer_b": {
+        "score": 62.59,
+        "hook": 0.78,
+        "completion": 0.2719,
+        "sinker": 0.4517
+      },
+      "punch": 1.0,
+      "measured_engine": "shocking",
+      "spread": 0.8069,
+      "penalty": 0.0
+    },
+    "win_share": 0.725,
+    "audience": {
+      "understood": "Clarissa forces Juliana to undertake a hand-shredding garden task by threatening to have Juliana's husband Alexander hanged.",
+      "question": "What is hidden in the garden, and can Juliana retrieve it without being maimed or losing Alexander?",
+      "next": [
+        [
+          "Juliana enters the garden and badly injures her hands retrieving the item",
+          65.0
+        ],
+        [
+          "Alexander intervenes and takes the punishment or confronts Clarissa",
+          20.0
+        ],
+        [
+          "Juliana finds a way to outsmart Clarissa without completing the task",
+          15.0
+        ]
+      ]
+    },
+    "auto_fixes": []
+  },
+  {
+    "rank": 4,
+    "promo_id": "71a1f988",
+    "moment_id": "M08",
+    "slate_role": "proven",
+    "title": "Alexander Died",
+    "change": "refine",
+    "duration_s": 22.9,
+    "segments": [
+      {
+        "episode": 42,
+        "start": "00:30.40",
+        "end": "00:39.80"
+      },
+      {
+        "episode": 42,
+        "start": "01:04.00",
+        "end": "01:17.50"
+      }
+    ],
+    "engine": "shocking",
+    "hook": "A terrified nobleman stares at the approaching stranger and insists, \"Alexander died!\"",
+    "sinker": "After being proclaimed the rightful Duke, the returned man faces the usurper and vows to settle what he stole.",
+    "sinker_question": "What will the rightful Duke do to the man who stole his life?",
+    "sinker_answers": [
+      "Have him arrested for treason",
+      "Challenge him to a duel",
+      "Expose the conspiracy before the nobility",
+      "Strip him of the title and everything it gave him"
+    ],
+    "why": "Opening on the impossible return creates instant shock, while the final threat preserves several plausible forms of reckoning.",
+    "spoiler_risk": "high",
+    "screen": null,
+    "engagement": {
+      "score": 70.79,
+      "viewer_a": {
+        "score": 75.62,
+        "hook": 0.784,
+        "completion": 0.6664,
+        "sinker": 0.7077
+      },
+      "viewer_b": {
+        "score": 61.81,
+        "hook": 0.6596,
+        "completion": 0.4743,
+        "sinker": 0.4718
+      },
+      "punch": 0.8667,
+      "measured_engine": "shocking",
+      "spread": 0.8871,
+      "penalty": 0.0
+    },
+    "win_share": 1.0,
+    "audience": {
+      "understood": "Alexander, believed dead, confronts Rupert as his mother publicly identifies him as the rightful Duke of Ashburn and he prepares to reclaim what Rupert stole.",
+      "question": "What exactly did Rupert steal, and how far will Alexander go to take it back?",
+      "next": [
+        [
+          "Alexander proves his claim, exposes Rupert and reclaims the dukedom",
+          55.0
+        ],
+        [
+          "Rupert challenges Alexander and the confrontation becomes violent",
+          30.0
+        ],
+        [
+          "Rupert escapes or takes a hostage before Alexander can punish him",
+          15.0
+        ]
+      ]
+    },
+    "auto_fixes": []
+  },
+  {
+    "rank": 5,
+    "promo_id": "102d2176",
+    "moment_id": "M02",
+    "slate_role": "proven",
+    "title": "Married, Then Disowned",
+    "change": "original",
+    "duration_s": 21.5,
+    "segments": [
+      {
+        "episode": 4,
+        "start": "01:53.00",
+        "end": "02:14.50"
+      }
+    ],
+    "engine": "explosive",
+    "hook": "The priest pronounces Juliana and the penniless stranger husband and wife in front of her stunned former groom.",
+    "sinker": "After Juliana rejects Gerald's life, her stepmother formally declares her disowned.",
+    "sinker_question": "Will Juliana abandon her new husband to preserve her family and status?",
+    "sinker_answers": [
+      "Choose her husband and accept exile",
+      "Beg her family to reconsider",
+      "Renounce the impulsive marriage"
+    ],
+    "why": "A triumphant wedding reversal immediately triggers Gerald's rage and an even harsher ultimatum from Juliana's family.",
+    "spoiler_risk": "medium",
+    "screen": {
+      "clip": "C20",
+      "understood": "Newly married Juliana rejects her enraged former groom, prompting her family to disown her for choosing a poor man.",
+      "stops_scroll": 5,
+      "needs_next": 4,
+      "confusing": "The identity of her new husband and her history with Gerald are only implied.",
+      "overall": 5
+    },
+    "engagement": {
+      "score": 70.01,
+      "viewer_a": {
+        "score": 74.9,
+        "hook": 0.8057,
+        "completion": 0.4826,
+        "sinker": 0.7077
+      },
+      "viewer_b": {
+        "score": 60.93,
+        "hook": 0.6926,
+        "completion": 0.273,
+        "sinker": 0.4718
+      },
+      "punch": 1.0,
+      "measured_engine": "shocking",
+      "spread": 0.8871,
+      "penalty": 0.0
+    },
+    "win_share": 0.617,
+    "audience": {
+      "understood": "Newly married Juliana rejects Gerald's control and is immediately disowned by Lady Ashcroft for choosing a penniless husband.",
+      "question": "How will Juliana and her supposedly penniless husband survive after her family disowns her?",
+      "next": [
+        [
+          "Juliana leaves with her husband and loses access to her family wealth",
+          55.0
+        ],
+        [
+          "Her husband's hidden status or fortune is soon revealed",
+          30.0
+        ],
+        [
+          "Juliana's family tries to annul the marriage or punish the couple",
+          15.0
+        ]
+      ]
+    },
+    "auto_fixes": []
+  },
+  {
+    "rank": 6,
+    "promo_id": "44b24bc4",
+    "moment_id": "M04",
+    "slate_role": "proven",
+    "title": "The Door Bursts Open",
+    "change": "hook",
+    "duration_s": 25.7,
+    "segments": [
+      {
+        "episode": 18,
+        "start": "00:17.80",
+        "end": "00:43.50"
+      }
+    ],
+    "engine": "explosive",
+    "hook": "A violent crash tears open the burning bedroom door, and a man bursts through the smoke.",
+    "sinker": "Wall-high flames seal the main exit, but he calmly declares that they will go another way.",
+    "sinker_question": "How will they escape when fire has sealed the doorway?",
+    "sinker_answers": [
+      "Find a hidden passage",
+      "Climb through a window",
+      "Break through a wall",
+      "Risk crossing the flames"
+    ],
+    "why": "Opening on the explosive rescue removes the slower wake-up and delivers human action immediately.",
+    "spoiler_risk": "low",
+    "screen": null,
+    "engagement": {
+      "score": 69.72,
+      "viewer_a": {
+        "score": 75.13,
+        "hook": 0.8452,
+        "completion": 0.6039,
+        "sinker": 0.7018
+      },
+      "viewer_b": {
+        "score": 59.68,
+        "hook": 0.728,
+        "completion": 0.3371,
+        "sinker": 0.4678
+      },
+      "punch": 0.8667,
+      "measured_engine": "shocking",
+      "spread": 0.8714,
+      "penalty": 0.31
+    },
+    "win_share": 0.883,
+    "audience": {
+      "understood": "Alexander bursts into a burning bedroom to rescue Juliana, but the flames and collapsing beams block their obvious exit.",
+      "question": "What other escape route can Alexander find before the burning room collapses around them?",
+      "next": [
+        [
+          "Alexander leads Juliana through a hidden passage or secondary corridor",
+          50.0
+        ],
+        [
+          "They climb through a window or onto the roof",
+          25.0
+        ],
+        [
+          "The alternate route also collapses and traps them",
+          15.0
+        ],
+        [
+          "Alexander stays behind to hold back debris while Juliana escapes",
+          10.0
+        ]
+      ]
+    },
+    "auto_fixes": [
+      "snapped_to_dialogue"
+    ]
+  },
+  {
+    "rank": 7,
+    "promo_id": "9ed4c485",
+    "moment_id": "M10",
+    "slate_role": "proven",
+    "title": "Name Your Price",
+    "change": "hook",
+    "duration_s": 28.7,
+    "segments": [
+      {
+        "episode": 50,
+        "start": "00:15.80",
+        "end": "00:35.00"
+      },
+      {
+        "episode": 50,
+        "start": "01:10.50",
+        "end": "01:20.00"
+      }
+    ],
+    "engine": "shocking",
+    "hook": "Still in bed with the bare-chested priest, the woman abruptly asks him to name his price.",
+    "sinker": "A maid discovers the lovers through the doorway and retreats into the shadows in terror.",
+    "sinker_question": "What will the maid do with the dangerous secret she witnessed?",
+    "sinker_answers": [
+      "Expose the affair immediately",
+      "Demand money for her silence",
+      "Be threatened into secrecy",
+      "Become a target before she can speak"
+    ],
+    "why": "Opening on a sexual encounter becoming an explicit transaction creates faster intrigue than playful pillow talk.",
+    "spoiler_risk": "high",
+    "screen": null,
+    "engagement": {
+      "score": 67.56,
+      "viewer_a": {
+        "score": 72.72,
+        "hook": 0.8352,
+        "completion": 0.5103,
+        "sinker": 0.7092
+      },
+      "viewer_b": {
+        "score": 57.99,
+        "hook": 0.736,
+        "completion": 0.2567,
+        "sinker": 0.4728
+      },
+      "punch": 0.8667,
+      "measured_engine": "puzzling",
+      "spread": 0.8911,
+      "penalty": 0.31
+    },
+    "win_share": 0.617,
+    "audience": {
+      "understood": "Catherine is bargaining with her priest lover for secrecy while Agnes accidentally discovers their affair and becomes a dangerous witness.",
+      "question": "Will Catherine or Father Thomas realize Agnes witnessed their affair and silence her?",
+      "next": [
+        [
+          "Agnes tries to flee and warn someone before she is caught",
+          45.0
+        ],
+        [
+          "Catherine notices Agnes and orders her silenced",
+          30.0
+        ],
+        [
+          "Father Thomas blackmails Catherine for even more after the discovery",
+          15.0
+        ],
+        [
+          "Agnes uses the secret to blackmail Catherine herself",
+          10.0
+        ]
+      ]
+    },
+    "auto_fixes": []
+  },
+  {
+    "rank": 8,
+    "promo_id": "e25f595e",
+    "moment_id": "M09",
+    "slate_role": "wild card",
+    "title": "The traitor runs for the door",
+    "change": "original",
+    "duration_s": 21.56,
+    "segments": [
+      {
+        "episode": 43,
+        "start": "01:33.40",
+        "end": "01:54.96"
+      }
+    ],
+    "engine": "explosive",
+    "hook": "Rupert desperately screams that he was only told Alexander was dead.",
+    "sinker": "Lord Sterling tries to flee but opens the door to find a police constable waiting for him.",
+    "sinker_question": "Can Lord Sterling escape the consequences of the conspiracy?",
+    "sinker_answers": [
+      "He is arrested immediately",
+      "He bargains by betraying Rupert",
+      "He fights his way out",
+      "He reveals who truly ordered the plot"
+    ],
+    "why": "A frantic betrayal triggers an attempted escape that ends with the villain face-to-face with the law.",
+    "spoiler_risk": "medium",
+    "screen": {
+      "clip": "C08",
+      "understood": "A presumed-dead Alexander confronts Rupert over a false death report, while Lord Sterling tries to escape and is stopped by a constable.",
+      "stops_scroll": 5,
+      "needs_next": 5,
+      "confusing": "The exact conspiracy and relationships among the men are not established.",
+      "overall": 5
+    },
+    "engagement": {
+      "score": 67.12,
+      "viewer_a": {
+        "score": 71.97,
+        "hook": 0.82,
+        "completion": 0.4912,
+        "sinker": 0.7154
+      },
+      "viewer_b": {
+        "score": 58.1,
+        "hook": 0.72,
+        "completion": 0.2749,
+        "sinker": 0.4769
+      },
+      "punch": 0.8667,
+      "measured_engine": "shocking",
+      "spread": 0.9078,
+      "penalty": 0.36
+    },
+    "win_share": 0.675,
+    "audience": {
+      "understood": "A supposedly dead Duke has interrupted a wedding and exposed Rupert and Lord Sterling as conspirators who stole his position.",
+      "question": "How did Alexander fake his death, and what punishment is waiting for Sterling and Rupert?",
+      "next": [
+        [
+          "Sterling is arrested and confesses that Rupert helped steal Alexander's title",
+          55.0
+        ],
+        [
+          "Sterling tries to fight or flee while Alexander confronts Rupert",
+          25.0
+        ],
+        [
+          "Sterling claims Catherine or another noble was the true mastermind",
+          20.0
+        ]
+      ]
+    },
+    "auto_fixes": []
+  },
+  {
+    "rank": 9,
+    "promo_id": "b3059f23",
+    "moment_id": "M05",
+    "slate_role": "proven",
+    "title": "The maid is Lady Juliana",
+    "change": "original",
+    "duration_s": 30.3,
+    "segments": [
+      {
+        "episode": 28,
+        "start": "01:10.50",
+        "end": "01:40.80"
+      }
+    ],
+    "engine": "shocking",
+    "hook": "Catherine rips Juliana's mother's locket from her neck as Juliana cries out.",
+    "sinker": "Catherine reads the herbarium inscription and triumphantly identifies the maid as Lady Juliana Ashcroft.",
+    "sinker_question": "What will Catherine do now that she knows the maid's true identity?",
+    "sinker_answers": [
+      "Expose and imprison her as an intruder",
+      "Exploit her family scandal to discredit her",
+      "Use her noble identity to implicate her husband"
+    ],
+    "why": "The stolen heirloom leads to a sharp identity reveal that gives Catherine a dangerous new weapon.",
+    "spoiler_risk": "medium",
+    "screen": {
+      "clip": "C22",
+      "understood": "Catherine strips imprisoned Juliana of her keepsakes, then discovers from an herb book that she is secretly Lady Juliana Ashcroft.",
+      "stops_scroll": 5,
+      "needs_next": 5,
+      "confusing": "Why Juliana hid her surname and why Catherine calls her a witch are unexplained.",
+      "overall": 5
+    },
+    "engagement": {
+      "score": 65.0,
+      "viewer_a": {
+        "score": 70.23,
+        "hook": 0.7333,
+        "completion": 0.3461,
+        "sinker": 0.7299
+      },
+      "viewer_b": {
+        "score": 55.28,
+        "hook": 0.5762,
+        "completion": 0.1485,
+        "sinker": 0.4866
+      },
+      "punch": 1.0,
+      "measured_engine": "shocking",
+      "spread": 0.9464,
+      "penalty": 0.0
+    },
+    "win_share": 0.725,
+    "audience": {
+      "understood": "Catherine abuses the imprisoned Juliana, then discovers from her mother's book that Juliana is actually Lady Juliana Ashcroft.",
+      "question": "What does Juliana's noble identity mean, and how will Catherine exploit the discovery?",
+      "next": [
+        [
+          "Catherine uses Juliana's identity to blackmail or condemn her",
+          50.0
+        ],
+        [
+          "Juliana reveals why she has been living under another identity",
+          25.0
+        ],
+        [
+          "The Ashcroft name gives Juliana an unexpected route to freedom",
+          25.0
+        ]
+      ]
+    },
+    "auto_fixes": []
+  },
+  {
+    "rank": 10,
+    "promo_id": "742ceaa1",
+    "moment_id": "M11",
+    "slate_role": "proven",
+    "title": "Burn Every Page",
+    "change": "original",
+    "duration_s": 38.2,
+    "segments": [
+      {
+        "episode": 32,
+        "start": "00:16.00",
+        "end": "00:54.20"
+      }
+    ],
+    "engine": "shocking",
+    "hook": "Catherine tells the chained, tearful Juliana to say goodbye to her mother as the ledger burns.",
+    "sinker": "Catherine thrusts the glowing iron toward Juliana and screams that she is lying.",
+    "sinker_question": "What will Catherine try next when the ledger fails to break Juliana?",
+    "sinker_answers": [
+      "Burn every page anyway",
+      "Turn the iron on Juliana",
+      "Threaten Juliana's husband",
+      "Lose control and back down"
+    ],
+    "why": "Juliana's unexpected command to burn the book instantly reverses who holds the emotional power.",
+    "spoiler_risk": "low",
+    "screen": {
+      "clip": "C15",
+      "understood": "Catherine threatens to burn Juliana's mother's ledger, but Juliana says the knowledge and identity it gave her cannot be destroyed.",
+      "stops_scroll": 5,
+      "needs_next": 4,
+      "confusing": "Why Juliana is imprisoned and why Catherine controls the ledger are not shown.",
+      "overall": 5
+    },
+    "engagement": {
+      "score": 63.8,
+      "viewer_a": {
+        "score": 68.7,
+        "hook": 0.8483,
+        "completion": 0.3068,
+        "sinker": 0.7392
+      },
+      "viewer_b": {
+        "score": 54.71,
+        "hook": 0.7441,
+        "completion": 0.0979,
+        "sinker": 0.4928
+      },
+      "punch": 0.8667,
+      "measured_engine": "shocking",
+      "spread": 0.9713,
+      "penalty": 0.32
+    },
+    "win_share": 0.667,
+    "audience": {
+      "understood": "Catherine threatens the chained Juliana with the destruction of her mother's legacy, but Juliana reclaims her strength and enrages Catherine by refusing to feel inferior.",
+      "question": "Will Catherine actually burn or strike Juliana now that Juliana has declared herself indestructible?",
+      "next": [
+        [
+          "Catherine attacks Juliana with the glowing iron",
+          45.0
+        ],
+        [
+          "Catherine orders Juliana's immediate execution instead",
+          25.0
+        ],
+        [
+          "A rescuer or sympathetic guard stops Catherine",
+          30.0
+        ]
+      ]
+    },
+    "auto_fixes": []
+  },
+  {
+    "rank": 11,
+    "promo_id": "0a5b0ae0",
+    "moment_id": "M01",
+    "slate_role": null,
+    "title": "One-Punch Protector",
+    "change": "hook",
+    "duration_s": 28.5,
+    "segments": [
+      {
+        "episode": 3,
+        "start": "01:24.00",
+        "end": "01:52.50"
+      }
+    ],
+    "engine": "explosive",
+    "hook": "The stranger blocks a charging guard and drops him with one bone-rattling strike.",
+    "sinker": "After protecting her and affirming her worth, the stranger is asked why he is doing this.",
+    "sinker_question": "Why is this dangerous stranger risking himself for the rejected woman?",
+    "sinker_answers": [
+      "He secretly knows her",
+      "His personal code compels him to defend her",
+      "He needs her trust for a hidden purpose"
+    ],
+    "why": "Opening on the instant knockout delivers a stronger visual shock while preserving the original motive mystery.",
+    "spoiler_risk": "low",
+    "screen": null,
+    "engagement": {
+      "score": 62.96,
+      "viewer_a": {
+        "score": 68.45,
+        "hook": 0.7962,
+        "completion": 0.336,
+        "sinker": 0.7392
+      },
+      "viewer_b": {
+        "score": 52.76,
+        "hook": 0.6974,
+        "completion": 0.0535,
+        "sinker": 0.4928
+      },
+      "punch": 0.8667,
+      "measured_engine": "shocking",
+      "spread": 0.9713,
+      "penalty": 0.0
+    },
+    "win_share": 0.675,
+    "audience": {
+      "understood": "A mysterious bearded stranger violently protects Juliana from her former groom, his guards, and her controlling family.",
+      "question": "Why is this dangerous stranger risking himself for Juliana?",
+      "next": [
+        [
+          "He reveals that he knows or loves Juliana from the past",
+          45.0
+        ],
+        [
+          "The groom orders all the remaining guards to attack him",
+          30.0
+        ],
+        [
+          "Juliana's family exposes a hidden motive behind his rescue",
+          25.0
+        ]
+      ]
+    },
+    "auto_fixes": []
+  },
+  {
+    "rank": 12,
+    "promo_id": "466642a4",
+    "moment_id": "M12",
+    "slate_role": null,
+    "title": "The Duchess makes her a maid",
+    "change": "original",
+    "duration_s": 26.2,
+    "segments": [
+      {
+        "episode": 47,
+        "start": "01:14.80",
+        "end": "01:41.00"
+      }
+    ],
+    "engine": "explosive",
+    "hook": "Alexander orders Catherine thrown beyond the estate gates while she screams for mercy.",
+    "sinker": "Juliana stops the expulsion and offers Catherine shelter—not as a guest, but as a scullery maid.",
+    "sinker_question": "Will the proud noblewoman accept service under the woman she tortured?",
+    "sinker_answers": [
+      "She accepts and genuinely submits",
+      "She accepts while planning revenge",
+      "She refuses and is cast out",
+      "She attacks Juliana rather than surrender"
+    ],
+    "why": "Mercy appears to save Catherine before transforming into a sharper and more personal humiliation.",
+    "spoiler_risk": "medium",
+    "screen": {
+      "clip": "C02",
+      "understood": "Alexander wants Catherine expelled for attacking Juliana, but Juliana overrules him and demotes Catherine to a scullery maid.",
+      "stops_scroll": 4,
+      "needs_next": 4,
+      "confusing": "What Catherine did to Juliana and why Alexander has authority are unstated.",
+      "overall": 5
+    },
+    "engagement": {
+      "score": 60.23,
+      "viewer_a": {
+        "score": 65.06,
+        "hook": 0.7275,
+        "completion": 0.3467,
+        "sinker": 0.6839
+      },
+      "viewer_b": {
+        "score": 51.26,
+        "hook": 0.6045,
+        "completion": 0.1456,
+        "sinker": 0.456
+      },
+      "punch": 0.8667,
+      "measured_engine": "shocking",
+      "spread": 0.8239,
+      "penalty": 0.56
+    },
+    "win_share": 0.783,
+    "audience": {
+      "understood": "Alexander wants Catherine expelled for attacking Juliana, but Juliana takes control and sentences her enemy to work as a scullery maid.",
+      "question": "Will Catherine submit to serving the woman she tried to destroy, or retaliate?",
+      "next": [
+        [
+          "Catherine reluctantly accepts the scullery-maid position",
+          50.0
+        ],
+        [
+          "Catherine pretends to comply while plotting revenge inside the house",
+          30.0
+        ],
+        [
+          "Catherine refuses and is thrown off the estate",
+          15.0
+        ],
+        [
+          "Alexander argues that keeping Catherine nearby is too dangerous",
+          5.0
+        ]
+      ]
+    },
+    "auto_fixes": []
+  }
+]

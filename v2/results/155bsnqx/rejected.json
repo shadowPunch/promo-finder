@@ -1,0 +1,121 @@
+[
+  {
+    "reason": "hook_too_late_after_snapping",
+    "moment_id": null,
+    "candidate": {
+      "title": "Then I Love a Nobody",
+      "segments": [
+        {
+          "start": "E32L059",
+          "end": "E32L093"
+        }
+      ],
+      "hook_ref": "E32L060",
+      "hook": "Catherine sneers, 'Your soldier?' and Juliana immediately corrects her: 'My husband.'",
+      "cliffhanger_ref": "E32L093",
+      "cliffhanger": "After Juliana says Catherine has never made anyone love her, Catherine breaks and screams, 'Why?!'",
+      "sinker_question": "Why won't Juliana stop confronting Catherine despite the threat of the hot iron?",
+      "sinker_answers": [
+        "She knows she is right",
+        "She wants Catherine to expose herself",
+        "She has nothing left to lose",
+        "She is defending her husband's dignity"
+      ],
+      "engine": "explosive",
+      "why": "The romance-versus-status argument steadily strips away Catherine's confidence until she cracks.",
+      "spoiler_risk": "low",
+      "change": "original"
+    }
+  },
+  {
+    "reason": "duplicate_version (same cut as an existing version)",
+    "moment_id": "M02",
+    "candidate": {
+      "change": "hook",
+      "title": "Thrown Away for Him",
+      "segments": [
+        {
+          "start": "E04L085",
+          "end": "E04L099"
+        }
+      ],
+      "engine": "explosive",
+      "hook_ref": "E04L087",
+      "hook": "A dramatic chord hits as an enraged man lunges forward and shouts that the bride has thrown herself away.",
+      "cliffhanger_ref": "E04L099",
+      "cliffhanger": "The family matriarch answers the bride's defiance by formally disowning her.",
+      "sinker_question": "Will the bride abandon the penniless man to preserve her family and status?",
+      "sinker_answers": [
+        "Choose her husband and accept exile",
+        "Beg her family to reconsider",
+        "Renounce her impulsive choice"
+      ],
+      "why": "The furious accusation is more immediately confrontational than the wedding pronouncement while retaining the same ultimatum.",
+      "spoiler_risk": "medium"
+    }
+  },
+  {
+    "reason": "overlapping_segments",
+    "moment_id": "M09",
+    "candidate": {
+      "change": "structure",
+      "title": "Going Somewhere",
+      "segments": [
+        {
+          "start": "E43L085",
+          "end": "E43L087"
+        },
+        {
+          "start": "E43L056",
+          "end": "E43L084"
+        },
+        {
+          "start": "E43L085",
+          "end": "E43L087"
+        }
+      ],
+      "engine": "puzzling",
+      "hook_ref": "E43L086",
+      "hook": "A fleeing aristocrat opens a church door and finds a sardonic police constable waiting outside.",
+      "cliffhanger_ref": "E43L087",
+      "cliffhanger": "After the accusations reveal why he ran, the promo returns to his face frozen before the waiting constable.",
+      "sinker_question": "Can the cornered lord escape the conspiracy closing around him?",
+      "sinker_answers": [
+        "He is arrested on the spot",
+        "He betrays his partners for immunity",
+        "He attacks the constable",
+        "He reveals who truly ordered the false death report"
+      ],
+      "why": "The cold open presents the satisfying trap first, then rewinds to build the evidence and betrayal that forced him to flee.",
+      "spoiler_risk": "medium"
+    }
+  },
+  {
+    "reason": "duplicate_version (same cut as an existing version)",
+    "moment_id": "M03",
+    "candidate": {
+      "change": "refine",
+      "title": "Crawl for His Life",
+      "segments": [
+        {
+          "start": "E12L032",
+          "end": "E12L045"
+        }
+      ],
+      "engine": "shocking",
+      "hook_ref": "E12L032",
+      "hook": "A smiling woman tells her own sister, \"I want to see you crawl.\"",
+      "cliffhanger_ref": "E12L045",
+      "cliffhanger": "She demands that her sister tear through frozen thorns with bare hands—or watch her husband hang.",
+      "sinker_question": "What will she choose when saving her husband means sacrificing her own hands?",
+      "sinker_answers": [
+        "Accept the ordeal and search for the ring",
+        "Refuse and trust her husband to face the law",
+        "Let her husband stop her from going",
+        "Expose the cruel bargain as a trap"
+      ],
+      "why": "Cutting before she accepts turns the visceral ordeal into a genuine choice with multiple believable outcomes.",
+      "spoiler_risk": "low"
+    }
+  }
+]

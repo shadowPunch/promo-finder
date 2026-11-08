@@ -53,6 +53,7 @@ def test_demo_data_links_candidates_to_episode_blocks(run_dir):
     for c in data["candidates"]:
         assert c["blocks"] and set(c["blocks"]) <= block_ids
     assert len(data["moments"]) == 2 and all(m["duels"] for m in data["moments"])
+    assert all(isinstance(m["rejected"], list) for m in data["moments"])
     assert data["promo"]["lines"] and data["promo"]["next_episode"] >= 2
 
 

@@ -1,0 +1,913 @@
+{
+ "run": {
+  "id": "155bsnqx",
+  "model": "gpt-5.6-sol",
+  "episodes": 50,
+  "cost_usd": 3.12,
+  "minutes": 11,
+  "wandb_url": "https://forge.coreweave.com/wandb/nithish232005-iit-roorkee/kuku-promo-finder/runs/155bsnqx"
+ },
+ "funnel": [
+  {
+   "label": "promos proposed",
+   "value": 93
+  },
+  {
+   "label": "passed the rules",
+   "value": 92
+  },
+  {
+   "label": "moments tested",
+   "value": 12
+  },
+  {
+   "label": "versions scored",
+   "value": 50
+  },
+  {
+   "label": "head-to-head duels",
+   "value": 140
+  },
+  {
+   "label": "promos to post",
+   "value": 10
+  }
+ ],
+ "win_rates": [
+  {
+   "change": "refine",
+   "label": "Refined",
+   "won": 2,
+   "tried": 4
+  },
+  {
+   "change": "hook",
+   "label": "New hook",
+   "won": 5,
+   "tried": 11
+  },
+  {
+   "change": "original",
+   "label": "Original",
+   "won": 5,
+   "tried": 12
+  },
+  {
+   "change": "length",
+   "label": "New length",
+   "won": 0,
+   "tried": 6
+  },
+  {
+   "change": "sinker",
+   "label": "New ending",
+   "won": 0,
+   "tried": 11
+  },
+  {
+   "change": "structure",
+   "label": "New structure",
+   "won": 0,
+   "tried": 6
+  }
+ ],
+ "checks": {
+  "n": 140,
+  "order_agreement": 0.857,
+  "order_agreement_a": 0.829,
+  "order_agreement_b": 0.886,
+  "first_shown_win_rate": 0.486,
+  "same_winner_as_score": 0.25,
+  "split_half_same_winner": 0.667,
+  "reliability": {
+   "n": 8,
+   "spearman": 0.119,
+   "mean_abs_change": 4.55
+  }
+ },
+ "slate": [
+  {
+   "rank": 1,
+   "role": "proven",
+   "title": "They Know the Intruder",
+   "change": "Refined",
+   "segments": "E41 01:21.0–01:36.0 + E42 00:11.2–00:28.8",
+   "duration_s": 32.7,
+   "score": 78.52,
+   "viewer_a": 80.48,
+   "viewer_b": 74.89,
+   "win_share": 1.0,
+   "engine": "shocking"
+  },
+  {
+   "rank": 2,
+   "role": "proven",
+   "title": "She Is to Be Executed",
+   "change": "New hook",
+   "segments": "E36 02:14.5–02:43.0 + E36 02:59.5–03:16.8",
+   "duration_s": 45.8,
+   "score": 72.23,
+   "viewer_a": 77.01,
+   "viewer_b": 63.34,
+   "win_share": 0.913,
+   "engine": "shocking"
+  },
+  {
+   "rank": 3,
+   "role": "proven",
+   "title": "Bare Hands",
+   "change": "New hook",
+   "segments": "E12 00:57.3–01:24.7",
+   "duration_s": 27.4,
+   "score": 72.04,
+   "viewer_a": 77.13,
+   "viewer_b": 62.59,
+   "win_share": 0.725,
+   "engine": "shocking"
+  },
+  {
+   "rank": 4,
+   "role": "proven",
+   "title": "Alexander Died",
+   "change": "Refined",
+   "segments": "E42 00:30.4–00:39.8 + E42 01:04.0–01:17.5",
+   "duration_s": 22.9,
+   "score": 70.79,
+   "viewer_a": 75.62,
+   "viewer_b": 61.81,
+   "win_share": 1.0,
+   "engine": "shocking"
+  },
+  {
+   "rank": 5,
+   "role": "proven",
+   "title": "Married, Then Disowned",
+   "change": "Original",
+   "segments": "E04 01:53.0–02:14.5",
+   "duration_s": 21.5,
+   "score": 70.01,
+   "viewer_a": 74.9,
+   "viewer_b": 60.93,
+   "win_share": 0.617,
+   "engine": "shocking"
+  },
+  {
+   "rank": 6,
+   "role": "proven",
+   "title": "The Door Bursts Open",
+   "change": "New hook",
+   "segments": "E18 00:17.8–00:43.5",
+   "duration_s": 25.7,
+   "score": 69.72,
+   "viewer_a": 75.13,
+   "viewer_b": 59.68,
+   "win_share": 0.883,
+   "engine": "shocking"
+  },
+  {
+   "rank": 7,
+   "role": "proven",
+   "title": "Name Your Price",
+   "change": "New hook",
+   "segments": "E50 00:15.8–00:35.0 + E50 01:10.5–01:20.0",
+   "duration_s": 28.7,
+   "score": 67.56,
+   "viewer_a": 72.72,
+   "viewer_b": 57.99,
+   "win_share": 0.617,
+   "engine": "puzzling"
+  },
+  {
+   "rank": 8,
+   "role": "wild card",
+   "title": "The traitor runs for the door",
+   "change": "Original",
+   "segments": "E43 01:33.4–01:54.9",
+   "duration_s": 21.6,
+   "score": 67.12,
+   "viewer_a": 71.97,
+   "viewer_b": 58.1,
+   "win_share": 0.675,
+   "engine": "shocking"
+  },
+  {
+   "rank": 9,
+   "role": "proven",
+   "title": "The maid is Lady Juliana",
+   "change": "Original",
+   "segments": "E28 01:10.5–01:40.8",
+   "duration_s": 30.3,
+   "score": 65.0,
+   "viewer_a": 70.23,
+   "viewer_b": 55.28,
+   "win_share": 0.725,
+   "engine": "shocking"
+  },
+  {
+   "rank": 10,
+   "role": "proven",
+   "title": "Burn Every Page",
+   "change": "Original",
+   "segments": "E32 00:16.0–00:54.2",
+   "duration_s": 38.2,
+   "score": 63.8,
+   "viewer_a": 68.7,
+   "viewer_b": 54.71,
+   "win_share": 0.667,
+   "engine": "shocking"
+  }
+ ],
+ "excerpts": [
+  {
+   "rank": 1,
+   "role": "proven",
+   "title": "They Know the Intruder",
+   "change": "Refined",
+   "segments": "E41 01:21.0–01:36.0 + E42 00:11.2–00:28.8",
+   "duration_s": 32.7,
+   "score": 78.52,
+   "viewer_a": 80.48,
+   "viewer_b": 74.89,
+   "win_share": 1.0,
+   "engine": "shocking",
+   "hook": "An ear-splitting explosion destroys the cathedral entrance as armed figures emerge through the smoke.",
+   "sinker_question": "Who is the stranger powerful enough to command the royal guards' loyalty?",
+   "sinker_answers": [
+    "The rightful Duke believed to be dead",
+    "A royal heir traveling under another identity",
+    "The guards' former commander",
+    "An agent carrying secret authority from the Crown"
+   ],
+   "parts": {
+    "hook_a": 0.9605,
+    "completion_a": 0.5836,
+    "punch": 1.0,
+    "sinker_a": 0.6752,
+    "penalty": 0.0
+   },
+   "curve_a": [
+    1.0,
+    0.9605,
+    0.9605,
+    0.9605,
+    0.9413,
+    0.9413,
+    0.9413,
+    0.9413,
+    0.9319,
+    0.9226,
+    0.9226,
+    0.9226,
+    0.9041,
+    0.9041,
+    0.9041,
+    0.9041,
+    0.8679,
+    0.8506,
+    0.8506,
+    0.8252,
+    0.8252,
+    0.7685,
+    0.723,
+    0.723,
+    0.723,
+    0.723,
+    0.6943,
+    0.6943,
+    0.633,
+    0.633,
+    0.6077,
+    0.5836,
+    0.5836,
+    0.5836
+   ],
+   "curve_b": [
+    1.0,
+    0.9603,
+    0.9603,
+    0.9603,
+    0.9219,
+    0.9219,
+    0.9219,
+    0.9219,
+    0.9035,
+    0.8944,
+    0.8944,
+    0.8944,
+    0.8497,
+    0.8497,
+    0.8497,
+    0.8497,
+    0.7817,
+    0.7505,
+    0.7505,
+    0.6843,
+    0.6843,
+    0.5855,
+    0.5227,
+    0.5227,
+    0.5227,
+    0.5227,
+    0.4866,
+    0.4866,
+    0.4161,
+    0.4161,
+    0.3869,
+    0.3602,
+    0.3602,
+    0.3602
+   ],
+   "versions": [
+    {
+     "label": "Original",
+     "score": 73.8,
+     "win_share": 0.283,
+     "winner": false
+    },
+    {
+     "label": "New hook",
+     "score": 81.7,
+     "win_share": 0.783,
+     "winner": false
+    },
+    {
+     "label": "New ending",
+     "score": 71.77,
+     "win_share": 0.619,
+     "winner": false
+    },
+    {
+     "label": "New structure",
+     "score": 70.84,
+     "win_share": 0.108,
+     "winner": false
+    },
+    {
+     "label": "Refined",
+     "score": 78.52,
+     "win_share": 1.0,
+     "winner": true
+    }
+   ],
+   "lines": [
+    {
+     "t0": 0.0,
+     "t1": 4.5,
+     "kind": "sfx",
+     "label": "SOUND FX",
+     "text": "Ear-splitting detonation, shattering stone, wood splintering violently into kindling, followed by terrified screams of the congregation.",
+     "cut_before": false
+    },
+    {
+     "t0": 0.8,
+     "t1": 3.0,
+     "kind": "action",
+     "label": "ACTION",
+     "text": "A violent fireball bursts inward as the entire cathedral entrance explodes, blasting the massive double doors and masonry into flying shrapnel and billowing smoke.",
+     "cut_before": false
+    },
+    {
+     "t0": 0.8,
+     "t1": 3.5,
+     "kind": "camera",
+     "label": "CAMERA",
+     "text": "Rapid series of panic shots: aristocratic guests ducking behind pews, covering their heads in terror, women shrieking as plaster rains down.",
+     "cut_before": false
+    },
+    {
+     "t0": 3.5,
+     "t1": 7.5,
+     "kind": "camera",
+     "label": "CAMERA",
+     "text": "Medium shot of Catherine and Rupert at the altar. Catherine gasps in horror, clutching her veil as debris rains over her bridal gown while Rupert spins around in shock.",
+     "cut_before": false
+    },
+    {
+     "t0": 7.5,
+     "t1": 11.0,
+     "kind": "camera",
+     "label": "CAMERA",
+     "text": "Medium wide shot of Juliana standing motionless in the middle of the aisle while thick smoke and dust billow from the demolished archway behind her.",
+     "cut_before": false
+    },
+    {
+     "t0": 8.0,
+     "t1": 12.5,
+     "kind": "action",
+     "label": "ACTION",
+     "text": "Silhouetted armed figures emerge through the smoke and rubble of the breached doorway. Juliana slowly turns her head, glancing back toward the light.",
+     "cut_before": false
+    },
+    {
+     "t0": 11.0,
+     "t1": 15.09,
+     "kind": "camera",
+     "label": "CAMERA",
+     "text": "Extreme close-up pushing in on Juliana's bruised face. Her expression shifts from grim resolve into awe, breathless realization, and blooming hope as the orchestral score swells into an abrupt cliffhanger.",
+     "cut_before": false
+    },
+    {
+     "t0": 15.09,
+     "t1": 16.49,
+     "kind": "dialogue",
+     "label": "BLOND NOBLEMAN (Shocked, Trembling)",
+     "text": "\"Who are you?\"",
+     "cut_before": true
+    },
+    {
+     "t0": 16.69,
+     "t1": 18.49,
+     "kind": "dialogue",
+     "label": "ALEXANDER (Low, Resonant)",
+     "text": "\"You already know.\"",
+     "cut_before": false
+    },
+    {
+     "t0": 18.49,
+     "t1": 20.49,
+     "kind": "camera",
+     "label": "CAMERA",
+     "text": "Close-up on Juliana, her manacled hands clutching at her smock as tears well in her eyes.",
+     "cut_before": false
+    },
+    {
+     "t0": 18.89,
+     "t1": 20.29,
+     "kind": "dialogue",
+     "label": "JULIANA (Breathless, Tearful Whisper)",
+     "text": "\"Alexander...\"",
+     "cut_before": false
+    },
+    {
+     "t0": 20.49,
+     "t1": 21.79,
+     "kind": "camera",
+     "label": "CAMERA",
+     "text": "Close-up on Alexander, his gaze softening momentarily toward her.",
+     "cut_before": false
+    },
+    {
+     "t0": 20.69,
+     "t1": 21.79,
+     "kind": "dialogue",
+     "label": "ALEXANDER (Gentle, Reassuring)",
+     "text": "\"Juliana.\"",
+     "cut_before": false
+    },
+    {
+     "t0": 21.79,
+     "t1": 25.39,
+     "kind": "camera",
+     "label": "CAMERA",
+     "text": "Medium shot of Rupert descending the altar steps, furiously pointing toward Alexander.",
+     "cut_before": false
+    },
+    {
+     "t0": 21.89,
+     "t1": 25.09,
+     "kind": "dialogue",
+     "label": "BLOND NOBLEMAN (Furious, Hysterical)",
+     "text": "\"Guards! Arrest this imposter!\"",
+     "cut_before": false
+    },
+    {
+     "t0": 25.39,
+     "t1": 27.29,
+     "kind": "camera",
+     "label": "CAMERA",
+     "text": "Medium shot of the royal guardsman standing rigidly in red uniform and bearskin cap, resting his white-gloved hand on his sabre.",
+     "cut_before": false
+    },
+    {
+     "t0": 25.89,
+     "t1": 27.29,
+     "kind": "dialogue",
+     "label": "ROYAL GUARD (Stoic, Defiant)",
+     "text": "\"We will not.\"",
+     "cut_before": false
+    },
+    {
+     "t0": 27.29,
+     "t1": 30.39,
+     "kind": "camera",
+     "label": "CAMERA",
+     "text": "Close-up on Rupert, veins bulging in his neck as his composure shatters.",
+     "cut_before": false
+    },
+    {
+     "t0": 27.39,
+     "t1": 29.09,
+     "kind": "dialogue",
+     "label": "BLOND NOBLEMAN (Screaming, Outraged)",
+     "text": "\"I said arrest him!\"",
+     "cut_before": false
+    },
+    {
+     "t0": 29.39,
+     "t1": 30.39,
+     "kind": "dialogue",
+     "label": "BLOND NOBLEMAN (Desperate, Unhinged)",
+     "text": "\"Why?!\"",
+     "cut_before": false
+    },
+    {
+     "t0": 30.39,
+     "t1": 32.69,
+     "kind": "camera",
+     "label": "CAMERA",
+     "text": "Close-up on the Royal Guard holding his upright blade with unwavering conviction.",
+     "cut_before": false
+    },
+    {
+     "t0": 30.59,
+     "t1": 32.69,
+     "kind": "dialogue",
+     "label": "ROYAL GUARD (Firm, Reverent)",
+     "text": "\"Because we know who he is.\"",
+     "cut_before": false
+    }
+   ]
+  },
+  {
+   "rank": 2,
+   "role": "proven",
+   "title": "She Is to Be Executed",
+   "change": "New hook",
+   "segments": "E36 02:14.5–02:43.0 + E36 02:59.5–03:16.8",
+   "duration_s": 45.8,
+   "score": 72.23,
+   "viewer_a": 77.01,
+   "viewer_b": 63.34,
+   "win_share": 0.913,
+   "engine": "shocking",
+   "hook": "A devastated mother tells her son that his wife is to be executed.",
+   "sinker_question": "What will the dead Duke do when he reaches the wedding before his wife's execution?",
+   "sinker_answers": [
+    "Storm the ceremony",
+    "Expose the conspiracy publicly",
+    "Trade himself for his wife",
+    "Arrive after the sentence is carried out"
+   ],
+   "parts": {
+    "hook_a": 0.8205,
+    "completion_a": 0.306,
+    "punch": 1.0,
+    "sinker_a": 0.9539,
+    "penalty": 0.0
+   },
+   "curve_a": [
+    1.0,
+    0.8372,
+    0.8205,
+    0.8205,
+    0.8205,
+    0.763,
+    0.7325,
+    0.7325,
+    0.6812,
+    0.6676,
+    0.6676,
+    0.6676,
+    0.6275,
+    0.615,
+    0.615,
+    0.5605,
+    0.5605,
+    0.5381,
+    0.5004,
+    0.5004,
+    0.4904,
+    0.4904,
+    0.4904,
+    0.4518,
+    0.4518,
+    0.4518,
+    0.4427,
+    0.4383,
+    0.4383,
+    0.412,
+    0.3873,
+    0.3873,
+    0.3757,
+    0.3757,
+    0.3424,
+    0.3424,
+    0.3424,
+    0.3424,
+    0.3218,
+    0.3154,
+    0.3154,
+    0.3154,
+    0.3091,
+    0.306,
+    0.306,
+    0.306,
+    0.306
+   ],
+   "curve_b": [
+    1.0,
+    0.7138,
+    0.6924,
+    0.6924,
+    0.6924,
+    0.6093,
+    0.5606,
+    0.5606,
+    0.4933,
+    0.4736,
+    0.4736,
+    0.4736,
+    0.4262,
+    0.4092,
+    0.4092,
+    0.3457,
+    0.3457,
+    0.3215,
+    0.2829,
+    0.2829,
+    0.2716,
+    0.2716,
+    0.2716,
+    0.2372,
+    0.2372,
+    0.2372,
+    0.2301,
+    0.2278,
+    0.2278,
+    0.205,
+    0.1866,
+    0.1866,
+    0.1754,
+    0.1754,
+    0.1514,
+    0.1514,
+    0.1514,
+    0.1514,
+    0.1363,
+    0.1322,
+    0.1322,
+    0.1322,
+    0.1282,
+    0.1257,
+    0.1257,
+    0.1257,
+    0.1257
+   ],
+   "versions": [
+    {
+     "label": "Original",
+     "score": 65.9,
+     "win_share": 0.667,
+     "winner": false
+    },
+    {
+     "label": "New hook",
+     "score": 72.23,
+     "win_share": 0.913,
+     "winner": true
+    },
+    {
+     "label": "New ending",
+     "score": 79.87,
+     "win_share": 0.333,
+     "winner": false
+    },
+    {
+     "label": "New structure",
+     "score": 63.83,
+     "win_share": 0.0,
+     "winner": false
+    },
+    {
+     "label": "Refined",
+     "score": 65.34,
+     "win_share": 0.35,
+     "winner": false
+    }
+   ],
+   "lines": [
+    {
+     "t0": 0.0,
+     "t1": 0.7,
+     "kind": "dialogue",
+     "label": "ALEXANDER (O.S.) (Gasping)",
+     "text": "\"No.\"",
+     "cut_before": false
+    },
+    {
+     "t0": 0.5,
+     "t1": 4.5,
+     "kind": "camera",
+     "label": "CAMERA",
+     "text": "Close-up on his mother looking up through her tears, delivering the horrifying reality.",
+     "cut_before": false
+    },
+    {
+     "t0": 1.5,
+     "t1": 4.3,
+     "kind": "dialogue",
+     "label": "ALEXANDER'S MOTHER (Solemn, Shattered)",
+     "text": "\"She is to be executed.\"",
+     "cut_before": false
+    },
+    {
+     "t0": 4.5,
+     "t1": 7.5,
+     "kind": "camera",
+     "label": "CAMERA",
+     "text": "Wide shot of the cabin as Alexander stands stiff as iron, stunned by the looming death sentence.",
+     "cut_before": false
+    },
+    {
+     "t0": 5.7,
+     "t1": 7.0,
+     "kind": "dialogue",
+     "label": "ALEXANDER (Guttural, Demanding)",
+     "text": "\"When?\"",
+     "cut_before": false
+    },
+    {
+     "t0": 7.5,
+     "t1": 11.3,
+     "kind": "camera",
+     "label": "CAMERA",
+     "text": "Close-up on his mother, her hand clutched tightly against her throat.",
+     "cut_before": false
+    },
+    {
+     "t0": 8.7,
+     "t1": 11.0,
+     "kind": "dialogue",
+     "label": "ALEXANDER'S MOTHER (Trembling)",
+     "text": "\"After the wedding.\"",
+     "cut_before": false
+    },
+    {
+     "t0": 11.3,
+     "t1": 14.0,
+     "kind": "camera",
+     "label": "CAMERA",
+     "text": "Close-up on Alexander, narrowing his eyes in lethal suspicion.",
+     "cut_before": false
+    },
+    {
+     "t0": 12.0,
+     "t1": 13.5,
+     "kind": "dialogue",
+     "label": "ALEXANDER (Cold, Menacing)",
+     "text": "\"What wedding?\"",
+     "cut_before": false
+    },
+    {
+     "t0": 14.0,
+     "t1": 17.5,
+     "kind": "camera",
+     "label": "CAMERA",
+     "text": "Profile close-up of his mother looking at him across the lantern light.",
+     "cut_before": false
+    },
+    {
+     "t0": 14.3,
+     "t1": 17.0,
+     "kind": "dialogue",
+     "label": "ALEXANDER'S MOTHER (Grim)",
+     "text": "\"Rupert... and Catherine's.\"",
+     "cut_before": false
+    },
+    {
+     "t0": 16.0,
+     "t1": 18.5,
+     "kind": "sfx",
+     "label": "SOUND FX",
+     "text": "A sudden dramatic metallic swell underscores the impending deadline.",
+     "cut_before": false
+    },
+    {
+     "t0": 17.5,
+     "t1": 22.0,
+     "kind": "camera",
+     "label": "CAMERA",
+     "text": "Frontal close-up on his mother, solemn and resolute in her warning.",
+     "cut_before": false
+    },
+    {
+     "t0": 19.0,
+     "t1": 21.5,
+     "kind": "dialogue",
+     "label": "ALEXANDER'S MOTHER (Deadly Serious)",
+     "text": "\"Two days from now.\"",
+     "cut_before": false
+    },
+    {
+     "t0": 22.0,
+     "t1": 25.5,
+     "kind": "camera",
+     "label": "CAMERA",
+     "text": "Profile shot of Alexander as dark realization settles over his face, turning to a grim, predatory glare.",
+     "cut_before": false
+    },
+    {
+     "t0": 22.3,
+     "t1": 25.3,
+     "kind": "dialogue",
+     "label": "ALEXANDER (Simmering with Fury)",
+     "text": "\"They are marrying in two days...\"",
+     "cut_before": false
+    },
+    {
+     "t0": 25.5,
+     "t1": 28.5,
+     "kind": "camera",
+     "label": "CAMERA",
+     "text": "Tight, terrifying close-up on Alexander's eyes flashing with murderous wrath.",
+     "cut_before": false
+    },
+    {
+     "t0": 26.0,
+     "t1": 28.5,
+     "kind": "dialogue",
+     "label": "ALEXANDER (Deadly, Throaty)",
+     "text": "\"...and killing my wife afterward.\"",
+     "cut_before": false
+    },
+    {
+     "t0": 28.5,
+     "t1": 33.0,
+     "kind": "camera",
+     "label": "CAMERA",
+     "text": "Tracking shot following Alexander as he turns his back on the warmth of the cabin and walks boldly toward the open double barn doors.",
+     "cut_before": true
+    },
+    {
+     "t0": 29.0,
+     "t1": 33.0,
+     "kind": "action",
+     "label": "ACTION",
+     "text": "Alexander stands framed in the doorway, staring out into the vast, snow-covered pine forest under the cold moonlight.",
+     "cut_before": false
+    },
+    {
+     "t0": 31.0,
+     "t1": 32.5,
+     "kind": "dialogue",
+     "label": "ALEXANDER (Calm, Chilling)",
+     "text": "\"Two days.\"",
+     "cut_before": false
+    },
+    {
+     "t0": 33.0,
+     "t1": 37.0,
+     "kind": "camera",
+     "label": "CAMERA",
+     "text": "Medium shot from inside the cabin, showing his mother clutching her chest, looking after Alexander's imposing silhouette standing at the threshold of the blizzard.",
+     "cut_before": false
+    },
+    {
+     "t0": 33.5,
+     "t1": 36.8,
+     "kind": "dialogue",
+     "label": "ALEXANDER (Vow of Vengeance)",
+     "text": "\"Then they have two days to celebrate.\"",
+     "cut_before": false
+    },
+    {
+     "t0": 37.0,
+     "t1": 41.5,
+     "kind": "camera",
+     "label": "CAMERA",
+     "text": "Side profile close-up on Alexander as his breath fogs into the icy winter night air, his jaw clenched tight.",
+     "cut_before": false
+    },
+    {
+     "t0": 38.5,
+     "t1": 41.2,
+     "kind": "dialogue",
+     "label": "ALEXANDER (Low, Menacing Promise)",
+     "text": "\"Because before that wedding begins...\"",
+     "cut_before": false
+    },
+    {
+     "t0": 41.5,
+     "t1": 45.8,
+     "kind": "camera",
+     "label": "CAMERA",
+     "text": "Tight side profile close-up of Alexander's battle-scarred cheek and burning gaze as he makes his final declaration.",
+     "cut_before": false
+    },
+    {
+     "t0": 42.0,
+     "t1": 45.8,
+     "kind": "dialogue",
+     "label": "ALEXANDER (Cold, Thunderous Finale)",
+     "text": "\"...their dead Duke is coming home.\"",
+     "cut_before": false
+    }
+   ]
+  }
+ ],
+ "links": {
+  "repo": "https://github.com/shadowPunch/promo-finder",
+  "results": "https://github.com/shadowPunch/promo-finder/tree/main/v2/results/155bsnqx",
+  "solution_doc": "https://github.com/shadowPunch/promo-finder/blob/main/v2/docs/solution-doc.md"
+ }
+}
