@@ -86,7 +86,7 @@ For EVERY clip above, reply with JSON only, in exactly this shape:
 {SCREEN_SCHEMA}"""
 
 
-AUDIENCE_VERSION = "audience-v1"
+AUDIENCE_VERSION = "audience-v2"
 
 VIEWER_A = ("Viewer A: a woman aged 25-44 who scrolls Instagram Reels in short breaks and enjoys romance and revenge "
             "drama.")
@@ -103,14 +103,18 @@ Each clip is written as numbered screenplay lines (L01, L02, ...) with times in 
 
 For every line, give:
 - the main emotion it causes: shock, anger, amusement, intrigue, tension, joy, sadness, boredom, confusion or none;
-- its strength: 0 (none) to 3 (very strong);
+- its strength: 0 = none, 1 = mild, 2 = clear, 3 = the strongest moment you would expect in a whole episode.
+  3 is rare: at most one line in a clip, and many clips have none. Most lines are 0 or 1;
 - for each viewer, the chance in percent (0-100) that they scroll away during this line, if still watching.
-Be realistic: most clips lose many viewers in the first seconds, a slow or confusing line loses viewers, and a strong
-surprise or conflict keeps them.
+  Typical clips lose 20-40% of viewers in the first 3 seconds; a line that adds nothing new loses 5-15%;
+  a gripping line loses 0-3%. Viewer B leaves faster than viewer A unless the moment is truly explosive, funny,
+  puzzling or shocking.
 
-At the end of each clip, say what the viewer thinks is happening, the question left in their head, 2-4 different
-things they imagine could happen next with a likelihood for each, and how badly each viewer needs to know what happens
-next (1 = not at all, 5 = desperately)."""
+At the end of each clip, say what the viewer thinks is happening and the question left in their head. List 2-4
+genuinely different things they imagine could happen next, with honest likelihoods: if one outcome is obvious, give it
+most of the likelihood (for example 80/20). Then say how badly each viewer needs to know what happens next:
+1 = would scroll on, 3 = mildly curious, 5 = would go looking for the show right now (rare: about 1 clip in 10).
+Most promo clips are average; judge each clip on its own merits, not against the others."""
 
 AUDIENCE_SCHEMA = """{"clips": [{
   "clip": "C01",
