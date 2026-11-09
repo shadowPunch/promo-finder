@@ -24,8 +24,7 @@ Shorts. For each clip you get the episode and exact start/end of every segment, 
 
 **Showcase site:** [promo-finder-nrk.streamlit.app](https://promo-finder-nrk.streamlit.app/) (code in
 [`showcase/`](showcase/README.md); run it locally from this folder with
-`env -u PYTHONPATH uv run --project v2 streamlit run showcase/streamlit_app.py`). **v2** (engagement tournament with
-head-to-head duels) is in [`v2/`](v2/README.md); its submitted run's files are in
+`env -u PYTHONPATH uv run --project v2 streamlit run showcase/streamlit_app.py`). submitted run's files are in
 [`v2/results/155bsnqx/`](v2/results/155bsnqx/).
 
 ## Quick start
