@@ -23,6 +23,22 @@ def test_missing_data_shows_a_friendly_error(monkeypatch, tmp_path):
     assert not at.exception and "export-site" in at.error[0].value
 
 
+def test_updated_data_file_is_reread(monkeypatch, tmp_path):
+    # a redeploy replaces the file but keeps the process (and its cache), so the cache must notice the change
+    import os
+
+    import loaders
+    monkeypatch.setattr(loaders, "DATA", tmp_path)
+    loaders.read.clear()
+    path = tmp_path / "x.json"
+    path.write_text('{"v": 1}')
+    assert loaders.data("x.json") == {"v": 1}
+    path.write_text('{"v": 2}')
+    os.utime(path, (path.stat().st_atime, path.stat().st_mtime + 10))
+    assert loaders.data("x.json") == {"v": 2}
+    loaders.read.clear()
+
+
 def test_player_inlines_data_safely():
     import json
 
