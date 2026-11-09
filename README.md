@@ -19,6 +19,12 @@
 
 ---
 
+<p align="center">
+  <b><a href="docs/solution-doc.pdf">Solution doc (2-page PDF)</a></b> &nbsp;·&nbsp;
+  <b><a href="https://promo-finder-nrk.streamlit.app/">Live demo</a></b> &nbsp;·&nbsp;
+  <b><a href="results/155bsnqx/">Raw outputs</a></b>
+</p>
+
 Reads a folder of timestamped microdrama screenplays and recommends ranked 20–60 s promo clips for TikTok, Reels and
 Shorts. It finds promo moments, re-cuts the best ones into several versions, scores every version with a simulated
 audience, picks each moment's best cut in one-on-one comparisons and outputs a ranked list. For each promo you get the
