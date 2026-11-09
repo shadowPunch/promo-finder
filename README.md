@@ -7,7 +7,7 @@
 
 <p align="center">
   <a href="https://promo-finder-nrk.streamlit.app/">
-    <img src="docs/showcase.png" width="860" alt="The Promo Finder showcase site (click to open)">
+    <img src="showcase.png" width="860" alt="The Promo Finder showcase site (click to open)">
   </a>
 </p>
 
