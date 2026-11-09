@@ -20,7 +20,6 @@
 ---
 
 <p align="center">
-  <b><a href="https://github.com/shadowPunch/promo-finder/blob/main/docs/solution-doc.pdf">Solution doc (2-page PDF)</a></b> &nbsp;·&nbsp;
   <b><a href="https://promo-finder-nrk.streamlit.app/">Live demo</a></b> &nbsp;·&nbsp;
   <b><a href="https://github.com/shadowPunch/promo-finder/tree/main/results/155bsnqx">Raw outputs</a></b>
 </p>
