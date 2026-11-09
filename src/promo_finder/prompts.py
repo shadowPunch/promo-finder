@@ -86,9 +86,9 @@ For EVERY clip above, reply with JSON only, in exactly this shape:
 {SCREEN_SCHEMA}"""
 
 
-AUDIENCE_VERSION = "audience-v2"
+AUDIENCE_VERSION = "audience-v3"  # v3: viewer A is 18-30
 
-VIEWER_A = ("Viewer A: a woman aged 25-44 who scrolls Instagram Reels in short breaks and enjoys romance and revenge "
+VIEWER_A = ("Viewer A: a woman aged 18-30 who scrolls Instagram Reels in short breaks and enjoys romance and revenge "
             "drama.")
 VIEWER_B = ("Viewer B: someone who doesn't usually watch romance dramas. They only stop scrolling for something "
             "explosive, funny, genuinely puzzling or shocking.")

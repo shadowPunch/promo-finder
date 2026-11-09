@@ -11,5 +11,6 @@ tried and every one-on-one comparison. W&B: https://forge.coreweave.com/wandb/ni
 | `rejected.json` | Promos and re-cuts rejected by the rule checks, with reasons |
 | `run_meta.json` | Settings, counts, comparison consistency checks, cost |
 
+This run's simulated viewer A was a woman aged 25–44 (see `run_meta.json`); the tool now uses 18–30.
 These files are the tool's unedited output, written before the naming cleanup, so they still say "duels" and "v2".
 The episode scripts, the raw model log and the screening file are not published (the scripts are confidential).

@@ -82,7 +82,7 @@ The model only points at block ids and gives reactions. Code owns every timestam
 Per viewer, 0–100: 25 × hook (share still watching at 3 s) + 25 × completion (share still watching at the end)
 + 25 × punch (peak of the strongest engine, with small bonuses for an early surprise and for emotions that rise and
 fall) + 25 × cliffhanger pull (need-to-know-next × spread of the imagined next scenes) − up to 15 for confusion.
-Engagement = 0.65 × viewer A (women 25–44 who like romance and revenge drama) + 0.35 × viewer B (newcomers).
+Engagement = 0.65 × viewer A (women 18–30 who like romance and revenge drama) + 0.35 × viewer B (newcomers).
 The weights are a stated assumption; every component is saved so they can be fitted to real hook rate and completion.
 
 ## Swapping the model

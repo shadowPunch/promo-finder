@@ -29,7 +29,7 @@ steps = "".join(f'<div class="pf-step {kind}"><b>{theme.esc(name)}</b><span clas
 st.html(f'<div class="pf-steps">{steps}</div>')
 
 st.subheader("The engagement score")
-st.write("Scored for each viewer from 0 to 100, then blended: 65% the core fan (a woman aged 25–44 who likes romance "
+st.write("Scored for each viewer from 0 to 100, then blended: 65% the core fan (a woman aged 18–30 who likes romance "
          "and revenge drama), 35% a newcomer who only stops for something explosive, funny, puzzling or shocking.")
 PARTS = [("Hook", "Share still watching at 3 seconds."), ("Completion", "Share still watching at the end."),
          ("Punch", "Peak strength of the strongest engine emotion."),
