@@ -1,7 +1,7 @@
 [project]
 name = "promo-finder"
-version = "0.1.0"
-description = "Find ranked 20-60 s promo clips in timestamped microdrama screenplays"
+version = "1.0.0"
+description = "Find, re-cut and rank 20-60 s microdrama promos by predicted engagement"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [

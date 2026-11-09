@@ -1,13 +1,14 @@
 .venv/
 __pycache__/
 .pytest_cache/
+.ruff_cache/
 .cache/
 .env
 wandb/
 outputs/
 data/
-# working plan: contains local paths to the confidential pack (the design spec is safe to publish)
-docs/superpowers/plans/
+# design notes and working plans from the AI-assisted build (the plans hold local paths to the confidential pack)
+docs/superpowers/
 
 # the showcase site's exported data: an artificial demo show plus two short Kuku promo excerpts (agreed)
 !showcase/data/

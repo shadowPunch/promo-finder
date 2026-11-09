@@ -25,7 +25,7 @@
    "value": 50
   },
   {
-   "label": "head-to-head duels",
+   "label": "one-on-one comparisons",
    "value": 140
   },
   {
@@ -907,7 +907,6 @@
  ],
  "links": {
   "repo": "https://github.com/shadowPunch/promo-finder",
-  "results": "https://github.com/shadowPunch/promo-finder/tree/main/v2/results/155bsnqx",
-  "solution_doc": "https://github.com/shadowPunch/promo-finder/blob/main/v2/docs/solution-doc.md"
+  "results": "https://github.com/shadowPunch/promo-finder/tree/main/results/155bsnqx"
  }
 }

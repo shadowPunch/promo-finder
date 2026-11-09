@@ -85,3 +85,11 @@ def test_config_from_env_reports_missing_vars(monkeypatch):
         monkeypatch.delenv(key, raising=False)
     with pytest.raises(ValueError, match="X_MODEL"):
         LLMConfig.from_env("X")
+
+
+def test_a_failing_backend_becomes_an_llm_error(tmp_path):
+    def broken(request):
+        raise RuntimeError("quota exhausted")
+
+    with pytest.raises(LLMError, match="model call failed: quota exhausted"):
+        fake_llm(broken, tmp_path).complete_json("s", "u", Answer, tag="t")

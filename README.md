@@ -19,13 +19,14 @@
 
 ---
 
-Reads a folder of timestamped microdrama screenplays and returns ranked 20–60 s promo clips for TikTok, Reels and
-Shorts. For each clip you get the episode and exact start/end of every segment, the hook, the cliffhanger, and why it works.
+Reads a folder of timestamped microdrama screenplays and recommends ranked 20–60 s promo clips for TikTok, Reels and
+Shorts. It finds promo moments, re-cuts the best ones into several versions, scores every version with a simulated
+audience, picks each moment's best cut in one-on-one comparisons and outputs a ranked list. For each promo you get the
+episode and exact start and end of every segment, the hook, the cliffhanger and why it works.
 
-**Showcase site:** [promo-finder-nrk.streamlit.app](https://promo-finder-nrk.streamlit.app/) (code in
-[`showcase/`](showcase/README.md); run it locally from this folder with
-`env -u PYTHONPATH uv run --project v2 streamlit run showcase/streamlit_app.py`). submitted run's files are in
-[`v2/results/155bsnqx/`](v2/results/155bsnqx/).
+The [showcase site](https://promo-finder-nrk.streamlit.app/) explains the method and replays a real run as an
+animation (code in [`showcase/`](showcase/README.md)). The submitted run's outputs are in
+[`results/155bsnqx/`](results/155bsnqx/).
 
 ## Quick start
 
@@ -34,82 +35,125 @@ Needs Python 3.12 via [uv](https://docs.astral.sh/uv/), and for the default back
 
 ```bash
 uv sync
-cp .env.example .env          # add your AgentRouter key (Codex backend) or any OpenAI-compatible API
-uv run promo-finder run --input "/path/to/show-folder"
+cp .env.example .env              # add your model key (see "Swapping the model")
+uv run promo-finder run --input "/path/to/show-scripts" --max-cost 5
+uv run pytest                     # fake models: no network, no cost
+uv run streamlit run app.py       # optional review app
+uv run streamlit run showcase/streamlit_app.py   # the showcase site, locally
 ```
-
-Outputs go to `outputs/<show>/<run_id>/`:
-
-| File | What it is |
-|---|---|
-| `report.md` | ranked promos with hook, cliffhanger, why, cold-viewer read and transcript |
-| `promos.csv` / `promos.json` | the same, for editors and tools |
-| `rejected.json` | candidates that broke a rule, with the reason |
-| `raw_llm.jsonl` | every raw model reply, unedited |
-| `run_meta.json` | config, counts, tokens, cost, W&B link |
-
-Useful flags: `--max-episodes 5` (quick try), `--per-call 1` (finer picks, more calls),
-`--judge-top 0` (no judge), `--tag dev`. Score a run against your own labels: `uv run promo-finder eval --run <run folder>`.
-Review app: `uv run streamlit run app.py`.
-
-## Swapping the model
-
-Swapping is a `.env` change; no code changes. There are two backends:
-
-| `LLM_BACKEND` | When | Example settings |
-|---|---|---|
-| `codex` (default) | gateways that only accept approved agent clients, e.g. AgentRouter | `LLM_BASE_URL=https://agentrouter.org/v1`, `LLM_MODEL=gpt-5.6-sol` |
-| `openai` | any OpenAI-compatible API, e.g. one Kuku provides, or Mistral, DeepSeek, Groq, Gemini, OpenRouter | `LLM_BASE_URL=https://api.example.com/v1`, `LLM_MODEL=...`, `LLM_JSON_MODE=1` |
-
-The `codex` backend runs the real Codex CLI (`codex exec`) once per call: read-only, in an empty temp folder, with its own
-`CODEX_HOME` under `.cache/`, so your `~/.codex` settings are not used. Codex adds ~17K tokens of its own instructions to
-every call, which is why the default batches 5 episodes per call. For high volume, use the `openai` backend against a
-direct API.
-
-The cold-viewer judge uses `JUDGE_*` variables, which fall back to `LLM_*`. A different judge model reduces self-preference.
 
 ## How it works
 
 ```
-parser (code) → finder (LLM, 5 episodes/call) → validator (code) → scorer + dedupe (code)
-             → cold-viewer judge (LLM) → ranker (code) → outputs + W&B run → editor review (human)
+parse (code) → find (LLM) → rule checks (code) → coverage check (code)
+  → quick screen (LLM) → shortlist 12 (code)
+  → re-cuts (LLM editor) → rule checks (code)
+  → simulated audience (LLM, two viewers, line by line) → engagement score (code)
+  → one-on-one comparisons per moment (LLM, both orders) → winner by win share (code)
+  → refine top 5 (LLM, must win its comparison) → reliability check (LLM)
+  → ranked list + report + W&B (code)
 ```
 
-| Module | Responsibility |
+- **Find:** the model reads several episodes per call. Each promo names its engine (explosive, funny, puzzling,
+  shocking), a hook in the first 3 s, and a cliffhanger: one open question with 2–4 believable answers that the show
+  really answers later.
+- **Rule checks:** the model cites block ids (`E03L045`), never timestamps. Code turns ids into exact times and
+  enforces the rules: 20–60 s, hook block starting within 3 s, at most 2 s after the cliffhanger, 1–3 segments that
+  don't overlap, no line cut mid-sentence. Small misses are repaired automatically; anything else is rejected with a
+  reason.
+- **Screen and shortlist:** a cold-viewer pass rates every valid promo; the top 12 go on, at most one per episode and
+  none sharing footage.
+- **Re-cuts:** an editor prompt makes 3 new versions per moment, each changing one thing (opening, ending, length or
+  structure such as a cold open). Re-cuts go through the same rule checks.
+- **Simulated audience:** two blind viewers react to each version line by line: emotion, strength and the % chance
+  each scrolls away. They also imagine 2–4 next scenes and say how badly they need to know what happens next.
+- **One-on-one comparisons:** every pair of versions of a moment is shown to the same two viewers, who each pick the
+  cut they would keep watching. Each pair is judged twice, once in each order and in separate calls, so a bias
+  towards the first cut cancels out. The winner has the highest win share (0.65 viewer A + 0.35 viewer B); ties go to
+  the higher score. Why: one scoring pass was too noisy to pick between cuts (two passes ordered a pair the same way
+  only 61% of the time; chance is 50%), while the two comparison orders agree 86% of the time.
+- **Refine and reliability:** the top 5 winners get one improvement round driven by their weak spots; the improved cut
+  must beat the winner to replace it. 8 winners are re-scored in a new order to measure how stable the scores are.
+
+The model only points at block ids and gives reactions. Code owns every timestamp, rule and number.
+
+## The engagement score
+
+Per viewer, 0–100: 25 × hook (share still watching at 3 s) + 25 × completion (share still watching at the end)
++ 25 × punch (peak of the strongest engine, with small bonuses for an early surprise and for emotions that rise and
+fall) + 25 × cliffhanger pull (need-to-know-next × spread of the imagined next scenes) − up to 15 for confusion.
+Engagement = 0.65 × viewer A (women 25–44 who like romance and revenge drama) + 0.35 × viewer B (newcomers).
+The weights are a stated assumption; every component is saved so they can be fitted to real hook rate and completion.
+
+## Swapping the model
+
+Swapping is a `.env` change; no code changes. `JUDGE_*` variables (falling back to `LLM_*`) set the model for the
+quick screen and the audience, so a different model can score what the first one wrote.
+
+| `LLM_BACKEND` | When | Example settings |
+|---|---|---|
+| `codex` (default) | gateways that only accept approved agent clients, e.g. AgentRouter | `LLM_BASE_URL=https://agentrouter.org/v1`, `LLM_MODEL=gpt-5.6-sol` |
+| `openai` | any OpenAI-compatible API (OpenAI, Gemini, Groq, DeepSeek, OpenRouter, or one Kuku provides) | `LLM_BASE_URL=https://api.example.com/v1`, `LLM_MODEL=...`, `LLM_JSON_MODE=1` |
+
+The `codex` backend runs the real Codex CLI (`codex exec`) once per call: read-only, in an empty temp folder, with its
+own `CODEX_HOME` under `.cache/`, so your `~/.codex` settings are not used. Codex adds about 17K tokens of its own
+instructions to every call; for high volume, use the `openai` backend against a direct API. Replies are cached in
+`.cache/llm` by model and prompt, so reruns cost nothing and a crashed run resumes.
+
+## Settings
+
+| Flag | Default | What it does |
+|---|---|---|
+| `--per-call` | 5 | episodes per finder call (the submitted run used 10) |
+| `--screen-batch` | 30 | promos per quick-screen call (the submitted run used 50) |
+| `--shortlist` | 12 | moments that get new versions |
+| `--versions` | 3 | new versions per moment |
+| `--refine-top` | 5 | winners that get one improvement round (0 = off) |
+| `--reliability` | 8 | winners re-scored to measure stability (0 = off) |
+| `--no-duels` | | pick winners by score instead of one-on-one comparisons |
+| `--duel-batch` | 12 | comparisons per audience call |
+| `--audience-weight` | 0.65 | weight of viewer A |
+| `--max-cost` | 5 | spending cap in USD (0 = none); the run stops cleanly and is tagged `partial` |
+| `--max-episodes` | all | quick dev runs on the first N episodes |
+| `--tag` | | W&B tag, repeatable |
+
+## Code map
+
+| Module | Job |
 |---|---|
-| `parser.py` | screenplay `.txt` → episodes of timed blocks; tolerant of header case changes |
-| `transcript.py` | block ids (`E03L045`) and the text the models and reports see |
-| `llm.py` | model client: picks the backend; JSON extraction, feedback retries, disk cache, token/cost accounting |
-| `codex_client.py` | Codex CLI backend (`codex exec`), shaped like the OpenAI client so the rest doesn't care |
-| `prompts.py` | finder and judge prompts; `PROMPT_VERSION` is logged with every run |
-| `finder.py` | batches episodes and collects candidates |
-| `validate.py` | turns ids into exact times and enforces the promo rules (below) |
-| `rank.py` | rule score, dedupe, cold-viewer judge, final rank |
-| `report.py`, `tracking.py`, `pipeline.py`, `cli.py`, `evaluate.py`, `app.py` | outputs, W&B, one shared run, CLI, eval, UI |
+| `parser.py`, `transcript.py` | screenplay → timed blocks; block ids; numbered clip lines |
+| `finder.py` | finder calls and the coverage check |
+| `validate.py` | every timing rule, with small automatic repairs |
+| `screen.py` | quick screen, shortlist, footage dedupe |
+| `editor.py` | re-cuts and the refine round |
+| `audience.py` | simulated viewers; per-clip validation and one retry |
+| `duels.py` | one-on-one comparisons in both orders, win shares, order agreement and position bias |
+| `engagement.py` | the score maths (pure functions) |
+| `tournament.py` | pick winners, refine, reliability, win rate per kind of re-cut |
+| `slate.py` | the ranked list of promos to post |
+| `budget.py`, `llm.py`, `codex_client.py` | spending cap, model client, Codex backend |
+| `report.py`, `tracking.py`, `pipeline.py`, `cli.py` | outputs, W&B, the run, the command |
+| `site_data.py` | `export-site`: turns a run folder into the showcase site's JSON |
+| `app.py` (repo root) | review app: upload scripts, run, review and label the promos |
 
-### Rules enforced in code (`validate.py`)
+## Outputs
 
-20–60 s total. The hook block starts ≤ 3 s into the promo; a late hook moves the start. At most 2 s plays after the
-cliffhanger; a longer tail is trimmed. No line of dialogue is cut mid-sentence; boundaries widen to the whole line.
-1–3 segments that don't overlap. Anything else is rejected with a reason code and listed in `rejected.json`.
+`outputs/<show>/<run_id>/`: `report.md` (the ranked list first, then each winner with its score parts, drop-off
+sparklines, AIDA timeline, versions tried with their comparison win shares, and transcript), `promos.json/csv`
+(winners), `versions.json` (every version with per-second curves, and every comparison with both picks and the reason),
+`screened.json`, `rejected.json`, `raw_llm.jsonl`, `run_meta.json`.
 
-### Design decisions
+The submitted run's shareable files (no scripts, no raw model log) are in `results/155bsnqx/`. To refresh the
+showcase site's data from a run, see [`showcase/README.md`](showcase/README.md). The demo uses an artificial show in
+`examples/demo-show/`.
 
-- **The model cites block ids, never timestamps.** Models misquote times. With ids, every cut lands on a real block
-  edge and the rules can check it.
-- **Five episodes per call.** Codex adds ~17K tokens to every call (~6.8¢ measured), so 10 finder calls + 1 judge call
-  per show keep a full run at about $1.5–2. Promos can also join moments from neighbouring episodes.
-- **The real Codex CLI, not an imitation.** AgentRouter refuses requests that don't come from an approved agent client.
-  The tool runs Codex itself rather than faking its identity, and the `openai` backend covers every normal API.
-- **Rules in code, taste in the model.** Time arithmetic and hard constraints are deterministic and tested; the model
-  only judges drama.
-- **A separate cold-viewer judge.** It sees only the clip, with no show context, which is how a scrolling viewer meets
-  an ad. It tests "makes sense on its own" more directly than the finder's self-scores.
-- **Ranking:** `0.4·hook + 0.3·cliffhanger + 0.3·standalone − spoiler penalty + 0.25 if episode ≤ 10`, plus the judge's
-  1–5 score. The hook weighs most because an ad that doesn't stop the scroll is never watched. Early episodes get a
-  small bonus because an ad should drop a new viewer at the start of the show.
-- **Cache.** Raw replies are cached by (model, prompt), so reruns cost nothing and a crashed run resumes.
+Every run is also logged to Weights & Biases (project `kuku-promo-finder`; `PROMO_WANDB=0` turns it off), and screenplay text is never sent there. Where the AI tools got it wrong: [`docs/ai-log.md`](docs/ai-log.md).
 
+## Business frameworks behind the design
+
+AIDA (the four score parts), North Star metric (one engagement score whose parts map to platform metrics), stage-gate
+(a cheap, wide screen first, expensive testing only for moments that pass) and test-and-learn (one change per
+version, so every win can be explained).
 
 ## Data
 

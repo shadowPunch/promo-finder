@@ -11,32 +11,31 @@ A four-page Streamlit site that explains Promo Finder and replaces a recorded de
 | **Outputs** | The submitted run (`155bsnqx`): headline numbers, which re-cuts win, trust checks, the ranked promos, two promos in full, a link to download everything |
 | **Demo** | An animated replay of the real tool running on an artificial 4-episode show: scripts → promos found → rule checks → re-cuts → simulated audience → side-by-side comparisons → the winning promo playing as captions on a phone |
 
-Design brief: `docs/superpowers/specs/2026-11-09-showcase-site-design.md` (repo root).
 
 ## Run it
 
 From the **repo root** (Streamlit Community Cloud also runs from there, and reads the theme from `.streamlit/config.toml`):
 
 ```bash
-env -u PYTHONPATH uv run --project v2 streamlit run showcase/streamlit_app.py
+uv run streamlit run showcase/streamlit_app.py
 ```
 
 Add `?autoplay=1` to the Demo page URL to start the animation on load (used for headless screenshots).
 
 ## Where the data comes from
 
-The site reads two JSON files and nothing else. It never imports the `promo_finder_v2` package or calls a model, so it
+The site reads two JSON files and nothing else. It never imports the `promo_finder` package or calls a model, so it
 deploys with `streamlit` only (`showcase/requirements.txt`) and costs nothing per visitor.
 
-| File | Made from | Command (run in `v2/`) |
+| File | Made from | Command (run from the repo root) |
 |---|---|---|
-| `data/results.json` | Kuku run `155bsnqx` (+ the pack, for the two excerpts) | `uv run promo-finder-v2 export-site --kind results --run "outputs/<show>/155bsnqx" --input "<pack folder>" --out ../showcase/data/results.json` |
-| `data/demo.json` | Demo run `c11ks0xy` on `v2/examples/demo-show/` | `uv run promo-finder-v2 export-site --kind demo --run outputs/demo-show/c11ks0xy --input examples/demo-show --out ../showcase/data/demo.json --title "The Bride They Threw Out"` |
+| `data/results.json` | Kuku run `155bsnqx` (+ the pack, for the two excerpts) | `uv run promo-finder export-site --kind results --run "outputs/<show>/155bsnqx" --input "<pack folder>" --out showcase/data/results.json` |
+| `data/demo.json` | Demo run `c11ks0xy` on `examples/demo-show/` | `uv run promo-finder export-site --kind demo --run outputs/demo-show/c11ks0xy --input examples/demo-show --out showcase/data/demo.json --title "The Bride They Threw Out"` |
 
 The demo show (*The Bride They Threw Out*) was written for this site because the Kuku scripts are confidential. The
 demo run used `--per-call 4 --shortlist 4 --versions 3 --refine-top 0 --reliability 0 --duel-batch 24` (8 model
 calls, $1.31 billed) and is tracked in W&B as `c11ks0xy`. `results.json` quotes two short Kuku promo excerpts; the
-full run files are in `v2/results/155bsnqx/`.
+full run files are in `results/155bsnqx/`.
 
 ## Code map
 

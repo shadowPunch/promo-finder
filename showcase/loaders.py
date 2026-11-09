@@ -1,4 +1,4 @@
-"""Read the exported data files. Regenerate them with `promo-finder-v2 export-site` (see showcase/README.md)."""
+"""Read the exported data files. Regenerate them with `promo-finder export-site` (see showcase/README.md)."""
 from __future__ import annotations
 
 import json
@@ -21,7 +21,7 @@ def data(name: str) -> dict:
     """The file's contents, or a short error on the page (and the page stops) if it can't be read."""
     found = read(name)
     if found is None:
-        st.error(f"Couldn't read `showcase/data/{name}`. Regenerate it with `promo-finder-v2 export-site` "
+        st.error(f"Couldn't read `showcase/data/{name}`. Regenerate it with `promo-finder export-site` "
                  "(see showcase/README.md).")
         st.stop()
     return found

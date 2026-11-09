@@ -21,4 +21,4 @@ with st.expander("Read the four scripts"):
         st.code("\n".join(f"{b['start']:06.2f}  {(b['speaker'] or b['kind']).upper():<10}  {b['text']}"
                           for b in ep["blocks"]), language=None, wrap_lines=True)
 st.caption(f"Tracked in W&B: [{run['id']}]({run['wandb_url']}). The scripts are in the repo under "
-           "`v2/examples/demo-show/`.")
+           "`examples/demo-show/`.")

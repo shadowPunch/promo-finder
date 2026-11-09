@@ -20,6 +20,7 @@ from typing import TypeVar
 from openai import OpenAI
 from pydantic import BaseModel, ValidationError
 
+from .budget import Budget
 from .codex_client import CodexClient
 
 log = logging.getLogger(__name__)
@@ -105,10 +106,12 @@ def _make_client(cfg: LLMConfig):
 
 
 class LLM:
-    def __init__(self, cfg: LLMConfig, client=None, cache_dir: Path | None = Path(".cache/llm")):
+    def __init__(self, cfg: LLMConfig, client=None, cache_dir: Path | None = Path(".cache/llm"),
+                 budget: Budget | None = None):
         self.cfg = cfg
         self.client = client or _make_client(cfg)
         self.cache_dir = cache_dir
+        self.budget = budget
         self.usage = Usage()
         self.log: list[dict] = []
         self._last_call = 0.0
@@ -129,7 +132,12 @@ class LLM:
         messages = [{"role": "system", "content": system}, {"role": "user", "content": user}]
         error: Exception | None = None
         for attempt in range(1, max_attempts + 1):
-            text = self._call(messages)
+            if self.budget:
+                self.budget.check(tag)
+            try:
+                text = self._call(messages)
+            except Exception as err:  # network, quota, timeout or gateway error: fail this call, not the whole run
+                raise LLMError(f"{tag}: model call failed: {err}") from err
             self.log.append({"tag": tag, "key": key, "cached": False, "attempt": attempt, "text": text})
             try:
                 result = schema.model_validate(extract_json(text))
@@ -161,8 +169,12 @@ class LLM:
         self.usage.calls += 1
         self.usage.seconds += self._last_call - started
         if response.usage:
-            self.usage.prompt_tokens += response.usage.prompt_tokens or 0
-            self.usage.completion_tokens += response.usage.completion_tokens or 0
+            prompt = response.usage.prompt_tokens or 0
+            completion = response.usage.completion_tokens or 0
+            self.usage.prompt_tokens += prompt
+            self.usage.completion_tokens += completion
+            if self.budget:
+                self.budget.add((prompt * self.cfg.price_in_per_m + completion * self.cfg.price_out_per_m) / 1e6)
         return response.choices[0].message.content or ""
 
     def _cache_get(self, key: str) -> str | None:
