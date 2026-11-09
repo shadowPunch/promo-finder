@@ -20,6 +20,7 @@
 ---
 
 <p align="center">
+  <b><a href="https://github.com/shadowPunch/promo-finder/blob/main/Nithish_Ravikkumar_23123028_Kuku_Problem1_solution.pdf">Solution doc (PDF)</a></b> &nbsp;·&nbsp;
   <b><a href="https://promo-finder-nrk.streamlit.app/">Live demo</a></b> &nbsp;·&nbsp;
   <b><a href="https://github.com/shadowPunch/promo-finder/tree/main/results/155bsnqx">Raw outputs</a></b>
 </p>
@@ -40,7 +41,7 @@ Needs Python 3.12 via [uv](https://docs.astral.sh/uv/), and for the default back
 
 ```bash
 uv sync
-cp .env.example .env              # add your model key (see "Swapping the model")
+cp .env.example .env              # add your model key (see "Model call and Swapping")
 uv run promo-finder run --input "/path/to/show-scripts" --max-cost 5
 uv run pytest                     # fake models: no network, no cost
 uv run streamlit run app.py       # optional review app
@@ -49,7 +50,23 @@ uv run streamlit run showcase/streamlit_app.py   # the showcase site, locally
 
 ## Working
 
-Explained in detail in solution document
+The full write-up (problem, assumptions, pipeline, results, evaluation and limitations) is in the
+**[solution document](Nithish_Ravikkumar_23123028_Kuku_Problem1_solution.pdf)**. In brief:
+
+<p align="center">
+  <img src="pipeline.png" width="860" alt="Promo Finder pipeline: LLM steps in red, code steps in white">
+</p>
+
+The model reads the screenplays and proposes promos that point at script lines, never timestamps; code turns those
+lines into exact times and enforces the promo rules (20–60 s, hook within 3 s, ending on the cliffhanger). The 12
+strongest moments get three re-cuts each, two simulated viewers react to every cut line by line, and each moment's
+best cut is picked in one-on-one comparisons judged in both orders. The winners are ranked by engagement score into
+the list of recommended promos, which an editor approves.
+
+On the 50-episode pack: 93 promos proposed, 92 passed the rules, and 12 moments were tested in 50 cuts with 140
+one-on-one comparisons. A re-cut beat the original in 7 of the 12 moments, mostly through a stronger opening. The
+comparisons are far steadier than single scores: the two orders agree on 86% of picks, against 61% when the same
+cuts are simply scored twice.
 
 ## Engagement score
 
@@ -103,7 +120,7 @@ The submitted run's shareable files (no scripts, no raw model log) are in `resul
 showcase site's data from a run, see [`showcase/README.md`](showcase/README.md). The demo uses an artificial show in
 `examples/demo-show/`.
 
-Every run is also logged to Weights & Biases (project `kuku-promo-finder`; `PROMO_WANDB=0` turns it off), and screenplay text is never sent there. Where the AI tools got it wrong: [`docs/ai-log.md`](docs/ai-log.md).
+Every run is also logged to Weights & Biases (project `kuku-promo-finder`; `PROMO_WANDB=0` turns it off), and screenplay text is never sent there.
 
 ## Business frameworks employed
 
