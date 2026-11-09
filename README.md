@@ -49,37 +49,7 @@ uv run streamlit run showcase/streamlit_app.py   # the showcase site, locally
 
 ## Working
 
-```
-parse (code) → find (LLM) → rule checks (code) → coverage check (code)
-  → quick screen (LLM) → shortlist 12 (code)
-  → re-cuts (LLM editor) → rule checks (code)
-  → simulated audience (LLM, two viewers, line by line) → engagement score (code)
-  → one-on-one comparisons per moment (LLM, both orders) → winner by win share (code)
-  → refine top 5 (LLM, must win its comparison) → reliability check (LLM)
-  → ranked list + report + W&B (code)
-```
-
-- **Find:** the model reads several episodes per call. Each promo names its engine (explosive, funny, puzzling,
-  shocking), a hook in the first 3 s, and a cliffhanger: one open question with 2–4 believable answers that the show
-  really answers later.
-- **Rule validation:** the model cites block ids (`E03L045`), never timestamps. Code turns ids into exact times and
-  enforces the rules: 20–60 s, hook block starting within 3 s, at most 2 s after the cliffhanger, 1–3 segments that
-  don't overlap, no line cut mid-sentence. Small misses are repaired automatically; anything else is rejected with a
-  reason.
-- **Screen and shortlist:** a cold-viewer pass rates every valid promo; the top 12 go on, at most one per episode and
-  none sharing footage.
-- **Re-cuts:** an editor prompt makes 3 new versions per moment, each changing one thing (opening, ending, length or
-  structure such as a cold open). Re-cuts go through the same rule checks.
-- **Simulated audience:** two blind viewers react to each version line by line: emotion, strength and the % chance
-  each scrolls away. They also imagine 2–4 next scenes and say how badly they need to know what happens next.
-- **One-on-one comparisons:** every pair of versions of a moment is shown to the same two viewers, who each pick the
-  cut they would keep watching. Each pair is judged twice, once in each order and in separate calls, so a bias
-  towards the first cut cancels out. The winner has the highest win share (0.65 viewer A + 0.35 viewer B); ties go to
-  the higher score. Why: one scoring pass was too noisy to pick between cuts (two passes ordered a pair the same way
-  only 61% of the time; chance is 50%), while the two comparison orders agree 86% of the time.
-- **Refine and reliability:** the top 5 winners get one improvement round driven by their weak spots; the improved cut
-  must beat the winner to replace it. 8 winners are re-scored in a new order to measure how stable the scores are.
-
+Explained in detail in solution document
 
 ## Engagement score
 
