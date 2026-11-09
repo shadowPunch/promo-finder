@@ -34,7 +34,7 @@ The [showcase site](https://promo-finder-nrk.streamlit.app/) explains the method
 animation (code in [`showcase/`](showcase/README.md)). The submitted run's outputs are in
 [`results/155bsnqx/`](results/155bsnqx/).
 
-## Quick start
+## Running code
 
 Needs Python 3.12 via [uv](https://docs.astral.sh/uv/), and for the default backend the
 [Codex CLI](https://github.com/openai/codex) on `PATH`.
@@ -48,7 +48,7 @@ uv run streamlit run app.py       # optional review app
 uv run streamlit run showcase/streamlit_app.py   # the showcase site, locally
 ```
 
-## How it works
+## Working
 
 ```
 parse (code) → find (LLM) → rule checks (code) → coverage check (code)
@@ -63,7 +63,7 @@ parse (code) → find (LLM) → rule checks (code) → coverage check (code)
 - **Find:** the model reads several episodes per call. Each promo names its engine (explosive, funny, puzzling,
   shocking), a hook in the first 3 s, and a cliffhanger: one open question with 2–4 believable answers that the show
   really answers later.
-- **Rule checks:** the model cites block ids (`E03L045`), never timestamps. Code turns ids into exact times and
+- **Rule validation:** the model cites block ids (`E03L045`), never timestamps. Code turns ids into exact times and
   enforces the rules: 20–60 s, hook block starting within 3 s, at most 2 s after the cliffhanger, 1–3 segments that
   don't overlap, no line cut mid-sentence. Small misses are repaired automatically; anything else is rejected with a
   reason.
@@ -81,9 +81,8 @@ parse (code) → find (LLM) → rule checks (code) → coverage check (code)
 - **Refine and reliability:** the top 5 winners get one improvement round driven by their weak spots; the improved cut
   must beat the winner to replace it. 8 winners are re-scored in a new order to measure how stable the scores are.
 
-The model only points at block ids and gives reactions. Code owns every timestamp, rule and number.
 
-## The engagement score
+## Engagement score
 
 Per viewer, 0–100: 25 × hook (share still watching at 3 s) + 25 × completion (share still watching at the end)
 + 25 × punch (peak of the strongest engine, with small bonuses for an early surprise and for emotions that rise and
@@ -91,9 +90,9 @@ fall) + 25 × cliffhanger pull (need-to-know-next × spread of the imagined next
 Engagement = 0.65 × viewer A (women 18–30 who like romance and revenge drama) + 0.35 × viewer B (newcomers).
 The weights are a stated assumption; every component is saved so they can be fitted to real hook rate and completion.
 
-## Swapping the model
+## Model call and Swapping
 
-Swapping is a `.env` change; no code changes. `JUDGE_*` variables (falling back to `LLM_*`) set the model for the
+Swapping is a `.env` change. `JUDGE_*` variables set the model for the
 quick screen and the audience, so a different model can score what the first one wrote.
 
 | `LLM_BACKEND` | When | Example settings |
@@ -123,24 +122,6 @@ instructions to every call; for high volume, use the `openai` backend against a 
 | `--max-episodes` | all | quick dev runs on the first N episodes |
 | `--tag` | | W&B tag, repeatable |
 
-## Code map
-
-| Module | Job |
-|---|---|
-| `parser.py`, `transcript.py` | screenplay → timed blocks; block ids; numbered clip lines |
-| `finder.py` | finder calls and the coverage check |
-| `validate.py` | every timing rule, with small automatic repairs |
-| `screen.py` | quick screen, shortlist, footage dedupe |
-| `editor.py` | re-cuts and the refine round |
-| `audience.py` | simulated viewers; per-clip validation and one retry |
-| `duels.py` | one-on-one comparisons in both orders, win shares, order agreement and position bias |
-| `engagement.py` | the score maths (pure functions) |
-| `tournament.py` | pick winners, refine, reliability, win rate per kind of re-cut |
-| `slate.py` | the ranked list of promos to post |
-| `budget.py`, `llm.py`, `codex_client.py` | spending cap, model client, Codex backend |
-| `report.py`, `tracking.py`, `pipeline.py`, `cli.py` | outputs, W&B, the run, the command |
-| `site_data.py` | `export-site`: turns a run folder into the showcase site's JSON |
-| `app.py` (repo root) | review app: upload scripts, run, review and label the promos |
 
 ## Outputs
 
@@ -155,12 +136,11 @@ showcase site's data from a run, see [`showcase/README.md`](showcase/README.md).
 
 Every run is also logged to Weights & Biases (project `kuku-promo-finder`; `PROMO_WANDB=0` turns it off), and screenplay text is never sent there. Where the AI tools got it wrong: [`docs/ai-log.md`](docs/ai-log.md).
 
-## Business frameworks behind the design
+## Business frameworks employed
 
-AIDA (the four score parts), North Star metric (one engagement score whose parts map to platform metrics), stage-gate
-(a cheap, wide screen first, expensive testing only for moments that pass) and test-and-learn (one change per
-version, so every win can be explained).
-
+- AIDA (the four score parts)
+- North Star metric (one engagement score whose parts map to platform metrics)
+  
 ## Data
 
 The input pack is confidential and is not in this repo. Point `--input` at your local copy. Tests use invented
