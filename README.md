@@ -111,33 +111,6 @@ cliffhanger; a longer tail is trimmed. No line of dialogue is cut mid-sentence; 
   small bonus because an ad should drop a new viewer at the start of the show.
 - **Cache.** Raw replies are cached by (model, prompt), so reruns cost nothing and a crashed run resumes.
 
-## Tracking and quality
-
-Every run is logged to Weights & Biases (project `kuku-promo-finder`): config, prompt version, data version, per-batch
-counts, tokens, cost, rejection reasons, and a timestamps-only promo table. Screenplay text is never sent to W&B.
-`PROMO_WANDB=0` turns tracking off.
-Quality is checked with unit tests on synthetic fixtures (`uv run pytest`), the rule checks in the validator, automatic
-run stats, and the cold-viewer judge. No human labels are used. When an editor does label a run (app or `labels.csv`),
-`promo-finder eval` scores the ranking against them: precision@k, reasons for rejects, and judge–human agreement.
-
-## Limits
-
-- Works from the screenplay only: it can't see whether a visual hook lands, or whether script times match the final cut.
-  An editor checks both.
-- Cross-episode joins only happen within one batch (5 episodes; none with `--per-call 1`).
-- A moment retold in a recap, with different timestamps, isn't caught as a duplicate.
-- With one model available, the finder and the judge are the same model.
-- The Codex backend's ~17K-token overhead per call makes it costly at volume; use the `openai` backend there.
-- AgentRouter is a third-party relay, so the screenplays pass through it.
-- Prompts are in English; tested on one show.
-
-## Troubleshooting
-
-- **pytest or the CLI fails importing unrelated packages** (e.g. `launch_testing`, `osrf_pycommon`): a sourced ROS
-  environment puts its own Python packages on `PYTHONPATH`. Run commands with it unset, e.g.
-  `env -u PYTHONPATH uv run pytest`.
-- **`CodexError: ... 403`**: the gateway key isn't allowed to use `LLM_MODEL`; check the key's model list.
-- **Tests:** `uv run pytest`. They use invented fixtures and fake model clients, so no network or cost.
 
 ## Data
 
