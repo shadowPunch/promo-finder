@@ -1,0 +1,26 @@
+name: Keep showcase awake
+
+# Streamlit Community Cloud puts an app to sleep after 12 hours without visitors.
+# This opens the site in a headless browser every 10 hours (cron can't count hours across days,
+# so it runs at 00:00, 10:00 and 20:00 UTC: never more than 10 hours apart).
+on:
+  schedule:
+    - cron: "0 */10 * * *"
+  workflow_dispatch:  # "Run workflow" button for a manual visit
+
+permissions:
+  contents: read
+
+jobs:
+  visit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Playwright (uses the runner's preinstalled Chrome)
+        run: pip install playwright==1.65.0
+      - name: Visit the site
+        run: python .github/scripts/keep_awake.py

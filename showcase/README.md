@@ -67,3 +67,5 @@ share.streamlit.io → Create app → repo `shadowPunch/promo-finder`, branch `m
 `showcase/streamlit_app.py` → Deploy. The repo is public, so the app is public. Deployed at
 https://promo-finder-nrk.streamlit.app/; every push to `main` redeploys it. Apps sleep after 12 hours without
 visitors; anyone can wake one with "Yes, get this app back up!".
+To keep it awake, the GitHub Action `.github/workflows/keep-awake.yml` opens the site in a headless browser every
+10 hours (and clicks the wake-up button if it ever does fall asleep); run it by hand from the Actions tab.
