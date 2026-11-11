@@ -81,6 +81,19 @@ class RawDuels(BaseModel):
     duels: list[dict]  # each duel is validated separately
 
 
+class Captions(BaseModel):
+    """On-screen captions for one promo, one per style (see prompts.CAPTION_SYSTEM)."""
+    model_config = {"str_strip_whitespace": True}
+    story: str = Field(min_length=1)     # time skip, secret or power reversal in one or two beats
+    you: str = Field(min_length=1)       # "you" / POV setup ending on the open question
+    meme: str = Field(min_length=1)      # self-aware creator humour about watching the drama
+    reaction: str = Field(min_length=1)  # a viewer's reaction teasing the next beat
+
+
+class RawCaptions(BaseModel):
+    promos: list[dict]  # each promo's captions are checked separately
+
+
 class MomentVersions(BaseModel):
     moment: str
     versions: list[dict]  # each version is validated separately as a Candidate
@@ -166,6 +179,7 @@ class Promo:
     slate_role: str | None = None         # "proven", "challenger" or "wild card"
     rank: int | None = None
     win_share: float | None = None        # weighted share of one-on-one comparisons won within its moment
+    captions: Captions | None = None      # on-screen captions, written for the winners
 
     @property
     def duration(self) -> float:

@@ -1,7 +1,7 @@
 import json
 
 import pytest
-from helpers import FIXTURE_SHOW, fake_llm, fixture_episodes, pipeline_reply
+from helpers import CAPTIONS, FIXTURE_SHOW, fake_llm, fixture_episodes, pipeline_reply
 
 from promo_finder import site_data
 from promo_finder.cli import main
@@ -43,6 +43,7 @@ def test_results_data_has_funnel_slate_checks_and_excerpts(run_dir):
     assert excerpt["rank"] == 1 and excerpt["lines"] and excerpt["curve_a"]
     assert {"t0", "t1", "kind", "label", "text", "cut_before"} <= set(excerpt["lines"][0])
     assert data["links"]["repo"].startswith("https://github.com/")
+    assert data["slate"][0]["title"] == CAPTIONS["story"] and excerpt["captions"] == CAPTIONS
 
 
 def test_demo_data_links_candidates_to_episode_blocks(run_dir):
@@ -55,6 +56,7 @@ def test_demo_data_links_candidates_to_episode_blocks(run_dir):
     assert len(data["moments"]) == 2 and all(m["duels"] for m in data["moments"])
     assert all(isinstance(m["rejected"], list) for m in data["moments"])
     assert data["promo"]["lines"] and data["promo"]["next_episode"] >= 2
+    assert data["promo"]["title"] == CAPTIONS["story"] and data["promo"]["captions"] == CAPTIONS
 
 
 def test_export_site_cli_writes_json(run_dir, tmp_path):
@@ -62,3 +64,23 @@ def test_export_site_cli_writes_json(run_dir, tmp_path):
     assert main(["export-site", "--kind", "demo", "--run", str(run_dir), "--input", str(FIXTURE_SHOW),
                  "--out", str(out), "--title", "Fixture"]) == 0
     assert json.loads(out.read_text())["show"]["title"] == "Fixture"
+
+
+def _copy_without_captions(run_dir, tmp_path):
+    import shutil
+
+    copy = tmp_path / "run"
+    shutil.copytree(run_dir, copy)
+    promos = json.loads((copy / "promos.json").read_text())
+    (copy / "promos.json").write_text(json.dumps([{**p, "captions": None} for p in promos]))
+    return copy, promos
+
+
+def test_an_older_run_picks_up_captions_json_and_falls_back_to_the_title(run_dir, tmp_path):
+    copy, promos = _copy_without_captions(run_dir, tmp_path)
+    plain = site_data.results_data(site_data.load_run(copy), EPISODES)
+    assert plain["slate"][0]["title"] == promos[0]["title"] and plain["slate"][0]["captions"] is None
+    later = {**CAPTIONS, "story": "Written after the run."}
+    (copy / "captions.json").write_text(json.dumps({"captions": {promos[0]["promo_id"]: later}}))
+    data = site_data.results_data(site_data.load_run(copy), EPISODES)
+    assert data["slate"][0]["title"] == "Written after the run." and data["slate"][0]["captions"] == later

@@ -23,6 +23,9 @@ STEPS = [
                                            "one they would keep watching. The cut that wins most often is the "
                                            "moment's best cut.")),
     ("Ranked promo list", "code", "The best cuts, ranked by engagement score: the list of recommended promos."),
+    ("Captions", "model", ("Each winner gets four on-screen captions in the styles real microdrama reels use: a "
+                         "story hook, a 'you'/POV question, a self-aware meme and a reaction. Code rejects any "
+                         "caption over the word limit or using a character's name.")),
 ]
 steps = "".join(f'<div class="pf-step {kind}"><b>{theme.esc(name)}</b><span class="pf-tag {kind}">{kind}</span>'
                 f'<p>{theme.esc(text)}</p></div>' for name, kind, text in STEPS)

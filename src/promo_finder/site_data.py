@@ -40,7 +40,11 @@ def load_run(run_dir: Path) -> Run:
         return json.loads((run_dir / name).read_text(encoding="utf-8"))
 
     screened = read("screened.json") if (run_dir / "screened.json").exists() else []
-    return Run(read("run_meta.json"), read("promos.json"), read("versions.json"), read("rejected.json"), screened)
+    promos = read("promos.json")
+    if (run_dir / "captions.json").exists():  # written later by `promo-finder captions` for an older run
+        later = read("captions.json")["captions"]
+        promos = [{**p, "captions": p.get("captions") or later.get(p["promo_id"])} for p in promos]
+    return Run(read("run_meta.json"), promos, read("versions.json"), read("rejected.json"), screened)
 
 
 def write_json(data: dict, path: Path) -> None:
@@ -90,7 +94,8 @@ def demo_data(run: Run, episodes: dict[int, Episode], title: str) -> dict:
         + [rejected_candidate(r, i) for i, r in enumerate(rule_rejects, 1)],
         "moments": [moment_record(m, [r for r in run.rejected if r["moment_id"] == m["moment_id"]])
                     for m in run.versions],
-        "promo": {"id": top["promo_id"], "moment": top["moment_id"], "title": top["title"],
+        "promo": {"id": top["promo_id"], "moment": top["moment_id"], "title": headline(top),
+                  "captions": top.get("captions"),
                   "duration_s": top["duration_s"], "score": top["engagement"]["score"], "win_share": top["win_share"],
                   "hook": top["hook"], "sinker_question": top["sinker_question"],
                   "sinker_answers": top["sinker_answers"], "curve_a": top_version["curve_a"],
@@ -128,10 +133,16 @@ def version_index(versions: list[dict]) -> dict[str, dict]:
     return {v["promo_id"]: v for m in versions for v in m["versions"]}
 
 
+def headline(p: dict) -> str:
+    """The promo as a viewer meets it: its story caption, or the internal title if it has none."""
+    return (p.get("captions") or {}).get("story") or p["title"]
+
+
 def promo_row(p: dict, role: str | None) -> dict:
     e = p["engagement"]
-    return {"rank": p["rank"], "role": role, "title": p["title"], "change": CHANGE_LABELS.get(p["change"], p["change"]),
-            "segments": segments_text(p), "duration_s": round(p["duration_s"], 1), "score": e["score"],
+    return {"rank": p["rank"], "role": role, "title": headline(p), "captions": p.get("captions"),
+            "change": CHANGE_LABELS.get(p["change"], p["change"]), "segments": segments_text(p),
+            "duration_s": round(p["duration_s"], 1), "score": e["score"],
             "viewer_a": e["viewer_a"]["score"], "viewer_b": e["viewer_b"]["score"], "win_share": p["win_share"],
             "engine": e.get("measured_engine") or p["engine"]}
 

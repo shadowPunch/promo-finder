@@ -166,7 +166,9 @@ h3.title { font: 600 1.15rem/1.25 var(--serif); margin: 0 0 .5rem; }
 .pbar i { position: absolute; left: 0; top: 0; height: 100%; width: 0; background: #fff; border-radius: 2px; }
 .hooklbl { position: absolute; top: 24px; left: 14px; font-size: .58rem; letter-spacing: .16em; color: #F2B3A9; transition: opacity .3s; }
 .timer { position: absolute; top: 24px; right: 14px; font: .68rem var(--mono); color: rgba(255,255,255,.7); }
-.scene { position: absolute; top: 24%; left: 18px; right: 18px; text-align: center; font: italic .86rem/1.45 var(--sans);
+.reelcap { position: absolute; top: 44px; left: 14px; right: 14px; text-align: center; font: 700 .92rem/1.3 var(--sans);
+           color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,.9), 0 0 1px #000; }
+.scene { position: absolute; top: 31%; left: 18px; right: 18px; text-align: center; font: italic .86rem/1.45 var(--sans);
          color: rgba(250,247,240,.72); }
 .cap { position: absolute; bottom: 13%; left: 14px; right: 14px; text-align: center; }
 .cap small { display: block; font-size: .6rem; letter-spacing: .18em; color: #EBB7AE; text-transform: uppercase; margin-bottom: .35rem; }
@@ -188,6 +190,9 @@ h3.title { font: 600 1.15rem/1.25 var(--serif); margin: 0 0 .5rem; }
 .stats span { color: var(--muted); font-size: .8rem; }
 .winfo p { margin: 0 0 .6rem; line-height: 1.5; }
 .winfo ul { margin: .3rem 0 0; padding-left: 1.1rem; color: var(--muted); }
+.capideas { list-style: none; padding: 0; margin: .3rem 0 1rem; }
+.capideas li { margin: 0 0 .45rem; color: var(--ink); line-height: 1.4; }
+.capideas li b { display: block; font: .66rem var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 
 @media (max-width: 760px) {
   #stage { padding: .75rem; min-height: 0; }
@@ -527,15 +532,18 @@ async function duels(root) {
   await wait(3200);
 }
 
+const CAPTION_STYLES = { story: "Story hook", you: "You / POV", meme: "Self-aware meme", reaction: "Reaction" };
+
 async function promo(root) {
   const P = D.promo, winner = VERSIONS[P.id] || {};
   const layout = el("div", "promo"), phone = el("div", "phone"), screen = el("div", "screen");
   const pbar = el("div", "pbar"), hook = el("span", "hook"), fill = el("i"), hookLbl = el("span", "hooklbl", "HOOK · FIRST 3 S");
   const timer = el("span", "timer"), scene = el("div", "scene"), cap = el("div", "cap"), flash = el("div", "flash");
+  const reelcap = el("div", "reelcap", P.captions ? P.captions.story : "");
   const end = el("div", "endcard");
   hook.style.width = pct(Math.min(1, 3 / P.duration_s));
   add(end, el("p", "label", "Will you watch next?"), el("h3", null, P.sinker_question), el("span", "cta", `Watch episode ${P.next_episode} →`));
-  add(screen, add(pbar, hook, fill), hookLbl, timer, scene, cap, flash, end);
+  add(screen, add(pbar, hook, fill), hookLbl, timer, reelcap, scene, cap, flash, end);
   phone.appendChild(screen);
 
   const info = el("div", "winfo"), chips = el("div", "chips"), stats = el("div", "stats");
@@ -545,7 +553,10 @@ async function promo(root) {
              add(el("div"), el("b", null, pct(P.win_share)), el("span", null, "of comparisons won")));
   const guesses = el("ul");
   P.sinker_answers.forEach(a => add(guesses, el("li", null, a)));
+  const ideas = el("ul", "capideas");
+  Object.entries(P.captions || {}).forEach(([style, text]) => add(ideas, add(el("li"), el("b", null, CAPTION_STYLES[style] || style), text)));
   add(info, el("p", "label", "The winning cut"), el("h2", null, P.title), chips, stats,
+      P.captions ? el("p", "label", "Captions to test, one per style") : null, P.captions ? ideas : null,
       add(el("p"), add(el("b"), "Hook: "), P.hook),
       add(el("p"), add(el("b"), "Open question: "), P.sinker_question),
       el("p", "label", "What viewers might guess next"), guesses);

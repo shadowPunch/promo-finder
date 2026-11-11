@@ -43,6 +43,7 @@ Needs Python 3.12 via [uv](https://docs.astral.sh/uv/), and for the default back
 uv sync
 cp .env.example .env              # add your model key (see "Model call and Swapping")
 uv run promo-finder run --input "/path/to/show-scripts" --max-cost 5
+uv run promo-finder captions --run outputs/<show>/<run_id> --input "/path/to/show-scripts"   # captions for an older run
 uv run pytest                     # fake models: no network, no cost
 uv run streamlit run app.py       # optional review app
 uv run streamlit run showcase/streamlit_app.py   # the showcase site, locally
@@ -62,6 +63,12 @@ lines into exact times and enforces the promo rules (20–60 s, hook within 3 s,
 strongest moments get three re-cuts each, two simulated viewers react to every cut line by line, and each moment's
 best cut is picked in one-on-one comparisons judged in both orders. The winners are ranked by engagement score into
 the list of recommended promos, which an editor approves.
+
+Each winner also gets four on-screen captions, written in the styles real microdrama reels use: a story hook ("Five
+years after the divorce, he finally found out he had a child."), a "you"/POV question, a self-aware meme and a
+reaction. Code rejects any caption that is too long or uses a character's name, since viewers don't know the names
+yet. On the submitted run, "She Is to Be Executed" became *"Declared dead, the Duke has two days to stop his wife's
+execution."*
 
 On the 50-episode pack: 93 promos proposed, 92 passed the rules, and 12 moments were tested in 50 cuts with 140
 one-on-one comparisons. A re-cut beat the original in 7 of the 12 moments, mostly through a stronger opening. The
@@ -106,17 +113,19 @@ instructions to every call; for high volume, use the `openai` backend against a 
 | `--audience-weight` | 0.65 | weight of viewer A |
 | `--max-cost` | 5 | spending cap in USD (0 = none); the run stops cleanly and is tagged `partial` |
 | `--max-episodes` | all | quick dev runs on the first N episodes |
+| `--no-captions` | | skip the captions for the winners |
 | `--tag` | | W&B tag, repeatable |
 
 
 ## Outputs
 
 `outputs/<show>/<run_id>/`: `report.md` (the ranked list first, then each winner with its score parts, drop-off
-sparklines, AIDA timeline, versions tried with their comparison win shares, and transcript), `promos.json/csv`
-(winners), `versions.json` (every version with per-second curves, and every comparison with both picks and the reason),
+sparklines, AIDA timeline, versions tried with their comparison win shares, captions and transcript), `promos.json/csv`
+(winners, with their captions), `versions.json` (every version with per-second curves, and every comparison with both picks and the reason),
 `screened.json`, `rejected.json`, `raw_llm.jsonl`, `run_meta.json`.
 
-The submitted run's shareable files (no scripts, no raw model log) are in `results/155bsnqx/`. To refresh the
+The submitted run's shareable files (no scripts, no raw model log) are in `results/155bsnqx/`; its `captions.json` was
+written afterwards by `promo-finder captions`, which adds captions to a finished run without changing anything else. To refresh the
 showcase site's data from a run, see [`showcase/README.md`](showcase/README.md). The demo uses an artificial show in
 `examples/demo-show/`.
 

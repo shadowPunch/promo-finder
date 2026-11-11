@@ -89,7 +89,13 @@
   {
    "rank": 1,
    "role": "proven",
-   "title": "They Know the Intruder",
+   "title": "The cathedral doors explode. Then the royal guards refuse to arrest the stranger.",
+   "captions": {
+    "story": "The cathedral doors explode. Then the royal guards refuse to arrest the stranger.",
+    "you": "POV: a stranger crashes the wedding, and the royal guards obey him. Who is he?",
+    "meme": "Me starting a wedding drama and immediately meeting the mystery man who outranks the royal guards.",
+    "reaction": "I'm still not over why the royal guards choose him."
+   },
    "change": "Refined",
    "segments": "E41 01:21.0–01:36.0 + E42 00:11.2–00:28.8",
    "duration_s": 32.7,
@@ -102,7 +108,13 @@
   {
    "rank": 2,
    "role": "proven",
-   "title": "She Is to Be Executed",
+   "title": "Declared dead, the Duke has two days to stop his wife's execution.",
+   "captions": {
+    "story": "Declared dead, the Duke has two days to stop his wife's execution.",
+    "you": "Your wife faces execution after a wedding in two days. Can you reach her?",
+    "meme": "Me hearing \"two days\" and knowing the dead Duke is about to ruin this entire wedding.",
+    "reaction": "The way his face changes when he hears what happens after the wedding."
+   },
    "change": "New hook",
    "segments": "E36 02:14.5–02:43.0 + E36 02:59.5–03:16.8",
    "duration_s": 45.8,
@@ -115,7 +127,13 @@
   {
    "rank": 3,
    "role": "proven",
-   "title": "Bare Hands",
+   "title": "She must search the garden barehanded, or her husband hangs.",
+   "captions": {
+    "story": "She must search the garden barehanded, or her husband hangs.",
+    "you": "You're sent into the garden barehanded. Can you survive and save your husband?",
+    "meme": "Me watching her accept garden torture because the villains put her husband's life on the clock.",
+    "reaction": "The moment she asks where the garden is, everyone knows she chose him."
+   },
    "change": "New hook",
    "segments": "E12 00:57.3–01:24.7",
    "duration_s": 27.4,
@@ -128,7 +146,13 @@
   {
    "rank": 4,
    "role": "proven",
-   "title": "Alexander Died",
+   "title": "The Duke returns from the dead to confront the man who stole his life.",
+   "captions": {
+    "story": "The Duke returns from the dead to confront the man who stole his life.",
+    "you": "POV: the rightful Duke returns. What do you do when he comes for what you stole?",
+    "meme": "Me realizing the \"dead\" Duke walked into church with receipts and a hand on his sabre.",
+    "reaction": "The way the usurper cowers when the rightful Duke reaches for his sabre."
+   },
    "change": "Refined",
    "segments": "E42 00:30.4–00:39.8 + E42 01:04.0–01:17.5",
    "duration_s": 22.9,
@@ -141,7 +165,13 @@
   {
    "rank": 5,
    "role": "proven",
-   "title": "Married, Then Disowned",
+   "title": "She marries a penniless stranger, then loses her family and home.",
+   "captions": {
+    "story": "She marries a penniless stranger, then loses her family and home.",
+    "you": "You chose a penniless husband over your title. Will you abandon him now?",
+    "meme": "Me cheering for the chapel wedding until her mother turns the honeymoon into an eviction notice.",
+    "reaction": "She chose her own life, and her family made the price immediate."
+   },
    "change": "Original",
    "segments": "E04 01:53.0–02:14.5",
    "duration_s": 21.5,
@@ -154,7 +184,13 @@
   {
    "rank": 6,
    "role": "proven",
-   "title": "The Door Bursts Open",
+   "title": "He reaches her through the flames, but the burning doorway seals behind him.",
+   "captions": {
+    "story": "He reaches her through the flames, but the burning doorway seals behind him.",
+    "you": "POV: he finds you in the fire. How do you escape the sealed room?",
+    "meme": "Me relaxing because he kicked down the door, then noticing the doorway is now completely on fire.",
+    "reaction": "He said \"another way\" like the whole room wasn't burning around them."
+   },
    "change": "New hook",
    "segments": "E18 00:17.8–00:43.5",
    "duration_s": 25.7,
@@ -167,7 +203,13 @@
   {
    "rank": 7,
    "role": "proven",
-   "title": "Name Your Price",
+   "title": "The bride bargains with a priest in bed. A maid witnesses everything.",
+   "captions": {
+    "story": "The bride bargains with a priest in bed. A maid witnesses everything.",
+    "you": "You catch a noblewoman bribing her priest lover. What do you do with the secret?",
+    "meme": "Me expecting forbidden romance and getting church corruption, tax fraud, and one terrified maid.",
+    "reaction": "That maid's gasp may have made her the most endangered person in the manor."
+   },
    "change": "New hook",
    "segments": "E50 00:15.8–00:35.0 + E50 01:10.5–01:20.0",
    "duration_s": 28.7,
@@ -180,7 +222,13 @@
   {
    "rank": 8,
    "role": "wild card",
-   "title": "The traitor runs for the door",
+   "title": "The false Duke blames a lord. The accused conspirator runs straight into a constable.",
+   "captions": {
+    "story": "The false Duke blames a lord. The accused conspirator runs straight into a constable.",
+    "you": "POV: your co-conspirator names you in church. Can you escape before the Duke reaches you?",
+    "meme": "Me watching the mastermind attempt a quiet church exit after being named in the loudest possible betrayal.",
+    "reaction": "The constable waiting outside that door was the most satisfying possible answer."
+   },
    "change": "Original",
    "segments": "E43 01:33.4–01:54.9",
    "duration_s": 21.6,
@@ -193,7 +241,13 @@
   {
    "rank": 9,
    "role": "proven",
-   "title": "The maid is Lady Juliana",
+   "title": "She steals the maid's locket, then finds a noble name inside her mother's book.",
+   "captions": {
+    "story": "She steals the maid's locket, then finds a noble name inside her mother's book.",
+    "you": "Your tormentor finds your real name in your mother's book. What will she do with it?",
+    "meme": "Me thinking the stolen locket was cruel enough before the family book exposed the maid's identity.",
+    "reaction": "That smile after reading the name tells me the real torment starts next."
+   },
    "change": "Original",
    "segments": "E28 01:10.5–01:40.8",
    "duration_s": 30.3,
@@ -206,7 +260,13 @@
   {
    "rank": 10,
    "role": "proven",
-   "title": "Burn Every Page",
+   "title": "The ledger burns, but the chained woman refuses to let her mother's teachings die.",
+   "captions": {
+    "story": "The ledger burns, but the chained woman refuses to let her mother's teachings die.",
+    "you": "POV: she burns your mother's ledger. What can she threaten when you still won't break?",
+    "meme": "Me watching a chained woman win the argument while her tormentor holds a flaming iron.",
+    "reaction": "Her calm answer hurts the tormentor more than the burning ledger hurts her."
+   },
    "change": "Original",
    "segments": "E32 00:16.0–00:54.2",
    "duration_s": 38.2,
@@ -221,7 +281,13 @@
   {
    "rank": 1,
    "role": "proven",
-   "title": "They Know the Intruder",
+   "title": "The cathedral doors explode. Then the royal guards refuse to arrest the stranger.",
+   "captions": {
+    "story": "The cathedral doors explode. Then the royal guards refuse to arrest the stranger.",
+    "you": "POV: a stranger crashes the wedding, and the royal guards obey him. Who is he?",
+    "meme": "Me starting a wedding drama and immediately meeting the mystery man who outranks the royal guards.",
+    "reaction": "I'm still not over why the royal guards choose him."
+   },
    "change": "Refined",
    "segments": "E41 01:21.0–01:36.0 + E42 00:11.2–00:28.8",
    "duration_s": 32.7,
@@ -531,7 +597,13 @@
   {
    "rank": 2,
    "role": "proven",
-   "title": "She Is to Be Executed",
+   "title": "Declared dead, the Duke has two days to stop his wife's execution.",
+   "captions": {
+    "story": "Declared dead, the Duke has two days to stop his wife's execution.",
+    "you": "Your wife faces execution after a wedding in two days. Can you reach her?",
+    "meme": "Me hearing \"two days\" and knowing the dead Duke is about to ruin this entire wedding.",
+    "reaction": "The way his face changes when he hears what happens after the wedding."
+   },
    "change": "New hook",
    "segments": "E36 02:14.5–02:43.0 + E36 02:59.5–03:16.8",
    "duration_s": 45.8,

@@ -16,7 +16,7 @@ SPARK = "▁▂▃▄▅▆▇█"
 SPARK_POINTS = 20
 CSV_COLUMNS = ["rank", "slate_role", "promo_id", "moment_id", "title", "change", "duration_s", "segments", "engine",
                "measured_engine", "hook", "sinker_question", "engagement", "win_share", "viewer_a", "viewer_b",
-               "hook_a", "completion_a", "punch", "sinker_a"]
+               "hook_a", "completion_a", "punch", "sinker_a", "caption"]
 
 
 def segments_text(p: Promo) -> str:
@@ -72,6 +72,7 @@ def promo_record(p: Promo) -> dict:
         "moment_id": p.moment_id,
         "slate_role": p.slate_role,
         "title": c.title,
+        "captions": p.captions.model_dump() if p.captions else None,
         "change": c.change,
         "duration_s": round(p.duration, 2),
         "segments": [{"episode": s.episode, "start": format_tc(s.start), "end": format_tc(s.end)} for s in p.segments],
@@ -118,7 +119,8 @@ def write_outputs(out_dir: Path, winners: list[Promo], slate: list[Promo], momen
             writer.writerow([r["rank"], r["slate_role"], r["promo_id"], r["moment_id"], r["title"], r["change"],
                              r["duration_s"], segments_text(p), r["engine"], e.get("measured_engine"), r["hook"],
                              r["sinker_question"], e.get("score"), r["win_share"], a.get("score"), b.get("score"),
-                             a.get("hook"), a.get("completion"), e.get("punch"), a.get("sinker")])
+                             a.get("hook"), a.get("completion"), e.get("punch"), a.get("sinker"),
+                             (r["captions"] or {}).get("story")])
     _write_json(out_dir / "versions.json", version_records(moments))
     _write_json(out_dir / "screened.json", [promo_record(p) for p in screened])
     _write_json(out_dir / "rejected.json",
@@ -154,12 +156,17 @@ def _markdown(winners: list[Promo], slate: list[Promo], moments: list[Moment], e
         lines.append(f"Episodes without a valid promo: {', '.join(map(str, meta['episodes_without_promo']))}.")
     lines += ["", "## Recommended posting slate", "",
               "| Role | # | Promo | Engagement | Engine | Segments |", "|---|---|---|---|---|---|"]
-    lines += [f"| {p.slate_role} | {p.rank} | {p.candidate.title} | {p.engagement.score:.1f} | "
+    lines += [f"| {p.slate_role} | {p.rank} | {headline(p)} | {p.engagement.score:.1f} | "
               f"{p.engagement.engine or '-'} | {segments_text(p)} |" for p in slate]
     by_moment = {m.moment_id: m for m in moments}
     for p in winners:
         lines += ["", *_promo_section(p, by_moment.get(p.moment_id), episodes)]
     return "\n".join(lines) + "\n"
+
+
+def headline(p: Promo) -> str:
+    """The promo as a viewer would meet it: its story caption, or the internal title if it has none."""
+    return p.captions.story if p.captions else p.candidate.title
 
 
 def _pct(value: float | None) -> str:
@@ -180,12 +187,14 @@ def _promo_section(p: Promo, moment: Moment | None, episodes: dict[int, Episode]
     c, e = p.candidate, p.engagement
     clip = clip_lines(p, episodes)
     role = f" · slate: {p.slate_role}" if p.slate_role else ""
-    out = [f"## #{p.rank} {c.title} ({p.duration:.1f}s, engagement {e.score:.1f}{_duels_won(p)})", "",
+    out = [f"## #{p.rank} {headline(p)} ({p.duration:.1f}s, engagement {e.score:.1f}{_duels_won(p)})", "",
            f"- **Segments:** {segments_text(p)}",
-           f"- **Version:** {c.change} (moment {p.moment_id}){role}",
+           f"- **Version:** {c.change} (moment {p.moment_id}, internal title \"{c.title}\"){role}",
            f"- **Engine:** {c.engine} (measured: {e.engine or 'none'})",
            f"- **Hook:** {c.hook}",
            f"- **Sinker:** {c.sinker_question} Editor's expected answers: {'; '.join(c.sinker_answers)}"]
+    if p.captions:
+        out.append("- **Captions:** " + " · ".join(f"{style}: “{text}”" for style, text in p.captions))
     if p.reaction:
         imagined = "; ".join(f"{text} ({share:.0f})" for text, share in p.reaction.next)
         out += [f"- **Audience understood:** {p.reaction.understood}",

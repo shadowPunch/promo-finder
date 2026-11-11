@@ -5,6 +5,14 @@ import theme
 from loaders import data
 
 results = data("results.json")
+STYLES = {"story": "Story hook", "you": "You / POV", "meme": "Self-aware meme", "reaction": "Reaction"}
+
+
+def md(text: str) -> str:
+    """Model-written text for st.markdown: a "$" would otherwise start a maths formula."""
+    return text.replace("$", "\\$")
+
+
 run, checks, links = results["run"], results["checks"], results["links"]
 funnel = {f["label"]: f["value"] for f in results["funnel"]}
 
@@ -32,26 +40,26 @@ with right:
                "cut is shown first.")
 
 st.subheader("Recommended promos, ranked")
-st.dataframe(
-    [{"#": r["rank"], "Promo": r["title"], "Cut": r["change"], "Segments": r["segments"], "Sec": r["duration_s"],
-      "Score": r["score"], "Comparisons won": round(100 * r["win_share"])} for r in results["slate"]],
-    hide_index=True, width="stretch",
-    column_config={"#": st.column_config.NumberColumn(width=30), "Cut": st.column_config.TextColumn(width=85),
-                   "Sec": st.column_config.NumberColumn(width=40),
-                   "Score": st.column_config.ProgressColumn(min_value=0, max_value=100, format="%.1f", width=110),
-                   "Comparisons won": st.column_config.NumberColumn(format="%d%%", width=110)})
-st.caption("Promos with close scores are effectively tied.")
+# st.table, not st.dataframe: it wraps long captions instead of cutting them off
+st.table([{"#": r["rank"], "Promo (story caption)": r["title"], "Cut": r["change"], "Segments": r["segments"],
+           "Sec": f"{r['duration_s']:.0f}", "Score": f"{r['score']:.1f}", "Won": theme.pct(r["win_share"])}
+          for r in results["slate"]])
+st.caption("Won: share of one-on-one comparisons won against other cuts of the same moment. Promos with close "
+           "scores are effectively tied.")
 
 st.subheader("Two promos in full")
 for ex in results["excerpts"]:
     with st.container(border=True):
         theme.label(f"#{ex['rank']} · {ex['change']} · {ex['duration_s']:.0f} seconds · {ex['segments']}")
-        st.markdown(f"### {ex['title']}")
+        st.markdown(f"### {md(ex['title'])}")
         script_col, info_col = st.columns([3, 2], gap="large")
         with script_col:
             theme.script(ex["lines"])
         with info_col:
             st.markdown(f"**Hook:** {ex['hook']}  \n**Open question:** {ex['sinker_question']}")
+            if ex.get("captions"):
+                st.markdown("**Captions to test:**  \n" + "  \n".join(f"*{STYLES.get(k, k)}:* {md(v)}"
+                                                                     for k, v in ex["captions"].items()))
             a, b, c = st.columns(3)
             a.metric("Score", f"{ex['score']:.1f}", help="65% viewer A + 35% viewer B")
             b.metric("Viewer A", f"{ex['viewer_a']:.1f}")

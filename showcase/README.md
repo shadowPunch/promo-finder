@@ -32,7 +32,8 @@ deploys with `streamlit` only (`showcase/requirements.txt`) and costs nothing pe
 | `data/results.json` | Kuku run `155bsnqx` (+ the pack, for the two excerpts) | `uv run promo-finder export-site --kind results --run "outputs/<show>/155bsnqx" --input "<pack folder>" --out showcase/data/results.json` |
 | `data/demo.json` | Demo run `c11ks0xy` on `examples/demo-show/` | `uv run promo-finder export-site --kind demo --run outputs/demo-show/c11ks0xy --input examples/demo-show --out showcase/data/demo.json --title "The Bride They Threw Out"` |
 
-The demo show (*The Bride They Threw Out*) was written for this site because the Kuku scripts are confidential. The
+Promo titles on the site are each winner's story caption; a run folder's `captions.json` (from `promo-finder
+captions`) is picked up by `export-site` automatically. The demo show (*The Bride They Threw Out*) was written for this site because the Kuku scripts are confidential. The
 demo run used `--per-call 4 --shortlist 4 --versions 3 --refine-top 0 --reliability 0 --duel-batch 24` (8 model
 calls, $1.31 billed) and is tracked in W&B as `c11ks0xy`. `results.json` quotes two short Kuku promo excerpts; the
 full run files are in `results/155bsnqx/`.

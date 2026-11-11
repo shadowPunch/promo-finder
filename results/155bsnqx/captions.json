@@ -1,0 +1,81 @@
+{
+ "prompt_version": "captions-v1",
+ "model": "gpt-5.6-sol",
+ "n_promos": 12,
+ "failed_calls": [],
+ "cost_usd": 0.1501,
+ "captions": {
+  "019541e5": {
+   "story": "The cathedral doors explode. Then the royal guards refuse to arrest the stranger.",
+   "you": "POV: a stranger crashes the wedding, and the royal guards obey him. Who is he?",
+   "meme": "Me starting a wedding drama and immediately meeting the mystery man who outranks the royal guards.",
+   "reaction": "I'm still not over why the royal guards choose him."
+  },
+  "28952d57": {
+   "story": "Declared dead, the Duke has two days to stop his wife's execution.",
+   "you": "Your wife faces execution after a wedding in two days. Can you reach her?",
+   "meme": "Me hearing \"two days\" and knowing the dead Duke is about to ruin this entire wedding.",
+   "reaction": "The way his face changes when he hears what happens after the wedding."
+  },
+  "6b1b033d": {
+   "story": "She must search the garden barehanded, or her husband hangs.",
+   "you": "You're sent into the garden barehanded. Can you survive and save your husband?",
+   "meme": "Me watching her accept garden torture because the villains put her husband's life on the clock.",
+   "reaction": "The moment she asks where the garden is, everyone knows she chose him."
+  },
+  "71a1f988": {
+   "story": "The Duke returns from the dead to confront the man who stole his life.",
+   "you": "POV: the rightful Duke returns. What do you do when he comes for what you stole?",
+   "meme": "Me realizing the \"dead\" Duke walked into church with receipts and a hand on his sabre.",
+   "reaction": "The way the usurper cowers when the rightful Duke reaches for his sabre."
+  },
+  "102d2176": {
+   "story": "She marries a penniless stranger, then loses her family and home.",
+   "you": "You chose a penniless husband over your title. Will you abandon him now?",
+   "meme": "Me cheering for the chapel wedding until her mother turns the honeymoon into an eviction notice.",
+   "reaction": "She chose her own life, and her family made the price immediate."
+  },
+  "44b24bc4": {
+   "story": "He reaches her through the flames, but the burning doorway seals behind him.",
+   "you": "POV: he finds you in the fire. How do you escape the sealed room?",
+   "meme": "Me relaxing because he kicked down the door, then noticing the doorway is now completely on fire.",
+   "reaction": "He said \"another way\" like the whole room wasn't burning around them."
+  },
+  "9ed4c485": {
+   "story": "The bride bargains with a priest in bed. A maid witnesses everything.",
+   "you": "You catch a noblewoman bribing her priest lover. What do you do with the secret?",
+   "meme": "Me expecting forbidden romance and getting church corruption, tax fraud, and one terrified maid.",
+   "reaction": "That maid's gasp may have made her the most endangered person in the manor."
+  },
+  "e25f595e": {
+   "story": "The false Duke blames a lord. The accused conspirator runs straight into a constable.",
+   "you": "POV: your co-conspirator names you in church. Can you escape before the Duke reaches you?",
+   "meme": "Me watching the mastermind attempt a quiet church exit after being named in the loudest possible betrayal.",
+   "reaction": "The constable waiting outside that door was the most satisfying possible answer."
+  },
+  "b3059f23": {
+   "story": "She steals the maid's locket, then finds a noble name inside her mother's book.",
+   "you": "Your tormentor finds your real name in your mother's book. What will she do with it?",
+   "meme": "Me thinking the stolen locket was cruel enough before the family book exposed the maid's identity.",
+   "reaction": "That smile after reading the name tells me the real torment starts next."
+  },
+  "742ceaa1": {
+   "story": "The ledger burns, but the chained woman refuses to let her mother's teachings die.",
+   "you": "POV: she burns your mother's ledger. What can she threaten when you still won't break?",
+   "meme": "Me watching a chained woman win the argument while her tormentor holds a flaming iron.",
+   "reaction": "Her calm answer hurts the tormentor more than the burning ledger hurts her."
+  },
+  "0a5b0ae0": {
+   "story": "A stranger drops an armed guard, then shields the woman her family rejected.",
+   "you": "A dangerous stranger protects you from your own family. Why is he risking everything?",
+   "meme": "Me falling for the stranger after one punch and one sentence about remembering her worth.",
+   "reaction": "The way his voice softens only when he asks if she's hurt."
+  },
+  "466642a4": {
+   "story": "The tortured woman spares her tormentor, then offers shelter at a servant's price.",
+   "you": "Your former victim offers you shelter as her maid. Will you swallow your pride?",
+   "meme": "Me expecting exile and getting the most brutal job offer in noble-house history.",
+   "reaction": "The apron and keys were somehow colder than throwing her into the mud."
+  }
+ }
+}

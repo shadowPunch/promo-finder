@@ -158,6 +158,18 @@ def editor_reply(user: str) -> str:
     return json.dumps({"moments": moments})
 
 
+CAPTIONS = {"story": "She lost everything at the gala. Tonight she takes it back.",
+            "you": "POV: the woman they mocked just bought the building. What now?",
+            "meme": "Me at 3 AM watching a revenge drama like it's a documentary about my life.",
+            "reaction": "I screamed at who walks in next."}
+
+
+def caption_reply(user: str) -> str:
+    """Valid captions for every promo in a caption prompt."""
+    ids = [chunk.split("\n", 1)[0].strip() for chunk in user.split("### PROMO ")[1:]]
+    return json.dumps({"promos": [{"promo": promo_id, **CAPTIONS} for promo_id in ids]})
+
+
 def pipeline_reply(request) -> str:
     """Fake model for a whole run on the fixture show, routed by system prompt."""
     from promo_finder import prompts
@@ -172,6 +184,8 @@ def pipeline_reply(request) -> str:
         return audience_reply(user)
     if system == prompts.DUEL_SYSTEM:
         return duel_reply(user)
+    if system == prompts.CAPTION_SYSTEM:
+        return caption_reply(user)
     return json.dumps({"candidates": [
         make_candidate().model_dump(),
         make_candidate(segments=[{"start": "E01L003", "end": "E01L004"}],

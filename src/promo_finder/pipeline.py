@@ -1,7 +1,7 @@
 """One end-to-end run, shared by the CLI and the Streamlit app:
 parse -> find (LLM) -> validate -> coverage -> quick screen (LLM) -> shortlist -> versions (LLM editor)
 -> simulated audience (LLM) -> one-on-one comparisons (LLM) -> pick + refine + reliability -> posting slate
--> write + track.
+-> captions for the winners (LLM) -> write + track.
 Every model call sits behind one spending cap; if it is reached the run stops cleanly and is marked partial."""
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ from pathlib import Path
 from statistics import mean, median
 from typing import Callable
 
-from . import engagement, prompts
+from . import captions, engagement, prompts
 from . import screen as screening
 from . import validate as rules
 from .budget import Budget
@@ -38,6 +38,7 @@ class Settings:
     reliability: int = 8          # winners re-scored to measure score stability
     duels: bool = True            # pick each moment's winner in one-on-one comparisons (False: highest absolute score)
     duel_batch: int = 12          # comparisons per call
+    captions: bool = True         # write on-screen captions for the winners
     audience_weight: float = 0.65  # viewer A (core audience); viewer B (newcomers) gets the rest
     max_cost: float | None = 5.0  # spending cap in USD for this run; None = no cap
     seed: int = 0                 # shuffles clip order for the screen and the audience
@@ -99,6 +100,8 @@ def run(input_dir: Path, out_root: Path, llm: LLM, judge_llm: LLM | None = None,
         rejections += outcome.rejections
         failed += outcome.failed
         slate = build_slate(outcome.winners)
+        if settings.captions:
+            failed += captions.caption_promos(outcome.winners, episodes, llm)
         screened = sorted(promos, key=screening.screen_score, reverse=True)
 
         run_id = tracker.run.id if tracker.run else time.strftime("%Y%m%d-%H%M%S")
@@ -143,6 +146,7 @@ def _counts(proposed: int, promos: list[Promo], finder_rejections: list[Rejectio
         "versions_scored": sum(v.engagement is not None for v in versions),
         "unscored": sum(v.engagement is None for v in versions),
         "refined": sum(m.refined is not None for m in outcome.moments),
+        "captioned": sum(p.captions is not None for p in outcome.winners),
         "winners": len(outcome.winners),
         "slate": len(slate),
     }
@@ -168,6 +172,7 @@ def _config(input_dir: Path, episode_list: list[Episode], llm: LLM, judge_llm: L
                     "hook_at_s": engagement.HOOK_AT_S, "punch_bonus": engagement.BONUS,
                     "early_episode_max": screening.EARLY_EPISODE_MAX, "early_bonus": screening.EARLY_BONUS},
         "viewers": {"a": prompts.VIEWER_A, "b": prompts.VIEWER_B},
+        "caption_max_words": captions.MAX_WORDS,
     }
 
 

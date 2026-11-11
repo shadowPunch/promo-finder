@@ -10,6 +10,7 @@ tried and every one-on-one comparison. W&B: https://forge.coreweave.com/wandb/ni
 | `versions.json` | Every version of every moment, with audience curves and all 140 comparisons (under `duels`) |
 | `rejected.json` | Promos and re-cuts rejected by the rule checks, with reasons |
 | `run_meta.json` | Settings, counts, comparison consistency checks, cost |
+| `captions.json` | Four on-screen captions per winner (story hook, you/POV, meme, reaction), written after the run by `promo-finder captions` (W&B run `eakso7np`) |
 
 This run's simulated viewer A was a woman aged 25–44 (see `run_meta.json`); the tool now uses 18–30.
 These files are the tool's unedited output, written before the naming cleanup, so they still say "duels" and "v2".

@@ -232,4 +232,50 @@ Set "change" to "refine". Reply with JSON only, in exactly this shape:
 {EDITOR_SCHEMA}"""
 
 
-PROMPT_VERSION = "+".join([FINDER_VERSION, SCREEN_VERSION, EDITOR_VERSION, AUDIENCE_VERSION, DUEL_VERSION])
+CAPTION_VERSION = "captions-v1"
+
+# Style guide distilled from real microdrama promo reels and ads (ReelShort, DramaBox and creator clips).
+CAPTION_SYSTEM = """You write the on-screen captions for microdrama promo reels on TikTok, Instagram Reels and YouTube
+Shorts. The caption sits in the top third of the video and has one job: make a scrolling viewer need to see what
+happens. Captions on reels that work sound like this:
+- "Five years after the divorce, he finally found out he had a child."
+- "He fired her at 9am. By noon she owned the company."
+- "They destroyed her. She came back as the boss."
+- "Sold by her dad, kidnapped on her wedding day."
+- "Your ex returns... Will you tell him the kid is his?"
+- "Me watching a 90-episode vertical drama about a CEO and his fake wife at 3 AM like it's Oscar-winning cinema."
+- "I'm still not over what he says right after this."
+
+For each promo, write four captions, one in each style:
+- story: the premise in one or two short beats: a time skip, a secret, or a reversal of power. A statement, not a
+  question.
+- you: put the viewer inside the story with "you" or "POV:", ending on the open question.
+- meme: self-aware humour about watching this drama, the way creators caption reels, naming this promo's hook.
+- reaction: a viewer's reaction that teases the next beat without giving it away.
+
+Rules:
+- Stay true to the clip and the setup it shows: no events that aren't there, no fake-outs.
+- Name the stake and the twist, never the answer to the promo's open question.
+- Characters by role (the Duke, the maid, his mother, the bride), never by name: viewers don't know the names yet.
+- Concrete beats beat adjectives: times, numbers, places, objects ("five years", "at the altar", "with her bare
+  hands"). No empty hype ("shocking", "insane", "you won't believe") unless the line already shows why.
+- story, you and reaction: at most 16 words. meme: at most 26 words. No hashtags, no emoji."""
+
+CAPTION_SCHEMA = """{"promos": [{"promo": "P01", "story": "...", "you": "...", "meme": "...", "reaction": "..."}]}"""
+
+
+def captions_user(promos: list[tuple[str, str, str, str]], names: list[str], notes: dict[str, str]) -> str:
+    """promos: (promo id, hook, open question, clip text); notes: why a promo's last captions were rejected."""
+    body = "\n\n".join(f"### PROMO {promo_id}\nHOOK: {hook}\nOPEN QUESTION (never answer it): {question}\nCLIP:\n{text}"
+                       for promo_id, hook, question, text in promos)
+    banned = f"\nNever use these character names: {', '.join(names)}.\n" if names else ""
+    fixes = "".join(f"\nYour last captions for {promo_id} were rejected: {note}. Fix that.\n"
+                    for promo_id, note in notes.items())
+    return f"""{body}
+{banned}{fixes}
+For EVERY promo above, reply with JSON only, in exactly this shape:
+{CAPTION_SCHEMA}"""
+
+
+PROMPT_VERSION = "+".join([FINDER_VERSION, SCREEN_VERSION, EDITOR_VERSION, AUDIENCE_VERSION, DUEL_VERSION,
+                           CAPTION_VERSION])

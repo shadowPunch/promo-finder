@@ -1,4 +1,4 @@
-from helpers import FIXTURE_SHOW, fake_llm, pipeline_reply
+from helpers import CAPTIONS, FIXTURE_SHOW, fake_llm, pipeline_reply
 from promo_finder.pipeline import Settings, run
 
 FILES = ("promos.json", "promos.csv", "versions.json", "screened.json", "report.md", "rejected.json",
@@ -16,11 +16,20 @@ def test_run_end_to_end_with_fake_llm(tmp_path, monkeypatch):
     assert [p.rank for p in result.winners] == [1, 2] and result.slate[0].slate_role == "proven"
     assert meta["partial"] is False and meta["failed_calls"] == []
     # judge: screen, audience, duels + swap, refine audience, refine duels + swap, reliability
-    assert meta["usage"]["llm"]["calls"] == 3 and meta["usage"]["judge"]["calls"] == 8
+    # llm: finder, editor versions, refine, captions
+    assert meta["usage"]["llm"]["calls"] == 4 and meta["usage"]["judge"]["calls"] == 8
+    assert counts["captioned"] == 2 and all(p.captions for p in result.winners)
     assert meta["duels"]["n"] == 8 and meta["duels"]["missing"] == 0
     assert set(meta["change_win_rates"]) >= {"original", "sinker", "refine"}
     for name in FILES:
         assert (result.out_dir / name).exists(), name
+    assert CAPTIONS["story"] in (result.out_dir / "report.md").read_text()
+
+
+def test_captions_can_be_switched_off(tmp_path, monkeypatch):
+    monkeypatch.setenv("PROMO_WANDB", "0")
+    result = run(FIXTURE_SHOW, tmp_path / "out", fake_llm(pipeline_reply, tmp_path / "c"), settings=Settings(captions=False))
+    assert result.meta["counts"]["captioned"] == 0 and not any(p.captions for p in result.winners)
 
 
 def test_duels_can_be_switched_off(tmp_path, monkeypatch):
