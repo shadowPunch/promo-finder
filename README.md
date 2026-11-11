@@ -51,8 +51,9 @@ uv run streamlit run showcase/streamlit_app.py   # the showcase site, locally
 
 ## Working
 
-The full write-up (problem, assumptions, pipeline, results, evaluation and limitations) is in the
-**[solution document](Nithish_Ravikkumar_23123028_Kuku_Problem1_solution.pdf)**. In brief:
+The full write-up (problem, assumptions, the pipeline with this flowchart, results, evaluation, limitations and the
+models used) is in the 2-page **[solution document](Nithish_Ravikkumar_23123028_Kuku_Problem1_solution.pdf)**.
+In brief:
 
 <p align="center">
   <img src="pipeline.png" width="860" alt="Promo Finder pipeline: LLM steps in red, code steps in white">
